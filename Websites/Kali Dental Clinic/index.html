@@ -1,1 +1,299 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="KALI Dental Clinic offers thoughtful, professional dental care in a welcoming environment. Explore services and request an appointment.">
+  <title>KALI Dental Clinic | Thoughtful Dental Care</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo" aria-label="KALI Dental Clinic home">
+        <img src="assets/logo.png" alt="KALI Dental Clinic logo">
+      </a>
+      <nav aria-label="Main navigation">
+        <ul class="nav-links">
+          <li><a href="index.html" aria-current="page">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="track-booking.html" class="nav-action-link">Track Booking</a>
+        <a href="dashboard.html" class="nav-action-link">Dashboard</a>
+        <a href="book-appointment.html" class="btn primary">Book Appointment</a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html" aria-current="page">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="track-booking.html">Track Booking</a></li>
+    </ul>
+    <div class="mobile-menu-actions">
+      <a href="book-appointment.html" class="btn primary">Book Appointment</a>
+      <a href="dashboard.html" class="btn outline">Staff Dashboard</a>
+    </div>
+    <a href="dashboard.html" class="mobile-dashboard">Receptionist / Business Owner Access</a>
+  </div>
+
+  <main id="main">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <span class="eyebrow">Welcome to KALI Dental Clinic</span>
+          <h1>A Healthier Smile Starts With the <em>Right Care.</em></h1>
+          <p>Experience thoughtful, professional dental care in a welcoming environment designed around your comfort and confidence.</p>
+          <div class="hero-actions">
+            <a href="book-appointment.html" class="btn primary">Book an Appointment <span aria-hidden="true">→</span></a>
+            <a href="services.html" class="btn outline">Explore Services</a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="assets/hero.png" alt="Dentist providing attentive dental care to a patient" fetchpriority="high">
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-strip" aria-label="Why patients choose KALI">
+      <div class="container trust-grid">
+        <div class="trust-item">
+          <div class="trust-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21.2l7.7-7.7 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+          </div>
+          <div><strong>Patient-focused care</strong><small>Your comfort matters</small></div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/></svg>
+          </div>
+          <div><strong>Thoughtful treatment</strong><small>Care that starts with listening</small></div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>
+          </div>
+          <div><strong>Convenient appointments</strong><small>Book at a time that suits you</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="services-heading-row">
+          <div class="section-heading">
+            <span class="eyebrow">Our Services</span>
+            <h2>Care for Every Stage of Your Smile.</h2>
+            <p class="description">From routine dental care to more specialised treatments, explore the services available at KALI Dental Clinic.</p>
+          </div>
+          <a href="services.html" class="text-link">View All Services <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="services-grid">
+          <article class="service-card">
+            <div class="service-image"><img src="assets/dental-consultation.png" alt="Dental consultation" loading="lazy"></div>
+            <div class="service-content">
+              <h3>Dental Consultation</h3>
+              <p>Discuss your dental concerns and receive professional guidance about your oral health.</p>
+              <a href="services.html#dental-consultation" class="text-link">Learn More <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+          <article class="service-card">
+            <div class="service-image"><img src="assets/teeth-cleaning.png" alt="Professional teeth cleaning" loading="lazy"></div>
+            <div class="service-content">
+              <h3>Teeth Cleaning &amp; Polishing</h3>
+              <p>Professional cleaning designed to remove plaque and help maintain good oral hygiene.</p>
+              <a href="services.html#teeth-cleaning" class="text-link">Learn More <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+          <article class="service-card">
+            <div class="service-image"><img src="assets/tooth-filling.png" alt="Dental filling treatment" loading="lazy"></div>
+            <div class="service-content">
+              <h3>Tooth Filling</h3>
+              <p>Treatment to restore teeth affected by decay or minor damage.</p>
+              <a href="services.html#tooth-filling" class="text-link">Learn More <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+          <article class="service-card">
+            <div class="service-image"><img src="assets/teeth-whitening.png" alt="Teeth whitening treatment" loading="lazy"></div>
+            <div class="service-content">
+              <h3>Teeth Whitening</h3>
+              <p>Explore professional options for improving the appearance of stained or discoloured teeth.</p>
+              <a href="services.html#teeth-whitening" class="text-link">Learn More <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section why-section">
+      <div class="container why-grid">
+        <div class="why-content">
+          <span class="eyebrow">The KALI Difference</span>
+          <h2>Your Comfort Is Part of the Care.</h2>
+          <p>Visiting a dentist should feel straightforward and reassuring. We believe good dental care begins with understanding each patient's needs and making them feel comfortable throughout their experience.</p>
+          <div class="why-list">
+            <div class="why-item">
+              <div class="why-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg></div>
+              <div><h3>Care that listens</h3><p>Your concerns and questions deserve attention.</p></div>
+            </div>
+            <div class="why-item">
+              <div class="why-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg></div>
+              <div><h3>Clear communication</h3><p>Understand your treatment options and what to expect.</p></div>
+            </div>
+            <div class="why-item">
+              <div class="why-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg></div>
+              <div><h3>A welcoming experience</h3><p>Feel informed and comfortable throughout your visit.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="why-visual">
+          <img src="assets/dental-crowns.png" alt="Precision dental care at KALI Dental Clinic" loading="lazy">
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container about-grid">
+        <div class="about-image">
+          <img src="assets/childrens-dental-care.png" alt="Gentle, welcoming dental care for patients at KALI Dental Clinic" loading="lazy">
+        </div>
+        <div class="about-content">
+          <span class="eyebrow">About KALI</span>
+          <h2>More Than Treatment. A Better Dental Experience.</h2>
+          <p>Your oral health deserves attention, understanding and thoughtful care. KALI Dental Clinic aims to make dental visits a more comfortable and reassuring experience.</p>
+          <p>Discover our approach to dental care, our clinic and the values that guide the patient experience.</p>
+          <a href="about.html" class="btn primary">Discover Our Clinic <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section team-section">
+      <div class="container">
+        <div class="team-panel">
+          <div>
+            <span class="eyebrow" style="color:#c6d6c8">Your Dental Care Team</span>
+            <h2>Good Dental Care Begins With People You Can Trust.</h2>
+            <p>Learn more about the dental professionals and people behind your care at KALI Dental Clinic.</p>
+          </div>
+          <a href="about.html#team" class="btn">Meet Our Team <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Patient Experiences</span>
+          <h2>Every Smile Has a Story.</h2>
+          <p class="description">We believe patient experiences are an important part of choosing the right dental care provider.</p>
+        </div>
+        <div class="testimonial-placeholder">
+          <strong>Patient testimonials will appear here.</strong>
+          This section is reserved for genuine feedback from KALI Dental Clinic patients.
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container cta-content">
+        <span class="eyebrow">Take the First Step</span>
+        <h2>Your Smile Deserves the Right Care.</h2>
+        <p>Take the first step towards better oral health. Explore our services and arrange an appointment with KALI Dental Clinic.</p>
+        <a href="book-appointment.html" class="btn primary">Book Your Appointment <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container contact-grid">
+        <div class="contact-content">
+          <span class="eyebrow">Visit or Contact Us</span>
+          <h2>We're Here to Help You Smile.</h2>
+          <p>Have a question or need help arranging your visit? Get in touch with KALI Dental Clinic.</p>
+          <div class="contact-details">
+            <div class="contact-detail">
+              <div class="contact-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+              <div><h3>Our Location</h3><p>University of Cape Coast Dental Clinic<br>School of Medical Sciences, University of Cape Coast<br>Cape Coast, Ghana</p></div>
+            </div>
+            <div class="contact-detail">
+              <div class="contact-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2Z"/></svg></div>
+              <div><h3>Phone / WhatsApp</h3><p><a href="tel:+233559411844">055 941 1844</a></p></div>
+            </div>
+            <div class="contact-detail">
+              <div class="contact-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+              <div><h3>Email</h3><p><a href="mailto:piersalledev1@gmail.com">piersalledev1@gmail.com</a></p></div>
+            </div>
+          </div>
+          <a href="contact.html" class="text-link" style="margin-top:28px">View Contact Information <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="contact-visual contact-map">
+          <h3>UCC Dental Clinic, Cape Coast</h3>
+          <p class="map-note">This is a demonstration location used to showcase Google Maps integration.</p>
+          <div class="map-embed">
+            <iframe src="https://www.google.com/maps?q=5.10557,-1.28364&z=16&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="UCC Dental Clinic, Cape Coast - demonstration location"></iframe>
+          </div>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=5.10557,-1.28364" class="btn outline" target="_blank" rel="noopener">Get Directions</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <img src="assets/logo.png" alt="KALI Dental Clinic logo" class="footer-logo">
+          <p>Thoughtful dental care with a focus on your comfort, confidence and oral health.</p>
+        </div>
+        <div class="footer-column">
+          <h3>Explore</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Patient Links</h3>
+          <ul>
+            <li><a href="#" data-booking-link>Book Appointment</a></li>
+            <li><a href="track-booking.html">Track Booking</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Clinic</h3>
+          <ul>
+            <li><a href="about.html">Our Approach</a></li>
+            <li><a href="services.html">Dental Treatments</a></li>
+            <li><a href="dashboard.html">Staff Access</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© <span id="year"></span> KALI Dental Clinic. All rights reserved.</p>
+        <p>Designed by Abrantyie Digital</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
