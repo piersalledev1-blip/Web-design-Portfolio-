@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn about KALI Dental Clinic's approach to thoughtful, patient-centred dental care in Ghana.">
+  <title>About Us | KALI Dental Clinic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body class="about-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo" aria-label="KALI Dental Clinic home">
+        <img src="assets/logo.png" alt="KALI Dental Clinic logo">
+      </a>
+      <nav aria-label="Main navigation">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html" aria-current="page">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="track-booking.html" class="nav-action-link">Track Booking</a>
+        <a href="dashboard.html" class="nav-action-link">Dashboard</a>
+        <a href="book-appointment.html" class="btn primary">Book Appointment</a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html" aria-current="page">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="track-booking.html">Track Booking</a></li>
+    </ul>
+    <div class="mobile-menu-actions">
+      <a href="book-appointment.html" class="btn primary">Book Appointment</a>
+      <a href="dashboard.html" class="btn outline">Staff Dashboard</a>
+    </div>
+    <a href="dashboard.html" class="mobile-dashboard">Receptionist / Business Owner Access</a>
+  </div>
+
+  <main id="main">
+    <section class="about-hero">
+      <div class="container about-hero-grid">
+        <div class="about-hero-copy">
+          <span class="eyebrow">About KALI Dental Clinic</span>
+          <h1>Care That Begins With Listening.</h1>
+          <p>KALI Dental Clinic is built around a simple idea: good dental care starts with understanding the person in the chair. We aim to make every visit clear, comfortable and centred on your needs.</p>
+          <div class="hero-actions">
+            <a href="book-appointment.html" class="btn primary">Book Appointment <span aria-hidden="true">→</span></a>
+            <a href="services.html" class="btn outline">Explore Services</a>
+          </div>
+        </div>
+        <div class="about-hero-panel">
+          <span class="about-hero-kicker">Our Approach</span>
+          <blockquote>Thoughtful care, explained clearly.</blockquote>
+          <p style="color:#d3dfd6; margin-bottom:22px;">We want you to feel informed about your oral health and confident about the decisions you make.</p>
+          <ul class="about-hero-points">
+            <li>Patient comfort comes first</li>
+            <li>Clear communication at every step</li>
+            <li>Treatment planned around you</li>
+            <li>Informed decisions, without pressure</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="approach-rail-head">
+          <div>
+            <span class="eyebrow">Our Approach</span>
+            <h2>Care That Puts You at Ease.</h2>
+          </div>
+          <div>
+            <p>Dental visits can feel daunting. Our approach is to slow down, listen and make sure you understand what is happening and why. Every patient is different, so treatment planning should reflect individual needs, concerns and priorities.</p>
+            <a href="contact.html" class="text-link" style="margin-top:14px;">Ask the Clinic a Question <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+        <div class="approach-rail-grid">
+          <article class="approach-step">
+            <span class="approach-step-number">01</span>
+            <h3>Patient comfort</h3>
+            <p>Your comfort is treated as part of the care, not an afterthought.</p>
+          </article>
+          <article class="approach-step">
+            <span class="approach-step-number">02</span>
+            <h3>Clear communication</h3>
+            <p>We aim to explain findings, options and next steps in plain language.</p>
+          </article>
+          <article class="approach-step">
+            <span class="approach-step-number">03</span>
+            <h3>Understanding your concerns</h3>
+            <p>Your questions and dental worries deserve time and attention.</p>
+          </article>
+          <article class="approach-step">
+            <span class="approach-step-number">04</span>
+            <h3>Thoughtful treatment planning</h3>
+            <p>Recommendations are considered in the context of your needs and oral health.</p>
+          </article>
+          <article class="approach-step">
+            <span class="approach-step-number">05</span>
+            <h3>Informed decisions</h3>
+            <p>You should have the information you need to make decisions about your care.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section values-section">
+      <div class="container values-layout">
+        <div class="values-intro">
+          <span class="eyebrow">Our Values</span>
+          <h2>The Principles Behind the Care.</h2>
+          <p class="description">These values guide how KALI Dental Clinic aims to work with patients and approach dental care.</p>
+        </div>
+        <div class="values-ledger">
+          <article class="value-row">
+            <span class="value-row-index">01</span>
+            <div>
+              <h3>Patient-centred care</h3>
+              <p>Your needs, comfort and understanding guide the conversation.</p>
+            </div>
+            <div class="value-row-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21l8.8-8.3a5 5 0 0 0 0-7.1Z"/></svg></div>
+          </article>
+          <article class="value-row">
+            <span class="value-row-index">02</span>
+            <div>
+              <h3>Professionalism</h3>
+              <p>Care is approached with attention, responsibility and respect.</p>
+            </div>
+            <div class="value-row-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          </article>
+          <article class="value-row">
+            <span class="value-row-index">03</span>
+            <div>
+              <h3>Compassion</h3>
+              <p>Dental concerns are met with patience and understanding.</p>
+            </div>
+            <div class="value-row-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.9 9.9 0 0 1-4.4-1.1L3 20l1.2-4.4A8.4 8.4 0 1 1 21 11.5Z"/></svg></div>
+          </article>
+          <article class="value-row">
+            <span class="value-row-index">04</span>
+            <div>
+              <h3>Clear communication</h3>
+              <p>You should understand what is being discussed and what comes next.</p>
+            </div>
+            <div class="value-row-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4V5Z"/><path d="M8 9h8M8 12.5h5"/></svg></div>
+          </article>
+          <article class="value-row">
+            <span class="value-row-index">05</span>
+            <div>
+              <h3>Commitment to oral health</h3>
+              <p>The focus is on supporting better oral health over the long term.</p>
+            </div>
+            <div class="value-row-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-4-2.5-7-6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4-3 7.5-7 10Z"/></svg></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section experience-section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">The Patient Experience</span>
+          <h2>What You Can Generally Expect.</h2>
+          <p class="description">Every visit is different, but the experience is designed to feel welcoming, clear and unhurried.</p>
+        </div>
+        <div class="experience-track">
+          <article class="experience-step">
+            <span class="step">01</span>
+            <h3>A welcoming experience</h3>
+            <p>Arrive to a calm environment where your visit can be discussed without rush.</p>
+          </article>
+          <article class="experience-step">
+            <span class="step">02</span>
+            <h3>Discussion of your concerns</h3>
+            <p>Talk through what brought you in and any worries you want addressed.</p>
+          </article>
+          <article class="experience-step">
+            <span class="step">03</span>
+            <h3>Examination and assessment</h3>
+            <p>An appropriate examination helps inform the conversation about your oral health.</p>
+          </article>
+          <article class="experience-step">
+            <span class="step">04</span>
+            <h3>Explanation of suitable options</h3>
+            <p>Discuss suitable treatment options and what each may involve before deciding.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="team">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Meet Our Dental Team</span>
+          <h2>Meet Our Dental Team</h2>
+          <p class="description">Behind every healthy smile is a dedicated team committed to your comfort, care and confidence. We believe in creating a welcoming environment where every patient receives attentive and professional dental care.</p>
+        </div>
+        <div style="margin-top:30px; border-radius:12px; overflow:hidden; box-shadow: 0 10px 40px rgba(23,61,50,0.04);">
+          <img src="assets/dental-team.png" alt="Dental professionals working together as a team" style="width:100%; height:auto; display:block; object-fit:cover;">
+        </div>
+      </div>
+    </section>
+
+    <section class="booking-section">
+      <div class="container booking-content">
+        <span class="eyebrow">Take the First Step</span>
+        <h2>Let's Talk About Your Dental Care.</h2>
+        <p>If you have a question or would like to arrange a visit, get in touch with KALI Dental Clinic.</p>
+        <a href="book-appointment.html" class="btn">Book Your Appointment <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <img src="assets/logo.png" alt="KALI Dental Clinic logo" class="footer-logo">
+          <p>Thoughtful dental care with a focus on your comfort, confidence and oral health.</p>
+        </div>
+        <div class="footer-column">
+          <h3>Explore</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Patient Links</h3>
+          <ul>
+            <li><a href="#" data-booking-link>Book Appointment</a></li>
+            <li><a href="track-booking.html">Track Booking</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Clinic</h3>
+          <ul>
+            <li><a href="about.html">Our Approach</a></li>
+            <li><a href="services.html">Dental Treatments</a></li>
+            <li><a href="dashboard.html">Staff Access</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© <span id="year"></span> KALI Dental Clinic. All rights reserved.</p>
+        <p>Designed by Abrantyie Digital</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+

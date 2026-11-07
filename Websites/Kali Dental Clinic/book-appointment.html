@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book an appointment at KALI Dental Clinic. Choose your service, pick a time, and book your visit.">
+  <title>Book an Appointment | KALI Dental Clinic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js" defer></script>
+  <script>
+    // Services loaded from Supabase
+  </script>
+  <style>
+    .booking-page-hero {
+      background: var(--ivory);
+      padding: 60px 0 40px;
+      text-align: center;
+    }
+    .booking-page-hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--green);
+      letter-spacing: -1.5px;
+      margin-bottom: 12px;
+    }
+    .booking-page-hero p {
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .booking-progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      max-width: 760px;
+      margin: 30px auto 40px;
+      padding: 0 18px;
+      position: relative;
+    }
+    .booking-progress::before {
+      content: "";
+      position: absolute;
+      left: 12%;
+      right: 12%;
+      top: 18px;
+      height: 1px;
+      background: var(--border);
+      z-index: 0;
+    }
+    .booking-progress-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .booking-progress-step.active {
+      color: var(--green);
+      font-weight: 600;
+    }
+    .booking-progress-step.completed {
+      color: var(--green);
+    }
+    .booking-progress-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--white);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .booking-progress-step.active .booking-progress-dot,
+    .booking-progress-step.completed .booking-progress-dot {
+      background: var(--green);
+      color: var(--white);
+      border-color: var(--green);
+    }
+    .booking-main {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) 320px;
+      gap: 28px;
+      align-items: start;
+      padding-bottom: 80px;
+    }
+    .booking-card-main {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 36px;
+      box-shadow: 0 10px 40px rgba(23,61,50,0.03);
+    }
+    .booking-step {
+      display: none;
+    }
+    .booking-step.active {
+      display: block;
+    }
+    .step-header {
+      margin-bottom: 28px;
+    }
+    .step-header h2 {
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+    .step-header p {
+      color: var(--muted);
+    }
+    .service-select-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .service-select-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      cursor: pointer;
+      transition: 0.2s;
+      background: var(--white);
+    }
+    .service-select-card:hover {
+      border-color: #b7c5bc;
+    }
+    .service-select-card.selected {
+      border-color: var(--green);
+      background: var(--sage-light);
+    }
+    .service-select-card input {
+      display: none;
+    }
+    .service-select-card h3 {
+      font-size: 1rem;
+      color: var(--green);
+      margin-bottom: 6px;
+    }
+    .service-select-card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .calendar-nav {
+      display: flex;
+      gap: 8px;
+    }
+    .calendar-nav button {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      cursor: pointer;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+    .calendar-day {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 4px;
+      text-align: center;
+      background: var(--white);
+      cursor: pointer;
+    }
+    .calendar-day.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .calendar-day.selected {
+      background: var(--green);
+      color: var(--white);
+      border-color: var(--green);
+    }
+    .calendar-day-name {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .calendar-day.selected .calendar-day-name {
+      color: #d3dfd6;
+    }
+    .calendar-day-num {
+      display: block;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .time-slots {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .time-slot {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      background: var(--white);
+      cursor: pointer;
+      font-size: 0.88rem;
+    }
+    .time-slot.selected {
+      background: var(--green);
+      color: var(--white);
+      border-color: var(--green);
+    }
+    .time-slot.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+    .form-group label {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .form-group input,
+    .form-group select {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 0.92rem;
+    }
+    .radio-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .radio-pill {
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .radio-pill.active {
+      border-color: var(--green);
+      background: var(--sage-light);
+    }
+    .booking-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 32px;
+    }
+    .booking-summary-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 26px;
+      position: sticky;
+      top: 120px;
+    }
+    .booking-summary-card h3 {
+      color: var(--green);
+      margin-bottom: 16px;
+    }
+    .summary-row-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+    .summary-row-line:last-of-type {
+      border-bottom: none;
+    }
+    .summary-row-line .label {
+      color: var(--muted);
+    }
+    .summary-total {
+      font-weight: 600;
+      font-size: 1rem;
+      padding-top: 14px;
+      margin-top: 8px;
+    }
+    .payment-option-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 12px;
+    }
+    .payment-option-card.active {
+      border-color: var(--green);
+      background: var(--sage-light);
+    }
+    .hold-notice {
+      background: #f4f7f2;
+      border: 1px solid #dce6d9;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+    .confirmation-section {
+      display: none;
+      text-align: center;
+      padding: 60px 18px 100px;
+    }
+    .confirmation-section.active {
+      display: block;
+    }
+    .confirmation-card {
+      max-width: 620px;
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 48px 32px;
+      box-shadow: 0 10px 40px rgba(23,61,50,0.03);
+    }
+    .confirmation-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #e8f5ee;
+      color: var(--green);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 18px;
+      font-size: 28px;
+    }
+    .demo-badge {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 6px 12px;
+      background: #f4f7f2;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      color: var(--green);
+    }
+    @media (max-width: 900px) {
+      .booking-main {
+        grid-template-columns: 1fr;
+      }
+      .booking-summary-card {
+        position: static;
+      }
+      .service-select-grid {
+        grid-template-columns: 1fr;
+      }
+      .time-slots {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .calendar-grid {
+        overflow-x: auto;
+        grid-template-columns: repeat(7, minmax(70px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo" aria-label="KALI Dental Clinic home">
+        <img src="assets/logo.png" alt="KALI Dental Clinic logo">
+      </a>
+      <nav aria-label="Main navigation">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="track-booking.html" class="nav-action-link">Track Booking</a>
+        <a href="dashboard.html" class="nav-action-link">Dashboard</a>
+        <a href="book-appointment.html" class="btn primary">Book Appointment</a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="track-booking.html">Track Booking</a></li>
+    </ul>
+    <div class="mobile-menu-actions">
+      <a href="book-appointment.html" class="btn primary">Book Appointment</a>
+      <a href="dashboard.html" class="btn outline">Staff Dashboard</a>
+    </div>
+    <a href="dashboard.html" class="mobile-dashboard">Receptionist / Business Owner Access</a>
+  </div>
+
+  <main id="main">
+    <section class="booking-page-hero">
+      <div class="container">
+        <span class="eyebrow">Book Your Visit</span>
+        <h1>Book Your Appointment</h1>
+        <p>Choose your service, find a convenient time, and complete your booking in a few simple steps.</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="booking-progress" id="bookingProgress">
+        <div class="booking-progress-step active" data-step="1">
+          <div class="booking-progress-dot">1</div>
+          <span>Select Service</span>
+        </div>
+        <div class="booking-progress-step" data-step="2">
+          <div class="booking-progress-dot">2</div>
+          <span>Date & Time</span>
+        </div>
+        <div class="booking-progress-step" data-step="3">
+          <div class="booking-progress-dot">3</div>
+          <span>Patient Details</span>
+        </div>
+        <div class="booking-progress-step" data-step="4">
+          <div class="booking-progress-dot">4</div>
+          <span>Payment</span>
+        </div>
+      </div>
+
+      <div class="booking-main" id="bookingMain">
+        <div class="booking-card-main">
+          <!-- Step 1 -->
+          <div class="booking-step active" id="step1">
+            <div class="step-header">
+              <h2>What service do you need?</h2>
+              <p>Select the dental service you'd like to book.</p>
+            </div>
+            <div class="service-select-grid" id="serviceGrid"></div>
+            <div class="booking-actions">
+              <a href="index.html" class="btn outline">Back to Website</a>
+              <button class="btn primary" id="toStep2">Continue <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="booking-step" id="step2">
+            <div class="step-header">
+              <h2>Choose a date and time</h2>
+              <p>Select an available appointment within the next eight days.</p>
+            </div>
+            <div class="calendar-header">
+              <h3 id="weekLabel">This week</h3>
+              <div class="calendar-nav">
+                <button id="prevWeek" aria-label="Previous week">←</button>
+                <button id="nextWeek" aria-label="Next week">→</button>
+              </div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+            <p style="color:var(--muted); font-size:0.85rem; margin-top:12px;">Select a date to see available times.</p>
+            <h3 style="margin-top:24px; color:var(--green);">Available times</h3>
+            <div class="time-slots" id="timeSlots"></div>
+            <p style="color:var(--muted); font-size:0.8rem; margin-top:10px;">Times shown are for demonstration only. Actual availability may differ.</p>
+            <div class="booking-actions">
+              <button class="btn outline" id="backTo1">← Back</button>
+              <button class="btn primary" id="toStep3">Continue <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="booking-step" id="step3">
+            <div class="step-header">
+              <h2>Who is this appointment for?</h2>
+              <p>Enter contact and patient details.</p>
+            </div>
+            <div class="form-grid">
+              <div class="form-group full">
+                <label for="fullName">Full Name *</label>
+                <input id="fullName" type="text" placeholder="Enter full name">
+              </div>
+              <div class="form-group">
+                <label for="contactPhone">Phone number *</label>
+                <input id="contactPhone" type="tel" inputmode="numeric" maxlength="10" placeholder="0559411844">
+              </div>
+              <div class="form-group">
+                <label for="contactEmail">Email *</label>
+                <input id="contactEmail" type="email" placeholder="you@example.com">
+              </div>
+              <div class="form-group full">
+                <label for="additionalInfo">Additional information (optional)</label>
+                <textarea id="additionalInfo" style="border:1px solid var(--border); border-radius:8px; padding:12px 14px; font-size:0.92rem; min-height:90px;" placeholder="Anything you'd like the clinic to know?"></textarea>
+              </div>
+            </div>
+            <div class="booking-actions">
+              <button class="btn outline" id="backTo2">← Back</button>
+              <button class="btn primary" id="toStep4">Continue to Payment <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="booking-step" id="step4">
+            <div class="step-header">
+              <h2>Complete your booking</h2>
+              <p>Review your appointment and payment details.</p>
+            </div>
+            <div class="hold-notice">
+              <strong>Secure Booking</strong>
+              <p style="color:var(--muted); font-size:0.88rem; margin-top:4px;">You will be redirected to Paystack to complete payment securely.</p>
+            </div>
+            <div class="payment-option-card active">
+              <input type="radio" checked>
+              <div>
+                <strong id="paymentLabel">Payment required</strong>
+                <p style="color:var(--muted); font-size:0.85rem;">Payment breakdown</p>
+              </div>
+              <div style="margin-left:auto; font-weight:600; color:var(--green);" id="payNowAmount">GH₵0.00</div>
+            </div>
+            <div style="border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:16px;">
+              <div id="paymentBreakdown" style="display:grid; gap:8px; font-size:0.9rem;"></div>
+            </div>
+            <div class="booking-actions">
+              <button class="btn outline" id="backTo3">← Back</button>
+              <button class="btn primary" id="completeBooking">Proceed to Payment <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="booking-summary-card">
+            <h3>Your Booking</h3>
+            <div class="summary-row-line">
+              <span class="label">Service</span>
+              <span id="summaryService">Not selected</span>
+            </div>
+            <div class="summary-row-line">
+              <span class="label">Date</span>
+              <span id="summaryDate">Not selected</span>
+            </div>
+            <div class="summary-row-line">
+              <span class="label">Time</span>
+              <span id="summaryTime">Not selected</span>
+            </div>
+            <div class="summary-row-line">
+              <span class="label">Patient</span>
+              <span id="summaryPatient">Not entered</span>
+            </div>
+            <div class="summary-row-line summary-total">
+              <span>Amount due now</span>
+              <span style="color:var(--green);" id="summaryDue">GH₵0.00</span>
+            </div>
+            <p style="color:var(--muted); font-size:0.8rem; margin-top:12px;">For fixed-price treatments, a deposit may apply. Consultation requires full payment.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <section class="confirmation-section" id="confirmationSection">
+      <div class="confirmation-card">
+        <div class="confirmation-icon">✓</div>
+        <span class="eyebrow">Booking Confirmation</span>
+        <h2 style="color:var(--green); font-size:clamp(2rem,4vw,3rem); margin:12px 0;">You're all set (Demo)</h2>
+        <div style="text-align:left; max-width:420px; margin:18px auto; background:var(--ivory); padding:18px; border-radius:10px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Service</span><span id="confService">-</span></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Total service cost</span><span id="confTotal">-</span></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Amount paid</span><span id="confPaid">-</span></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Outstanding balance</span><span id="confBalance">-</span></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Payment status</span><span>Demo - Not paid</span></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Date</span><span id="confDate">-</span></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Time</span><span id="confTime">-</span></div>
+          <div style="display:flex; justify-content:space-between;"><span style="color:var(--muted);">Booking reference</span><span id="confRef">KALI-DEMO</span></div>
+        </div>
+        <p style="color:var(--muted); max-width:480px; margin:0 auto;">This is a frontend demonstration. Payment is not connected and no booking has been saved to a backend. In a live system, Paystack verification and backend confirmation would be required.</p>
+        <div class="demo-badge">Demonstration only — not a real appointment</div>
+        <div style="margin-top:28px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+          <a href="track-booking.html" class="btn outline">Track My Booking</a>
+          <button class="btn primary" id="newBooking">Book Another Appointment</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <img src="assets/logo.png" alt="KALI Dental Clinic logo" class="footer-logo">
+          <p>Thoughtful dental care with a focus on your comfort, confidence and oral health.</p>
+        </div>
+        <div class="footer-column">
+          <h3>Explore</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Patient Links</h3>
+          <ul>
+            <li><a href="book-appointment.html">Book Appointment</a></li>
+            <li><a href="track-booking.html">Track Booking</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Clinic</h3>
+          <ul>
+            <li><a href="about.html">Our Approach</a></li>
+            <li><a href="services.html">Dental Treatments</a></li>
+            <li><a href="dashboard.html">Staff Access</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© <span id="year"></span> KALI Dental Clinic. All rights reserved.</p>
+        <p>Designed by Abrantyie Digital</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+      let services = [];
+    const timeOptions = ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '01:00 PM', '01:30 PM', '02:00 PM', '02:30 PM', '03:00 PM'];
+    const bookedDemo = new Set();
+    const state = { service: null, date: null, time: null, bookingFor: 'self' };
+
+    const serviceGrid = document.getElementById('serviceGrid');
+    
+    async function loadServices() {
+      const client = window.getSupabaseClient ? window.getSupabaseClient() : null;
+      if (!client || !serviceGrid) return;
+      serviceGrid.innerHTML = '<p style="color:var(--muted);">Loading services...</p>';
+      try {
+        const { data, error } = await client
+          .from('services')
+          .select('*')
+          .eq('is_active', true)
+          .order('display_order');
+        if (error || !data) {
+          serviceGrid.innerHTML = '<p style="color:var(--muted);">Unable to load services.</p>';
+          return;
+        }
+        services = data.map(s => ({
+          id: s.id,
+          name: s.name,
+          desc: s.description || '',
+          price: parseFloat(s.total_price || 0),
+          payNow: parseFloat(s.booking_amount || 0),
+          balance: Math.max(0, parseFloat(s.total_price || 0) - parseFloat(s.booking_amount || 0)),
+          type: s.payment_type || 'full'
+        }));
+        serviceGrid.innerHTML = '';
+        services.forEach(s => {
+          const card = document.createElement('label');
+          card.className = 'service-select-card';
+          card.innerHTML = `<input type="radio" name="service" value="${s.id}"><h3>${escapeHtml(s.name)}</h3><p style="margin-bottom:8px;">${escapeHtml(s.desc)}</p><p style="font-weight:600; color:var(--green);">Total cost: GH₵${s.price.toLocaleString('en-US')}</p><p style="font-size:0.8rem; color:var(--muted);">${s.type === 'full' ? 'Full payment required' : 'Deposit to book'}: GH₵${s.payNow.toLocaleString('en-US')}</p>`;
+          card.addEventListener('click', () => {
+            document.querySelectorAll('.service-select-card').forEach(c=>c.classList.remove('selected'));
+            card.classList.add('selected');
+            state.service = s;
+            updateSummary();
+          });
+          serviceGrid.appendChild(card);
+        });
+        // Pre-select from URL if present
+        const params = new URLSearchParams(window.location.search);
+        const preselected = params.get('service');
+        if (preselected) {
+          const card = Array.from(document.querySelectorAll('.service-select-card')).find(c => c.querySelector('input')?.value === preselected);
+          if (card) card.click();
+        }
+      } catch (e) {
+        serviceGrid.innerHTML = '<p style="color:var(--muted);">Unable to load services.</p>';
+      }
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    loadServices();
+
+    function updateSummary(){
+      document.getElementById('summaryService').textContent = state.service ? state.service.name : 'Not selected';
+      document.getElementById('summaryDate').textContent = state.date ? state.date : 'Not selected';
+      document.getElementById('summaryTime').textContent = state.time ? state.time : 'Not selected';
+      const fullName = document.getElementById('fullName').value;
+      document.getElementById('summaryPatient').textContent = fullName ? fullName : 'Not entered';
+      if(state.service){
+        document.getElementById('summaryDue').textContent = `GH₵${Math.floor(state.service.payNow).toLocaleString('en-US')}.00`;
+        document.getElementById('payNowAmount').textContent = `GH₵${Math.floor(state.service.payNow).toLocaleString('en-US')}.00`;
+        document.getElementById('paymentLabel').textContent = state.service.type === 'full' ? 'Full payment required' : 'Deposit required';
+        const pb = document.getElementById('paymentBreakdown');
+        if(pb){
+          if(state.service.type === 'full'){
+            pb.innerHTML = `<div style="display:flex; justify-content:space-between;"><span>Total cost</span><span>GH₵${Math.floor(state.service.price).toLocaleString('en-US')}.00</span></div><div style="display:flex; justify-content:space-between; font-weight:600;"><span>AMOUNT TO PAY NOW</span><span>GH₵${Math.floor(state.service.payNow).toLocaleString('en-US')}.00</span></div>`;
+          }else{
+            pb.innerHTML = `<div style="display:flex; justify-content:space-between;"><span>Total treatment cost</span><span>GH₵${Math.floor(state.service.price).toLocaleString('en-US')}.00</span></div><div style="display:flex; justify-content:space-between;"><span>Deposit payable now</span><span>GH₵${Math.floor(state.service.payNow).toLocaleString('en-US')}.00</span></div><div style="display:flex; justify-content:space-between;"><span>Remaining balance at clinic</span><span>GH₵${Math.floor(state.service.balance).toLocaleString('en-US')}.00</span></div><div style="display:flex; justify-content:space-between; font-weight:600; padding-top:8px; border-top:1px solid var(--border);"><span>AMOUNT TO PAY NOW</span><span>GH₵${Math.floor(state.service.payNow).toLocaleString('en-US')}.00</span></div>`;
+          }
+        }
+      }
+    }
+
+    // Calendar
+    const calendarGrid = document.getElementById('calendarGrid');
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    function renderCalendar(){
+      calendarGrid.innerHTML='';
+      for(let i=0;i<7;i++){
+        const d = new Date(today);
+        d.setDate(today.getDate()+i);
+        if(i>7) break;
+        const btn = document.createElement('button');
+        btn.className = 'calendar-day';
+        btn.innerHTML = `<span class="calendar-day-name">${d.toLocaleDateString('en-US',{weekday:'short'})}</span><span class="calendar-day-num">${d.getDate()}</span>`;
+        btn.addEventListener('click', ()=>{
+          if(d < today) return;
+          document.querySelectorAll('.calendar-day').forEach(b=>b.classList.remove('selected'));
+          btn.classList.add('selected');
+          state.date = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+          updateSummary();
+          renderTimes();
+        });
+        calendarGrid.appendChild(btn);
+      }
+    }
+    renderCalendar();
+
+    function renderTimes(){
+      const slots = document.getElementById('timeSlots');
+      slots.innerHTML='';
+      timeOptions.forEach(t=>{
+        const key = (state.date||'')+'_'+t;
+        const btn = document.createElement('button');
+        btn.className = 'time-slot';
+        if(bookedDemo.has(key)) btn.classList.add('disabled');
+        btn.textContent = t;
+        btn.addEventListener('click', ()=>{
+          if(btn.classList.contains('disabled')) return;
+          document.querySelectorAll('.time-slot').forEach(b=>b.classList.remove('selected'));
+          btn.classList.add('selected');
+          state.time = t;
+          updateSummary();
+        });
+        slots.appendChild(btn);
+      });
+    }
+
+    // Booking for simplified - no toggle needed
+
+    // Navigation
+    document.getElementById('toStep2').addEventListener('click', ()=>{
+      if(!state.service){ alert('Please select a service'); return; }
+      document.getElementById('step1').classList.remove('active');
+      document.getElementById('step2').classList.add('active');
+      document.querySelectorAll('.booking-progress-step').forEach((s,i)=>{ if(i===0){s.classList.remove('active');s.classList.add('completed');} if(i===1){s.classList.add('active');}});
+    });
+    document.getElementById('backTo1').addEventListener('click', ()=>{
+      document.getElementById('step2').classList.remove('active');
+      document.getElementById('step1').classList.add('active');
+      document.querySelectorAll('.booking-progress-step').forEach((s,i)=>{ if(i===1){s.classList.remove('active');} if(i===0){s.classList.remove('completed');s.classList.add('active');}});
+    });
+    document.getElementById('toStep3').addEventListener('click', ()=>{
+      if(!state.date || !state.time){ alert('Please select a date and time'); return; }
+      document.getElementById('step2').classList.remove('active');
+      document.getElementById('step3').classList.add('active');
+      document.querySelectorAll('.booking-progress-step').forEach((s,i)=>{ if(i===1){s.classList.remove('active');s.classList.add('completed');} if(i===2){s.classList.add('active');}});
+      updateSummary();
+    });
+    document.getElementById('backTo2').addEventListener('click', ()=>{
+      document.getElementById('step3').classList.remove('active');
+      document.getElementById('step2').classList.add('active');
+      document.querySelectorAll('.booking-progress-step').forEach((s,i)=>{ if(i===2){s.classList.remove('active');} if(i===1){s.classList.remove('completed');s.classList.add('active');}});
+    });
+    document.getElementById('toStep4').addEventListener('click', ()=>{
+      const phone = document.getElementById('contactPhone').value;
+      const email = document.getElementById('contactEmail').value;
+      const fullName = document.getElementById('fullName').value;
+      if(!fullName){ alert('Please enter your full name'); return; }
+      if(!/^\d{10}$/.test(phone)){ alert('Please enter a valid 10-digit phone number'); return; }
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ alert('Please enter a valid email'); return; }
+      document.getElementById('step3').classList.remove('active');
+      document.getElementById('step4').classList.add('active');
+      document.querySelectorAll('.booking-progress-step').forEach((s,i)=>{ if(i===2){s.classList.remove('active');s.classList.add('completed');} if(i===3){s.classList.add('active');}});
+      updateSummary();
+    });
+    document.getElementById('backTo3').addEventListener('click', ()=>{
+      document.getElementById('step4').classList.remove('active');
+      document.getElementById('step3').classList.add('active');
+      document.querySelectorAll('.booking-progress-step').forEach((s,i)=>{ if(i===3){s.classList.remove('active');} if(i===2){s.classList.remove('completed');s.classList.add('active');}});
+    });
+    document.getElementById('completeBooking').addEventListener('click', async ()=>{
+      const btn = document.getElementById('completeBooking');
+      if(btn.disabled) return;
+      if(!state.service || !state.date || !state.time) {
+        alert('Please complete all steps');
+        return;
+      }
+      const fullName = document.getElementById('fullName').value;
+      const phone = document.getElementById('contactPhone').value;
+      const email = document.getElementById('contactEmail').value;
+      if(!fullName || !/^\d{10}$/.test(phone) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('Please provide valid details');
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = 'Processing...';
+      
+      const client = window.getSupabaseClient ? window.getSupabaseClient() : null;
+      if(!client) {
+        alert('System error. Please try again.');
+        btn.disabled = false;
+        btn.textContent = 'Proceed to Payment →';
+        return;
+      }
+      
+      try {
+        // Convert date to YYYY-MM-DD format
+        const dateParts = state.date.split(' ');
+        const months = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+        const year = dateParts[2];
+        const month = months[dateParts[1]] || '01';
+        const day = dateParts[0].padStart(2,'0');
+        const appointmentDate = year + '-' + month + '-' + day;
+        
+        // Convert time to HH:MM:SS
+        const timeStr = state.time;
+        const [time, meridiem] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if(meridiem === 'PM' && hours !== 12) hours += 12;
+        if(meridiem === 'AM' && hours === 12) hours = 0;
+        const startTime = String(hours).padStart(2,'0') + ':' + String(minutes).padStart(2,'0') + ':00';
+        
+        const idempotencyKey = crypto.randomUUID();
+        
+        const { data: bookingData, error: bookingError } = await client.functions.invoke('create-booking', {
+          body: {
+            service_id: state.service.id,
+            appointment_date: appointmentDate,
+            appointment_time: startTime,
+            patient_name: fullName,
+            patient_phone: phone,
+            patient_email: email,
+            booker_name: fullName,
+            booker_phone: phone,
+            booker_email: email,
+            booking_for: 'self',
+            idempotency_key: idempotencyKey
+          }
+        });
+        
+        if(bookingError || !bookingData?.success) {
+          alert(bookingData?.error || 'Booking failed. Please try again.');
+          btn.disabled = false;
+          btn.textContent = 'Proceed to Payment →';
+          return;
+        }
+        
+        // Initialize payment
+        const { data: payData, error: payError } = await client.functions.invoke('paystack-initialize', {
+          body: {
+            appointment_id: bookingData.appointment_id,
+            tracking_code: bookingData.tracking_code
+          }
+        });
+        
+        if(payError || !payData?.authorization_url) {
+          alert('Payment initialization failed. Please try again.');
+          btn.disabled = false;
+          btn.textContent = 'Proceed to Payment →';
+          return;
+        }
+        
+        // Redirect to Paystack
+        window.location.href = payData.authorization_url;
+        
+      } catch(e) {
+        alert('An error occurred. Please try again.');
+        btn.disabled = false;
+        btn.textContent = 'Proceed to Payment →';
+      }
+    });
+    document.getElementById('newBooking').addEventListener('click', ()=>{
+      location.reload();
+    });
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -1,0 +1,2679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book an Appointment | KALI DENTAL CLINIC</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --green: #214d3a;
+    --green-dark: #163729;
+    --sage: #e5ede5;
+    --ivory: #f8f7f2;
+    --white: #ffffff;
+    --text: #252d27;
+    --muted: #777f78;
+    --border: #e5e8e1;
+    --danger: #b43c3c;
+    --success: #28744b;
+    --shadow: 0 12px 40px rgba(32, 55, 40, 0.06);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--ivory);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+button, input, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+/* NAVIGATION */
+
+.navbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-inner {
+    max-width: 1200px;
+    height: 76px;
+    margin: auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.brand-mark {
+    width: 42px;
+    height: 42px;
+    background: var(--green);
+    color: white;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+}
+
+.brand-name {
+    font-family: 'Playfair Display', serif;
+    color: var(--green);
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.brand-subtitle {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 3px;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-link {
+    font-size: 13px;
+    color: #4c554d;
+}
+
+.nav-link:hover {
+    color: var(--green);
+}
+
+.menu-button {
+    background: transparent;
+    border: 1px solid var(--border);
+    width: 43px;
+    height: 43px;
+    border-radius: 9px;
+    font-size: 22px;
+    color: var(--green);
+}
+
+.menu-panel {
+    position: absolute;
+    right: max(24px, calc((100% - 1152px) / 2));
+    top: 66px;
+    width: 220px;
+    padding: 10px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.menu-panel a {
+    display: block;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 7px;
+}
+
+.menu-panel a:hover {
+    background: var(--sage);
+}
+
+/* PAGE INTRO */
+
+.page-intro {
+    text-align: center;
+    padding: 42px 20px 30px;
+}
+
+.eyebrow {
+    color: var(--green);
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+}
+
+.page-intro h1 {
+    font-size: clamp(32px, 4vw, 44px);
+    line-height: 1.2;
+    margin-bottom: 12px;
+}
+
+.page-intro p {
+    max-width: 510px;
+    margin: auto;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* PROGRESS */
+
+.progress-wrap {
+    max-width: 760px;
+    margin: 0 auto 28px;
+    padding: 0 20px;
+}
+
+.progress {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    position: relative;
+}
+
+.progress::before {
+    content: "";
+    position: absolute;
+    height: 2px;
+    background: #dfe4dc;
+    left: 12%;
+    right: 12%;
+    top: 17px;
+    z-index: 0;
+}
+
+.progress-step {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: #929991;
+    font-size: 11px;
+}
+
+.progress-number {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 7px;
+    border: 1px solid #dfe4dc;
+    background: var(--ivory);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.progress-step.active {
+    color: var(--green);
+    font-weight: 700;
+}
+
+.progress-step.active .progress-number,
+.progress-step.completed .progress-number {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+}
+
+/* MAIN LAYOUT */
+
+.booking-layout {
+    max-width: 1152px;
+    padding: 0 24px;
+    margin: 0 auto 65px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 25px;
+    align-items: start;
+}
+
+.booking-card,
+.summary-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+}
+
+.booking-card {
+    padding: 30px;
+    min-width: 0;
+}
+
+.step-heading {
+    margin-bottom: 25px;
+}
+
+.step-heading h2 {
+    font-size: 25px;
+    margin-bottom: 5px;
+}
+
+.step-heading p {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.section-label {
+    font-size: 12px;
+    font-weight: 700;
+    margin: 24px 0 12px;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+/* SERVICES */
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.service-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 16px;
+    background: white;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+}
+
+.service-option:hover {
+    border-color: #91aa96;
+}
+
+.service-option.selected {
+    border: 1.5px solid var(--green);
+    background: #f2f7f1;
+}
+
+.service-radio {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    margin-top: 3px;
+    accent-color: var(--green);
+}
+
+.service-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.service-name {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.service-description {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.service-price {
+    display: block;
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 700;
+    margin-top: 9px;
+}
+
+/* CALENDAR */
+
+.calendar-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 17px;
+}
+
+.calendar-top h3 {
+    font-size: 18px;
+}
+
+.week-nav {
+    display: flex;
+    gap: 8px;
+}
+
+.week-nav button {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--green);
+}
+
+.week-nav button:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 7px;
+}
+
+.day-button {
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 10px;
+    padding: 11px 2px;
+    text-align: center;
+    min-width: 0;
+    color: var(--text);
+}
+
+.day-name {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 5px;
+}
+
+.day-number {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.day-button.selected {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+}
+
+.day-button.selected .day-name {
+    color: #e1ebe2;
+}
+
+.day-button:disabled {
+    background: #f3f3ef;
+    color: #b8bcb6;
+    border-color: #eceee8;
+    cursor: not-allowed;
+}
+
+.day-button:disabled .day-name {
+    color: #b8bcb6;
+}
+
+.calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #83ae8b;
+}
+
+.legend-dot.selected-dot {
+    background: var(--green);
+}
+
+.legend-dot.unavailable-dot {
+    background: #d7dad3;
+}
+
+.slots-heading {
+    margin: 27px 0 13px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.slots-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 9px;
+}
+
+.time-slot {
+    padding: 11px 4px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    font-size: 12px;
+    color: var(--text);
+}
+
+.time-slot:hover:not(:disabled) {
+    border-color: var(--green);
+}
+
+.time-slot.selected {
+    background: var(--green);
+    color: white;
+    border-color: var(--green);
+}
+
+.time-slot:disabled {
+    background: #f0f1ed;
+    color: #b4b8b1;
+    border-color: #eaebe6;
+    text-decoration: line-through;
+    cursor: not-allowed;
+}
+
+.slots-note {
+    margin-top: 13px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+/* FORMS */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.form-group {
+    min-width: 0;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-control {
+    width: 100%;
+    border: 1px solid #dfe4dc;
+    border-radius: 9px;
+    padding: 13px 14px;
+    background: white;
+    outline: none;
+    font-size: 13px;
+    color: var(--text);
+}
+
+.form-control:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(33, 77, 58, .08);
+}
+
+.form-control::placeholder {
+    color: #a2a79f;
+}
+
+.form-help {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+}
+
+.radio-panel {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.radio-choice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 9px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.radio-choice:has(input:checked) {
+    border-color: var(--green);
+    background: #f2f7f1;
+}
+
+.radio-choice input {
+    accent-color: var(--green);
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    color: #555f56;
+    margin-top: 20px;
+}
+
+.checkbox-row input {
+    margin-top: 4px;
+    accent-color: var(--green);
+}
+
+/* PAYMENT */
+
+.payment-intro {
+    background: #f1f6f0;
+    border: 1px solid #e0eade;
+    padding: 17px;
+    border-radius: 11px;
+    margin-bottom: 22px;
+}
+
+.payment-intro h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.payment-intro p {
+    font-size: 12px;
+    color: #5e6c60;
+}
+
+.payment-option {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.payment-option input {
+    margin-top: 4px;
+    accent-color: var(--green);
+}
+
+.payment-option strong {
+    display: block;
+    font-size: 13px;
+}
+
+.payment-option small {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.payment-option .amount {
+    margin-left: auto;
+    font-weight: 700;
+    color: var(--green);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.payment-summary {
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 18px;
+    margin-top: 22px;
+}
+
+.payment-summary h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 12px;
+    margin: 10px 0;
+}
+
+.summary-row span:first-child {
+    color: var(--muted);
+}
+
+.summary-row span:last-child {
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.summary-total {
+    border-top: 1px solid var(--border);
+    padding-top: 13px;
+    margin-top: 15px;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.secure-note {
+    display: flex;
+    gap: 9px;
+    margin-top: 17px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+/* HOLD */
+
+.hold-notice {
+    background: #f4f7e9;
+    border: 1px solid #dce6c3;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.hold-notice strong {
+    display: block;
+    color: var(--green);
+    font-size: 14px;
+}
+
+.hold-notice p {
+    font-size: 12px;
+    color: #64705b;
+    margin-top: 4px;
+}
+
+.countdown {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+/* BUTTONS */
+
+.form-error {
+    color: var(--danger);
+    font-size: 12px;
+    margin-top: 12px;
+}
+
+.form-success {
+    color: var(--success);
+    font-size: 12px;
+    margin-top: 12px;
+}
+
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    padding: 13px 19px;
+    font-size: 13px;
+    font-weight: 700;
+    min-height: 47px;
+    transition: background .15s;
+}
+
+.btn-primary {
+    background: var(--green);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--green-dark);
+}
+
+.btn-secondary {
+    background: white;
+    color: var(--green);
+    border-color: var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--sage);
+}
+
+.btn:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.button-row .btn-primary {
+    margin-left: auto;
+}
+
+/* RIGHT SUMMARY */
+
+.summary-card {
+    padding: 23px;
+    position: sticky;
+    top: 100px;
+}
+
+.summary-card h3 {
+    font-size: 20px;
+    margin-bottom: 18px;
+}
+
+.summary-empty {
+    background: var(--ivory);
+    padding: 15px;
+    border-radius: 9px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.summary-service {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.summary-detail {
+    display: flex;
+    gap: 10px;
+    margin: 14px 0;
+    align-items: flex-start;
+}
+
+.summary-icon {
+    width: 33px;
+    height: 33px;
+    border-radius: 8px;
+    background: var(--sage);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    font-size: 15px;
+}
+
+.summary-detail small {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+}
+
+.summary-detail strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.summary-divider {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 17px 0;
+}
+
+.summary-price {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 12px;
+    margin: 12px 0;
+}
+
+.summary-price span:first-child {
+    color: var(--muted);
+}
+
+.summary-price strong {
+    color: var(--green);
+}
+
+.summary-note {
+    margin-top: 18px;
+    background: #f4f7f2;
+    border-radius: 9px;
+    padding: 13px;
+    font-size: 11px;
+    color: #58645a;
+}
+
+.help-card {
+    margin-top: 18px;
+    padding: 18px;
+    background: #eaf0e7;
+    border-radius: 12px;
+}
+
+.help-card h3 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.help-card p {
+    color: #657067;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.help-card a {
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* CONFIRMATION */
+
+.confirmation {
+    max-width: 680px;
+    padding: 0 20px;
+    margin: 0 auto 70px;
+}
+
+.confirmation-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: var(--shadow);
+}
+
+.success-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 22px;
+    border-radius: 50%;
+    background: #e2f1e5;
+    color: var(--success);
+    display: grid;
+    place-items: center;
+    font-size: 33px;
+}
+
+.confirmation-card h2 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.confirmation-card > p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.booking-reference {
+    margin: 25px 0;
+    padding: 17px;
+    background: var(--ivory);
+    border-radius: 10px;
+}
+
+.booking-reference small {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.booking-reference strong {
+    display: block;
+    color: var(--green);
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin-top: 5px;
+}
+
+.tracking-code {
+    margin-top: 15px;
+    padding: 13px;
+    background: #f0f6ed;
+    border-radius: 9px;
+    overflow-wrap: anywhere;
+}
+
+.tracking-code small {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.tracking-code strong {
+    display: block;
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: var(--green);
+    margin-top: 4px;
+}
+
+.tracking-warning {
+    margin-top: 9px;
+    font-size: 11px;
+    color: #6e766c;
+}
+
+.confirmation-details {
+    text-align: left;
+    margin: 24px 0;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.confirmation-details .summary-row {
+    font-size: 13px;
+}
+
+.confirmation-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+/* FOOTER */
+
+.footer {
+    border-top: 1px solid var(--border);
+    background: white;
+    padding: 28px 20px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.footer strong {
+    color: var(--green);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+    .booking-layout {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 720px;
+    }
+
+    .summary-card {
+        position: static;
+        order: -1;
+    }
+
+    .summary-card h3 {
+        margin-bottom: 12px;
+    }
+
+    .summary-note {
+        display: none;
+    }
+}
+
+@media (max-width: 560px) {
+    .nav-inner {
+        height: 67px;
+        padding: 0 16px;
+    }
+
+    .brand-name {
+        font-size: 16px;
+    }
+
+    .brand-subtitle {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+    }
+
+    .brand-mark {
+        width: 37px;
+        height: 37px;
+    }
+
+    .nav-actions {
+        gap: 10px;
+    }
+
+    .nav-link {
+        display: none;
+    }
+
+    .page-intro {
+        padding: 32px 18px 25px;
+    }
+
+    .progress-wrap {
+        padding: 0 12px;
+        margin-bottom: 22px;
+    }
+
+    .progress-step {
+        font-size: 10px;
+    }
+
+    .progress-number {
+        width: 32px;
+        height: 32px;
+    }
+
+    .progress::before {
+        top: 15px;
+    }
+
+    .booking-layout {
+        padding: 0 12px;
+        gap: 15px;
+        margin-bottom: 40px;
+    }
+
+    .booking-card {
+        padding: 20px 15px;
+        border-radius: 12px;
+    }
+
+    .summary-card {
+        padding: 17px;
+        border-radius: 12px;
+    }
+
+    .step-heading {
+        margin-bottom: 20px;
+    }
+
+    .step-heading h2 {
+        font-size: 23px;
+    }
+
+    .service-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .service-option {
+        padding: 14px;
+    }
+
+    .calendar-grid {
+        gap: 4px;
+    }
+
+    .day-button {
+        padding: 9px 0;
+        border-radius: 7px;
+    }
+
+    .day-name {
+        font-size: 9px;
+    }
+
+    .day-number {
+        font-size: 13px;
+    }
+
+    .slots-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .time-slot {
+        padding: 11px 2px;
+        font-size: 11px;
+    }
+
+    .form-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 15px;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .button-row {
+        gap: 8px;
+    }
+
+    .button-row .btn {
+        padding: 12px;
+        font-size: 12px;
+    }
+
+    .confirmation-card {
+        padding: 27px 17px;
+    }
+
+    .confirmation-card h2 {
+        font-size: 26px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<header class="navbar">
+    <div class="nav-inner">
+
+        <a href="index.html" class="brand" aria-label="KALI DENTAL CLINIC homepage">
+            <div class="brand-mark">K</div>
+            <div>
+                <div class="brand-name">KALI DENTAL CLINIC</div>
+                <div class="brand-subtitle">Your Smile, Our Care</div>
+            </div>
+        </a>
+
+        <div class="nav-actions">
+            <a href="track-booking.html" class="nav-link">Track Booking</a>
+
+            <button
+                class="menu-button"
+                id="menuButton"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="menuPanel">
+                ☰
+            </button>
+        </div>
+
+        <nav class="menu-panel" id="menuPanel" hidden>
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="services.html">Our Services</a>
+            <a href="contact.html">Contact</a>
+            <a href="track-booking.html">Track Booking</a>
+        </nav>
+
+    </div>
+</header>
+
+<!-- INTRO -->
+<section class="page-intro" id="pageIntro">
+    <div class="eyebrow">KALI DENTAL CLINIC</div>
+    <h1>Book Your Appointment</h1>
+    <p>
+        Choose your service, find a convenient time, and book your visit
+        in just a few simple steps.
+    </p>
+</section>
+
+<!-- PROGRESS -->
+<div class="progress-wrap" id="progressWrap">
+    <div class="progress">
+
+        <div class="progress-step active" data-progress="1">
+            <div class="progress-number">1</div>
+            <span>Service</span>
+        </div>
+
+        <div class="progress-step" data-progress="2">
+            <div class="progress-number">2</div>
+            <span>Date & Time</span>
+        </div>
+
+        <div class="progress-step" data-progress="3">
+            <div class="progress-number">3</div>
+            <span>Your Details</span>
+        </div>
+
+        <div class="progress-step" data-progress="4">
+            <div class="progress-number">4</div>
+            <span>Payment</span>
+        </div>
+
+    </div>
+</div>
+
+<!-- BOOKING LAYOUT -->
+<main class="booking-layout" id="bookingLayout">
+
+    <!-- MAIN BOOKING CARD -->
+    <section class="booking-card">
+
+        <!-- STEP 1: SERVICE -->
+        <div class="booking-step" id="step1">
+
+            <div class="step-heading">
+                <h2>What service do you need?</h2>
+                <p>Select the dental service you would like to book.</p>
+            </div>
+
+            <div class="service-grid" id="serviceGrid"></div>
+
+            <div class="button-row">
+                <a href="index.html" class="btn btn-secondary">
+                    ← Back to Website
+                </a>
+
+                <button class="btn btn-primary" id="continueToDate">
+                    Continue →
+                </button>
+            </div>
+
+            <div class="form-error" id="serviceError" hidden></div>
+
+        </div>
+
+        <!-- STEP 2: DATE AND TIME -->
+        <div class="booking-step" id="step2" hidden>
+
+            <div class="step-heading">
+                <h2>Choose a date and time</h2>
+                <p>
+                    Select an available appointment within the next eight days.
+                </p>
+            </div>
+
+            <div class="calendar-top">
+                <h3 id="weekLabel">This week</h3>
+
+                <div class="week-nav">
+                    <button
+                        type="button"
+                        id="previousWeek"
+                        aria-label="Previous week">
+                        ←
+                    </button>
+
+                    <button
+                        type="button"
+                        id="nextWeek"
+                        aria-label="Next week">
+                        →
+                    </button>
+                </div>
+            </div>
+
+            <div class="calendar-grid" id="calendarGrid"></div>
+
+            <div class="calendar-legend">
+                <div class="legend-item">
+                    <span class="legend-dot"></span>
+                    Available
+                </div>
+
+                <div class="legend-item">
+                    <span class="legend-dot selected-dot"></span>
+                    Selected
+                </div>
+
+                <div class="legend-item">
+                    <span class="legend-dot unavailable-dot"></span>
+                    Unavailable
+                </div>
+            </div>
+
+            <div class="slots-heading" id="slotsHeading">
+                Available appointment times
+            </div>
+
+            <div class="slots-grid" id="slotsGrid"></div>
+
+            <p class="slots-note">
+                Unavailable times cannot be selected. Actual appointment
+                availability must be confirmed by the booking system.
+            </p>
+
+            <div class="button-row">
+                <button class="btn btn-secondary" id="backToService">
+                    ← Back
+                </button>
+
+                <button class="btn btn-primary" id="continueToDetails">
+                    Continue →
+                </button>
+            </div>
+
+            <div class="form-error" id="dateError" hidden></div>
+
+        </div>
+
+        <!-- STEP 3: PATIENT DETAILS -->
+        <div class="booking-step" id="step3" hidden>
+
+            <div class="step-heading">
+                <h2>Who is the appointment for?</h2>
+                <p>Enter the contact and patient details below.</p>
+            </div>
+
+            <div class="section-label">Booking for</div>
+
+            <div class="radio-panel">
+
+                <label class="radio-choice">
+                    <input
+                        type="radio"
+                        name="bookingFor"
+                        value="self"
+                        checked>
+                    Myself
+                </label>
+
+                <label class="radio-choice">
+                    <input
+                        type="radio"
+                        name="bookingFor"
+                        value="someone">
+                    Someone else
+                </label>
+
+            </div>
+
+            <div class="section-label">Patient information</div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label class="field-label" for="patientFirstName">
+                        Patient's first name *
+                    </label>
+
+                    <input
+                        class="form-control"
+                        id="patientFirstName"
+                        autocomplete="given-name"
+                        placeholder="First name"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label class="field-label" for="patientLastName">
+                        Patient's last name *
+                    </label>
+
+                    <input
+                        class="form-control"
+                        id="patientLastName"
+                        autocomplete="family-name"
+                        placeholder="Last name"
+                        required>
+                </div>
+
+            </div>
+
+            <div class="section-label">Contact information</div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label class="field-label" for="contactName">
+                        Contact person's name *
+                    </label>
+
+                    <input
+                        class="form-control"
+                        id="contactName"
+                        autocomplete="name"
+                        placeholder="Full name"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label class="field-label" for="contactPhone">
+                        Ghanaian mobile number *
+                    </label>
+
+                    <input
+                        class="form-control"
+                        id="contactPhone"
+                        type="tel"
+                        inputmode="numeric"
+                        autocomplete="tel-national"
+                        placeholder="0559411844"
+                        maxlength="10"
+                        required>
+
+                    <div class="form-help">
+                        Enter 10 digits, for example 0559411844.
+                    </div>
+                </div>
+
+                <div class="form-group full">
+                    <label class="field-label" for="contactEmail">
+                        Email address *
+                    </label>
+
+                    <input
+                        class="form-control"
+                        id="contactEmail"
+                        type="email"
+                        autocomplete="email"
+                        placeholder="you@example.com"
+                        required>
+
+                    <div class="form-help">
+                        Use an email address you can access for booking
+                        information and tracking instructions.
+                    </div>
+                </div>
+
+                <div class="form-group full">
+                    <label class="field-label" for="bookingNotes">
+                        Additional information (optional)
+                    </label>
+
+                    <input
+                        class="form-control"
+                        id="bookingNotes"
+                        maxlength="500"
+                        placeholder="Anything you would like the clinic to know?">
+                </div>
+
+            </div>
+
+            <label class="checkbox-row">
+                <input type="checkbox" id="agreePolicy">
+
+                <span>
+                    I understand that appointment availability and booking
+                    confirmation depend on the clinic's booking system.
+                    I agree to the clinic's booking and cancellation policy.
+                </span>
+            </label>
+
+            <div class="button-row">
+                <button class="btn btn-secondary" id="backToDate">
+                    ← Back
+                </button>
+
+                <button class="btn btn-primary" id="continueToPayment">
+                    Continue to Payment →
+                </button>
+            </div>
+
+            <div class="form-error" id="detailsError" hidden></div>
+
+        </div>
+
+        <!-- STEP 4: PAYMENT -->
+        <div class="booking-step" id="step4" hidden>
+
+            <div class="step-heading">
+                <h2>Complete your booking</h2>
+                <p>Check your appointment details and payment amount.</p>
+            </div>
+
+            <div class="hold-notice" id="holdNotice" hidden>
+                <strong>Your appointment is temporarily reserved</strong>
+                <p>
+                    Complete payment before your reservation expires:
+                    <span class="countdown" id="countdown">05:00</span>.
+                </p>
+            </div>
+
+            <div class="payment-intro">
+                <h3>Payment details</h3>
+                <p>
+                    Consultation appointments require full payment.
+                    Other services require the booking deposit shown below.
+                </p>
+            </div>
+
+            <div id="paymentOptions"></div>
+
+            <div class="payment-summary">
+
+                <h3>Your appointment</h3>
+
+                <div class="summary-row">
+                    <span>Service</span>
+                    <span id="paymentService">—</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Date</span>
+                    <span id="paymentDate">—</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Time</span>
+                    <span id="paymentTime">—</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Booking amount</span>
+                    <span id="paymentAmount">—</span>
+                </div>
+
+                <div class="summary-row summary-total">
+                    <span>Pay now</span>
+                    <span id="paymentTotal">—</span>
+                </div>
+
+                <div class="form-help">
+                    For deposit bookings, the remaining treatment balance
+                    is payable according to the clinic's arrangements.
+                </div>
+
+            </div>
+
+            <div class="secure-note">
+                <span>🔒</span>
+
+                <span>
+                    In the live system, payment must be securely verified
+                    before your appointment is confirmed.
+                </span>
+            </div>
+
+            <div class="button-row">
+                <button class="btn btn-secondary" id="backToDetails">
+                    ← Back
+                </button>
+
+                <!-- DEMO BUTTON ONLY -->
+                <button class="btn btn-primary" id="payButton">
+                    Continue to Payment
+                </button>
+            </div>
+
+            <div class="form-error" id="paymentError" hidden></div>
+
+        </div>
+
+    </section>
+
+    <!-- BOOKING SUMMARY -->
+    <aside>
+
+        <div class="summary-card">
+
+            <h3>Your Booking</h3>
+
+            <div id="summaryEmpty" class="summary-empty">
+                Your selected service, appointment time and payment amount
+                will appear here as you complete the steps.
+            </div>
+
+            <div id="summaryContent" hidden>
+
+                <div class="summary-service" id="summaryService">
+                    No service selected
+                </div>
+
+                <div class="summary-detail">
+                    <div class="summary-icon">📅</div>
+                    <div>
+                        <small>Appointment date</small>
+                        <strong id="summaryDate">Not selected</strong>
+                    </div>
+                </div>
+
+                <div class="summary-detail">
+                    <div class="summary-icon">◷</div>
+                    <div>
+                        <small>Appointment time</small>
+                        <strong id="summaryTime">Not selected</strong>
+                    </div>
+                </div>
+
+                <div class="summary-detail">
+                    <div class="summary-icon">👤</div>
+                    <div>
+                        <small>Patient</small>
+                        <strong id="summaryPatient">Not entered</strong>
+                    </div>
+                </div>
+
+                <hr class="summary-divider">
+
+                <div class="summary-price">
+                    <span>Booking amount</span>
+                    <strong id="summaryPrice">GH₵0.00</strong>
+                </div>
+
+                <div class="summary-price">
+                    <span>Due now</span>
+                    <strong id="summaryDue">GH₵0.00</strong>
+                </div>
+
+                <div class="summary-note">
+                    You can go back to an earlier step to change your
+                    service, appointment time or patient details.
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="help-card">
+            <h3>Need assistance?</h3>
+            <p>Contact the clinic if you need help with your booking.</p>
+            <a href="tel:+233559411844">0559411844</a>
+        </div>
+
+    </aside>
+
+</main>
+
+<!-- CONFIRMATION -->
+<section class="confirmation" id="confirmation" hidden>
+
+    <div class="confirmation-card">
+
+        <div class="success-icon">✓</div>
+
+        <div class="eyebrow">BOOKING CONFIRMATION</div>
+
+        <h2>You're all set!</h2>
+
+        <p>
+            Your payment has been marked successful in this demonstration.
+            A real booking requires verified payment and backend confirmation.
+        </p>
+
+        <div class="booking-reference">
+            <small>Demonstration booking reference</small>
+            <strong id="confirmationReference">KALI-DEMO</strong>
+        </div>
+
+        <div class="confirmation-details">
+
+            <div class="summary-row">
+                <span>Patient</span>
+                <span id="confirmationPatient">—</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Service</span>
+                <span id="confirmationService">—</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Date</span>
+                <span id="confirmationDate">—</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Time</span>
+                <span id="confirmationTime">—</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Payment</span>
+                <span id="confirmationPayment">—</span>
+            </div>
+
+        </div>
+
+        <div class="tracking-code">
+            <small>Demonstration tracking code</small>
+            <strong id="confirmationTracking">DEMO-CODE</strong>
+        </div>
+
+        <p class="tracking-warning">
+            This prototype does not save bookings or create secure tracking
+            credentials. In the live system, store the tracking-code hash
+            securely and show the full code only once.
+        </p>
+
+        <div class="confirmation-actions">
+
+            <a href="track-booking.html" class="btn btn-secondary">
+                Track My Booking
+            </a>
+
+            <button class="btn btn-primary" id="bookAnother">
+                Book Another Appointment
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer class="footer">
+    <p>
+        © <span id="year"></span>
+        <strong>KALI DENTAL CLINIC</strong>.
+        All rights reserved.
+    </p>
+</footer>
+
+<script>
+/*
+ * FRONTEND DEMONSTRATION
+ *
+ * This file does not connect to Supabase or Paystack.
+ * Prices, opening hours and unavailable slots below are examples.
+ *
+ * Production requirements:
+ * - Load services and prices from Supabase.
+ * - Load real availability from the backend.
+ * - Create atomic, five-minute appointment holds on the server.
+ * - Initialise Paystack from a secure backend endpoint.
+ * - Verify payment server-side before confirming an appointment.
+ * - Generate and securely store tracking credentials on the backend.
+ */
+
+const services = [
+    {
+        id: "consultation",
+        name: "Dental Consultation",
+        description: "Discuss your dental concerns with the clinic.",
+        price: 100,
+        deposit: 100,
+        paymentType: "full"
+    },
+    {
+        id: "cleaning",
+        name: "Teeth Cleaning & Polishing",
+        description: "Professional cleaning and polishing.",
+        price: 350,
+        deposit: 100,
+        paymentType: "deposit"
+    },
+    {
+        id: "filling",
+        name: "Tooth Filling",
+        description: "Treatment for suitable cavities.",
+        price: 300,
+        deposit: 100,
+        paymentType: "deposit"
+    },
+    {
+        id: "extraction",
+        name: "Tooth Extraction",
+        description: "Assessment and extraction when appropriate.",
+        price: 250,
+        deposit: 100,
+        paymentType: "deposit"
+    },
+    {
+        id: "root-canal",
+        name: "Root Canal Treatment",
+        description: "Treatment for an affected tooth.",
+        price: 1500,
+        deposit: 150,
+        paymentType: "deposit"
+    },
+    {
+        id: "whitening",
+        name: "Teeth Whitening",
+        description: "Discuss suitable whitening options.",
+        price: 1500,
+        deposit: 150,
+        paymentType: "deposit"
+    },
+    {
+        id: "crowns",
+        name: "Dental Crowns",
+        description: "Discuss restorative treatment options.",
+        price: 2000,
+        deposit: 200,
+        paymentType: "deposit"
+    },
+    {
+        id: "bridges",
+        name: "Dental Bridges",
+        description: "Discuss tooth replacement options.",
+        price: 2500,
+        deposit: 250,
+        paymentType: "deposit"
+    },
+    {
+        id: "braces",
+        name: "Braces Consultation",
+        description: "Discuss orthodontic treatment options.",
+        price: 150,
+        deposit: 150,
+        paymentType: "full"
+    },
+    {
+        id: "children",
+        name: "Children's Dental Care",
+        description: "Dental care for children.",
+        price: 150,
+        deposit: 100,
+        paymentType: "deposit"
+    }
+];
+
+const demoTimes = [
+    "09:00 AM",
+    "09:30 AM",
+    "10:00 AM",
+    "10:30 AM",
+    "11:00 AM",
+    "11:30 AM",
+    "12:00 PM",
+    "01:00 PM",
+    "01:30 PM",
+    "02:00 PM",
+    "02:30 PM",
+    "03:00 PM"
+];
+
+const state = {
+    step: 1,
+    serviceId: null,
+    date: null,
+    time: null,
+    patientType: "self",
+    holdUntil: null,
+    holdTimer: null,
+    demoBookedSlots: new Set(),
+    paymentMode: "required"
+};
+
+const $ = id => document.getElementById(id);
+
+const money = amount =>
+    new Intl.NumberFormat("en-GH", {
+        style: "currency",
+        currency: "GHS",
+        minimumFractionDigits: 2
+    }).format(amount);
+
+function localDateString(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+function dateFromString(value) {
+    const [year, month, day] = value.split("-").map(Number);
+
+    return new Date(year, month - 1, day);
+}
+
+function addDays(date, amount) {
+    const result = new Date(date);
+    result.setDate(result.getDate() + amount);
+    return result;
+}
+
+function formatDate(value, options = {}) {
+    if (!value) return "Not selected";
+
+    return dateFromString(value).toLocaleDateString(
+        "en-GB",
+        options.month
+            ? options
+            : {
+                weekday: "short",
+                day: "numeric",
+                month: "short",
+                year: "numeric"
+            }
+    );
+}
+
+function getToday() {
+    const now = new Date();
+
+    now.setHours(0, 0, 0, 0);
+
+    return now;
+}
+
+function getMaxDate() {
+    return addDays(getToday(), 8);
+}
+
+function getSelectedService() {
+    return services.find(service => service.id === state.serviceId) || null;
+}
+
+function getAmountDue() {
+    const service = getSelectedService();
+
+    if (!service) return 0;
+
+    return service.paymentType === "full"
+        ? service.price
+        : service.deposit;
+}
+
+function showError(id, message) {
+    const element = $(id);
+
+    element.textContent = message;
+    element.hidden = false;
+}
+
+function clearError(id) {
+    $(id).textContent = "";
+    $(id).hidden = true;
+}
+
+function renderServices() {
+    const grid = $("serviceGrid");
+
+    grid.innerHTML = services.map(service => `
+        <label class="service-option ${
+            state.serviceId === service.id ? "selected" : ""
+        }">
+
+            <input
+                class="service-radio"
+                type="radio"
+                name="service"
+                value="${service.id}"
+                ${state.serviceId === service.id ? "checked" : ""}>
+
+            <div class="service-info">
+                <div class="service-name">${service.name}</div>
+                <div class="service-description">${service.description}</div>
+
+                <span class="service-price">
+                    ${
+                        service.id === "consultation"
+                            ? "Consultation fee: " + money(service.price)
+                            : "From " + money(service.price)
+                    }
+                </span>
+            </div>
+
+        </label>
+    `).join("");
+
+    grid.querySelectorAll('input[name="service"]').forEach(input => {
+        input.addEventListener("change", () => {
+            state.serviceId = input.value;
+
+            renderServices();
+            renderSummary();
+        });
+    });
+}
+
+function updateProgress() {
+    document.querySelectorAll(".progress-step").forEach(element => {
+        const number = Number(element.dataset.progress);
+
+        element.classList.toggle("active", number === state.step);
+        element.classList.toggle("completed", number < state.step);
+
+        const numberElement = element.querySelector(".progress-number");
+
+        numberElement.textContent =
+            number < state.step ? "✓" : String(number);
+    });
+}
+
+function goToStep(step) {
+    state.step = step;
+
+    document.querySelectorAll(".booking-step").forEach(element => {
+        element.hidden = true;
+    });
+
+    $("step" + step).hidden = false;
+
+    updateProgress();
+    renderSummary();
+
+    /*
+     * Deliberately no scrollIntoView().
+     * Changing steps does not force the user to scroll back to the top.
+     */
+}
+
+function renderSummary() {
+    const service = getSelectedService();
+
+    $("summaryEmpty").hidden = Boolean(service);
+    $("summaryContent").hidden = !service;
+
+    if (!service) return;
+
+    $("summaryService").textContent = service.name;
+
+    $("summaryDate").textContent = state.date
+        ? formatDate(state.date)
+        : "Not selected";
+
+    $("summaryTime").textContent = state.time || "Not selected";
+
+    const first = $("patientFirstName").value.trim();
+    const last = $("patientLastName").value.trim();
+
+    $("summaryPatient").textContent =
+        first || last
+            ? `${first} ${last}`.trim()
+            : "Not entered";
+
+    $("summaryPrice").textContent =
+        service.paymentType === "full"
+            ? money(service.price)
+            : money(service.price) + " estimated total";
+
+    $("summaryDue").textContent = money(getAmountDue());
+}
+
+/* CALENDAR */
+
+function getStartOfWeek(date) {
+    const result = new Date(date);
+    const day = result.getDay();
+
+    result.setDate(result.getDate() + (day === 0 ? -6 : 1 - day));
+    result.setHours(0, 0, 0, 0);
+
+    return result;
+}
+
+let visibleWeekStart = getStartOfWeek(getToday());
+
+function renderCalendar() {
+    const grid = $("calendarGrid");
+    const today = getToday();
+    const maxDate = getMaxDate();
+
+    const lastVisibleWeekStart = getStartOfWeek(maxDate);
+
+    $("previousWeek").disabled =
+        visibleWeekStart <= getStartOfWeek(today);
+
+    $("nextWeek").disabled =
+        visibleWeekStart >= lastVisibleWeekStart;
+
+    const endOfWeek = addDays(visibleWeekStart, 6);
+
+    $("weekLabel").textContent =
+        visibleWeekStart.getMonth() === endOfWeek.getMonth()
+            ? visibleWeekStart.toLocaleDateString("en-GB", {
+                month: "long",
+                year: "numeric"
+            })
+            : visibleWeekStart.toLocaleDateString("en-GB", {
+                month: "short"
+            }) + " – " + endOfWeek.toLocaleDateString("en-GB", {
+                month: "short",
+                year: "numeric"
+            });
+
+    grid.innerHTML = "";
+
+    for (let index = 0; index < 7; index++) {
+        const date = addDays(visibleWeekStart, index);
+        const dateString = localDateString(date);
+
+        const isUnavailable = date < today || date > maxDate;
+        const isSelected = state.date === dateString;
+
+        const button = document.createElement("button");
+
+        button.type = "button";
+        button.className =
+            "day-button" + (isSelected ? " selected" : "");
+
+        button.disabled = isUnavailable;
+
+        button.innerHTML = `
+            <span class="day-name">
+                ${date.toLocaleDateString("en-GB", {
+                    weekday: "short"
+                })}
+            </span>
+
+            <span class="day-number">${date.getDate()}</span>
+        `;
+
+        button.addEventListener("click", () => {
+            state.date = dateString;
+            state.time = null;
+
+            renderCalendar();
+            renderTimeSlots();
+            renderSummary();
+        });
+
+        grid.appendChild(button);
+    }
+}
+
+/*
+ * DEMONSTRATION ONLY:
+ * A few slots are marked unavailable so the calendar can be tested.
+ *
+ * These are not real bookings.
+ * Production availability must come from Supabase.
+ */
+function isDemoSlotUnavailable(dateString, time) {
+    const demoUnavailable = {
+        "09:30 AM": 2,
+        "11:00 AM": 5,
+        "01:30 PM": 1
+    };
+
+    const date = dateFromString(dateString);
+
+    return demoUnavailable[time] === date.getDate() % 7;
+}
+
+function renderTimeSlots() {
+    const grid = $("slotsGrid");
+
+    grid.innerHTML = "";
+
+    if (!state.date) {
+        grid.innerHTML = `
+            <p class="muted" style="grid-column:1/-1;font-size:13px;">
+                Select a date to view appointment times.
+            </p>
+        `;
+
+        $("slotsHeading").textContent = "Available appointment times";
+
+        return;
+    }
+
+    $("slotsHeading").textContent =
+        "Available times — " + formatDate(state.date);
+
+    demoTimes.forEach(time => {
+        const button = document.createElement("button");
+
+        const unavailable = isDemoSlotUnavailable(state.date, time);
+
+        button.type = "button";
+        button.className =
+            "time-slot" + (state.time === time ? " selected" : "");
+
+        button.textContent = time;
+
+        /*
+         * Do not allow selection of demonstration-unavailable slots.
+         * A production implementation must also check the server.
+         */
+        button.disabled = unavailable;
+
+        if (unavailable) {
+            button.title = "Unavailable in this demonstration";
+        }
+
+        button.addEventListener("click", () => {
+            if (button.disabled) return;
+
+            state.time = time;
+
+            renderTimeSlots();
+            renderSummary();
+        });
+
+        grid.appendChild(button);
+    });
+}
+
+$("previousWeek").addEventListener("click", () => {
+    const minimumWeek = getStartOfWeek(getToday());
+
+    visibleWeekStart = addDays(visibleWeekStart, -7);
+
+    if (visibleWeekStart < minimumWeek) {
+        visibleWeekStart = minimumWeek;
+    }
+
+    renderCalendar();
+});
+
+$("nextWeek").addEventListener("click", () => {
+    const maximumWeek = getStartOfWeek(getMaxDate());
+
+    visibleWeekStart = addDays(visibleWeekStart, 7);
+
+    if (visibleWeekStart > maximumWeek) {
+        visibleWeekStart = maximumWeek;
+    }
+
+    renderCalendar();
+});
+
+/* STEP NAVIGATION */
+
+$("continueToDate").addEventListener("click", () => {
+    clearError("serviceError");
+
+    if (!state.serviceId) {
+        showError("serviceError", "Please select a dental service.");
+        return;
+    }
+
+    renderCalendar();
+    renderTimeSlots();
+    goToStep(2);
+});
+
+$("backToService").addEventListener("click", () => {
+    goToStep(1);
+});
+
+$("continueToDetails").addEventListener("click", () => {
+    clearError("dateError");
+
+    if (!state.date || !state.time) {
+        showError(
+            "dateError",
+            "Please select both an appointment date and time."
+        );
+
+        return;
+    }
+
+    goToStep(3);
+});
+
+$("backToDate").addEventListener("click", () => {
+    goToStep(2);
+});
+
+$("backToDetails").addEventListener("click", () => {
+    goToStep(3);
+});
+
+/* PATIENT INFORMATION */
+
+document.querySelectorAll('input[name="bookingFor"]').forEach(input => {
+    input.addEventListener("change", () => {
+        state.patientType = input.value;
+
+        if (state.patientType === "self") {
+            const contactName = $("contactName").value.trim();
+
+            if (contactName && !$("patientFirstName").value.trim()) {
+                const parts = contactName.split(/\s+/);
+
+                $("patientFirstName").value = parts[0] || "";
+                $("patientLastName").value =
+                    parts.slice(1).join(" ");
+            }
+        }
+
+        renderSummary();
+    });
+});
+
+$("patientFirstName").addEventListener("input", renderSummary);
+$("patientLastName").addEventListener("input", renderSummary);
+
+$("contactName").addEventListener("input", () => {
+    if (state.patientType !== "self") return;
+
+    const parts = $("contactName").value.trim().split(/\s+/);
+
+    $("patientFirstName").value = parts[0] || "";
+    $("patientLastName").value = parts.slice(1).join(" ");
+
+    renderSummary();
+});
+
+$("continueToPayment").addEventListener("click", () => {
+    clearError("detailsError");
+
+    const first = $("patientFirstName").value.trim();
+    const last = $("patientLastName").value.trim();
+    const contact = $("contactName").value.trim();
+    const phone = $("contactPhone").value.trim();
+    const email = $("contactEmail").value.trim();
+    const agreed = $("agreePolicy").checked;
+
+    if (!first || !last || !contact || !phone || !email) {
+        showError(
+            "detailsError",
+            "Please complete all required fields."
+        );
+
+        return;
+    }
+
+    /*
+     * Ghanaian local mobile number format:
+     * 10 digits beginning with a recognised mobile prefix.
+     *
+     * This checks format only, not ownership or actual connectivity.
+     */
+    const ghanaPhonePattern =
+        /^(020|023|024|025|026|027|028|029|030|050|053|054|055|056|057|059)\d{7}$/;
+
+    if (!ghanaPhonePattern.test(phone)) {
+        showError(
+            "detailsError",
+            "Enter a valid 10-digit Ghanaian mobile number, such as 0559411844. Do not include +233."
+        );
+
+        return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+        showError(
+            "detailsError",
+            "Please enter a valid email address."
+        );
+
+        return;
+    }
+
+    if (!agreed) {
+        showError(
+            "detailsError",
+            "Please confirm that you understand the booking and cancellation policy."
+        );
+
+        return;
+    }
+
+    renderPayment();
+    goToStep(4);
+});
+
+/* PAYMENT SUMMARY */
+
+function renderPayment() {
+    const service = getSelectedService();
+
+    if (!service) return;
+
+    $("paymentService").textContent = service.name;
+    $("paymentDate").textContent = formatDate(state.date);
+    $("paymentTime").textContent = state.time;
+    $("paymentAmount").textContent = money(service.price);
+    $("paymentTotal").textContent = money(getAmountDue());
+
+    const options = $("paymentOptions");
+
+    if (service.paymentType === "full") {
+        options.innerHTML = `
+            <label class="payment-option">
+                <input type="radio" checked disabled>
+
+                <span>
+                    <strong>Full payment</strong>
+                    <small>
+                        The full consultation fee is payable when booking.
+                    </small>
+                </span>
+
+                <span class="amount">${money(service.price)}</span>
+            </label>
+        `;
+    } else {
+        options.innerHTML = `
+            <label class="payment-option">
+                <input type="radio" checked disabled>
+
+                <span>
+                    <strong>Booking deposit</strong>
+                    <small>
+                        Pay the deposit now. The remaining balance is
+                        handled according to the clinic's arrangements.
+                    </small>
+                </span>
+
+                <span class="amount">${money(service.deposit)}</span>
+            </label>
+        `;
+    }
+
+    $("payButton").textContent =
+        "Continue to Payment · " + money(getAmountDue());
+
+    renderSummary();
+}
+
+/* DEMONSTRATION HOLD TIMER */
+
+function startDemoHold() {
+    clearInterval(state.holdTimer);
+
+    state.holdUntil = Date.now() + 5 * 60 * 1000;
+
+    $("holdNotice").hidden = false;
+
+    updateDemoCountdown();
+
+    state.holdTimer = setInterval(updateDemoCountdown, 1000);
+}
+
+function updateDemoCountdown() {
+    if (!state.holdUntil) return;
+
+    const remaining = Math.max(
+        0,
+        Math.ceil((state.holdUntil - Date.now()) / 1000)
+    );
+
+    const minutes = String(Math.floor(remaining / 60)).padStart(2, "0");
+    const seconds = String(remaining % 60).padStart(2, "0");
+
+    $("countdown").textContent = `${minutes}:${seconds}`;
+
+    if (remaining <= 0) {
+        clearInterval(state.holdTimer);
+
+        $("holdNotice").hidden = true;
+
+        state.holdUntil = null;
+
+        $("payButton").disabled = true;
+
+        showError(
+            "paymentError",
+            "The demonstration reservation has expired. Return to the appointment time step to check the time again."
+        );
+    }
+}
+
+/*
+ * This button deliberately does NOT make a real payment.
+ * It simulates a successful payment so the interface can be tested.
+ */
+$("payButton").addEventListener("click", () => {
+    clearError("paymentError");
+
+    if (!state.holdUntil || Date.now() >= state.holdUntil) {
+        showError(
+            "paymentError",
+            "Your demonstration reservation has expired. Please return to the date and time step."
+        );
+
+        return;
+    }
+
+    clearInterval(state.holdTimer);
+
+    state.holdTimer = null;
+
+    /*
+     * A real implementation must redirect to Paystack or open
+     * its checkout flow, then verify the transaction on the server.
+     */
+    $("payButton").disabled = true;
+    $("payButton").textContent = "Processing demonstration…";
+
+    setTimeout(() => {
+        showConfirmation();
+    }, 500);
+});
+
+/* CONFIRMATION */
+
+function makeDemoReference() {
+    return "KALI-DEMO-" +
+        Math.random().toString(36).substring(2, 8).toUpperCase();
+}
+
+function makeDemoTrackingCode() {
+    return "DEMO-" +
+        Math.random().toString(36).substring(2, 10).toUpperCase();
+}
+
+function showConfirmation() {
+    const service = getSelectedService();
+
+    if (!service) return;
+
+    $("confirmationReference").textContent = makeDemoReference();
+
+    $("confirmationTracking").textContent = makeDemoTrackingCode();
+
+    $("confirmationPatient").textContent =
+        `${$("patientFirstName").value.trim()} ${
+            $("patientLastName").value.trim()
+        }`.trim();
+
+    $("confirmationService").textContent = service.name;
+    $("confirmationDate").textContent = formatDate(state.date);
+    $("confirmationTime").textContent = state.time;
+
+    $("confirmationPayment").textContent =
+        money(getAmountDue()) + " (demonstration only)";
+
+    $("bookingLayout").hidden = true;
+    $("progressWrap").hidden = true;
+    $("pageIntro").hidden = true;
+
+    $("confirmation").hidden = false;
+
+    window.scrollTo({
+        top: 0,
+        behavior: "auto"
+    });
+}
+
+/* START A FRESH BOOKING */
+
+$("bookAnother").addEventListener("click", () => {
+    clearInterval(state.holdTimer);
+
+    state.step = 1;
+    state.serviceId = null;
+    state.date = null;
+    state.time = null;
+    state.patientType = "self";
+    state.holdUntil = null;
+
+    $("patientFirstName").value = "";
+    $("patientLastName").value = "";
+    $("contactName").value = "";
+    $("contactPhone").value = "";
+    $("contactEmail").value = "";
+    $("bookingNotes").value = "";
+    $("agreePolicy").checked = false;
+
+    document.querySelector(
+        'input[name="bookingFor"][value="self"]'
+    ).checked = true;
+
+    $("holdNotice").hidden = true;
+
+    $("payButton").disabled = false;
+    $("payButton").textContent = "Continue to Payment";
+
+    $("bookingLayout").hidden = false;
+    $("progressWrap").hidden = false;
+    $("pageIntro").hidden = false;
+
+    $("confirmation").hidden = true;
+
+    clearError("serviceError");
+    clearError("dateError");
+    clearError("detailsError");
+    clearError("paymentError");
+
+    visibleWeekStart = getStartOfWeek(getToday());
+
+    renderServices();
+    renderCalendar();
+    renderTimeSlots();
+    renderSummary();
+
+    goToStep(1);
+
+    window.scrollTo({
+        top: 0,
+        behavior: "auto"
+    });
+});
+
+/* HAMBURGER MENU */
+
+$("menuButton").addEventListener("click", () => {
+    const panel = $("menuPanel");
+    const willOpen = panel.hidden;
+
+    panel.hidden = !willOpen;
+
+    $("menuButton").setAttribute(
+        "aria-expanded",
+        String(willOpen)
+    );
+});
+
+document.addEventListener("click", event => {
+    const panel = $("menuPanel");
+    const button = $("menuButton");
+
+    if (!panel.contains(event.target) && !button.contains(event.target)) {
+        panel.hidden = true;
+        button.setAttribute("aria-expanded", "false");
+    }
+});
+
+/* INITIALISE */
+
+$("year").textContent = new Date().getFullYear();
+
+renderServices();
+renderCalendar();
+renderTimeSlots();
+renderSummary();
+updateProgress();
+</script>
+
+</body>
+</html>

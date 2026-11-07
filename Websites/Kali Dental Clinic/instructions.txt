@@ -1,0 +1,42 @@
+We are preparing the KALI DENTAL CLINIC website for Paystack test-mode integration.
+
+The Supabase project already has two deployed Edge Functions:
+
+1. `paystack-initialize`
+- Accepts a booking ID and private tracking code.
+- Validates the booking.
+- Gets the authoritative payment amount from the database.
+- Initializes a Paystack transaction.
+- Returns the checkout authorization URL and payment reference.
+
+2. `paystack-webhook`
+- Receives Paystack webhook events.
+- Validates the HMAC-SHA512 signature.
+- Checks payment reference, amount and currency.
+- Records successful payments and confirms appointments.
+
+Supabase project URL:
+`https://gwtaaljthqosalpjerrx.supabase.co`
+
+Your preparation tasks:
+
+1. Inspect the existing website and identify the booking flow's payment stage.
+2. Inspect the existing Supabase integration and database schema.
+3. Do not recreate, replace, or rename the deployed Edge Functions.
+4. Prepare the frontend to call `paystack-initialize` using the booking ID and private tracking code.
+5. Redirect patients to the returned Paystack authorization URL.
+6. Prepare the callback page to handle the return from Paystack.
+7. Do not confirm appointments based on the callback URL or browser response. The webhook is responsible for verified payment confirmation.
+8. Display appropriate payment-pending, successful, failed and expired states.
+9. Prevent repeated clicks from creating unnecessary payment attempts.
+10. Keep all Paystack secret keys out of frontend code, HTML, JavaScript and Git.
+11. Do not invent database columns or assume field names. Inspect the actual schema and report mismatches.
+12. Do not change existing booking logic, prices, deposits, design or other functionality without approval.
+
+Before making changes, report:
+- The current booking-to-payment flow.
+- The files that need modification.
+- Any mismatches between the frontend and deployed Edge Functions.
+- Any missing information required to complete integration.
+
+Wait for approval before making significant changes.

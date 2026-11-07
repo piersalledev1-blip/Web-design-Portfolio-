@@ -1,0 +1,433 @@
+DENTAL BOOKING SYSTEM RESEARCH — GHANA
+=====================================
+Prepared: 2026-10-29
+Scope: Ghanaian dental clinic websites that offer (or claim to offer) online
+appointment booking. Focus on the most professional sites in Accra and other
+major cities.
+Method: Web search + direct inspection of public booking pages. Findings are
+based on visible page content/forms. Pages that timed out or hide content
+behind JavaScript are marked "not fully verified".
+
+
+1. EXECUTIVE SUMMARY
+--------------------
+The Ghanaian dental market is NOT yet using true real-time scheduling. Most
+"online booking" is an appointment REQUEST form that a receptionist confirms
+by phone, WhatsApp, SMS or email. The dominant conversion path is
+website -> form or WhatsApp -> human confirmation.
+
+Only a few sites approach a modern self-service flow:
+- Brighton Dental (3-step wizard)
+- Smile Center GH (3-step wizard, price-first)
+- Akcess Dental (single-page branch + procedure + calendar + time)
+- Dentoc Dental (rich single form with branch, reason, hourly slots)
+- myhealthGH (true marketplace: verified clinics, live slot selection, MoMo /
+  card payment, receipts, reschedule/cancel)
+
+Two distinct patterns dominate:
+(A) Premium clinic brand + lead form / WhatsApp handoff.
+(B) Content/SEO-led clinic + basic request form.
+
+There is a clear gap for a well-designed system that offers real availability,
+instant confirmation, mobile-money payment/deposit, reminders and
+self-service rescheduling.
+
+
+2. TIERED REVIEW (most professional first)
+-----------------------------------------
+Tier 1 — Most professional / closest to a real booking product
+
+1) Akcess Dental — akcessdental.com/appointment
+   - Modern React-style site, clean brand.
+   - Single-page booking: branch selector (North Legon, Oyarifa, Ho),
+     procedure selector with description + duration (e.g. checkup 60 min,
+     cleaning 45 min), calendar date picker, time selection, patient details,
+     optional referral, optional notes.
+   - "We'll confirm your appointment within 24 hours."
+   - Reset form / Submit appointment.
+   - Multi-branch + multi-service handled well. Still request-based.
+
+2) myhealthGH — myhealthgh.com
+   - Health marketplace, not a single clinic. The most "system" of the set.
+   - Patients choose a verified doctor, then clinic + date + time on one
+     screen.
+   - Payments: MTN MoMo, Telecel Cash, AirtelTigo Money, Visa/Mastercard via
+     Paystack. Official receipts.
+   - Verification: doctors licensed by Medical & Dental Council of Ghana;
+     facilities licensed by HeFRA.
+   - Family member profiles; book for dependants.
+   - Patient dashboard with reschedule, cancel, receipts.
+   - Coverage: Accra, Kumasi, Tamale, Takoradi; mobile apps "coming soon".
+   - This is the reference model for a marketplace-style build.
+
+3) Dentoc Dental Clinic — dentocdentalclinic.com
+   - 6 branches (East Legon, North Legon, Ashaiman, Weija, Nkawkaw,
+     Sunyani-Fiapre).
+   - Strong single form: full name, phone, email, nearest branch, preferred
+     date, reason (13 options incl emergency), preferred time (hourly slots
+     8am-4pm), notes, honeypot spam field.
+   - "We'll confirm within one business day." Inline success state with
+     fallback phone number.
+   - Insurance logos, 4.9-star social proof, branch directory.
+   - Very complete lead-capture design.
+
+4) Brighton Dental Clinic — brightondentalgh.com/appointment
+   - Clear 3-step wizard: Select Service -> Choose Date & Time -> Personal
+     Information.
+   - 16 services including CBCT, OPG, periapicals, emergency, orthodontics.
+   - Team profiles with credentials (BDS, MDC certified, years, Invisalign
+     certification) and ratings.
+   - Modern, minimal design; good example of progressive disclosure.
+
+5) Smile Center GH — smilecentergh.com/book/simple
+   - 3-step flow: Your details -> Choose a time -> Review.
+   - Copy explicitly says "Just your name and phone number. No account
+     needed."
+   - Price-first model: GHS prices for whitening, polishing, scaling, tooth
+     gems; session packages with total updating clearly.
+   - Cosmetic/whitening focus, before/after and shade tracking language.
+   - Strong example of transparent pricing + low-friction booking.
+
+6) Bethel Dental Clinic — betheldentalghana.com
+   - The most established/premium brand in the sample: "Official Dental
+     Provider of the Ghana Black Stars".
+   - 3 locations (Accra, Kumasi, Tema), international + local insurance list,
+     specialist team, downloadable patient forms, patient information pages.
+   - Booking is a "Request a Consult" contact form: first name, last name,
+     email, phone, "How can we help?", SMS/email consent checkboxes,
+     reCAPTCHA. Phone remains the primary CTA.
+   - Excellent credibility/content; weak self-service booking UX.
+
+7) Amoah Dental — amoahdental.com.gh
+   - Premium "American-standard" positioning; strong trust copy (20+ years US
+     practice, GDA registered, sterilisation protocols, transparent costs).
+   - Booking form: full name, phone, optional email, preferred date, service
+     dropdown (9 options + "Not sure yet"), optional message, honeypot.
+   - On submit it PREPARES A WHATSAPP MESSAGE; the patient taps Send. Details
+     are not stored on the website. Explicit warning not to include sensitive
+     medical information.
+   - Response promise: within 2 hours during opening hours.
+   - Best example of a privacy-conscious WhatsApp handoff.
+
+Tier 2 — Professional clinic sites with basic request forms
+
+8) Total House Clinic — totalhouseclinic.com/book
+   - Multi-specialty (not dental-only) but excellent booking UX copy.
+   - "Tell us what you need and when works for you. Our care team will
+     confirm by phone or SMS within one working day."
+   - Explains next steps: confirmation -> appointment slip with doctor/time/
+     branch -> arrive 10 min early with ID and insurance card.
+   - Notes that time, branch and doctor can be adjusted at confirmation.
+   - 3 branches. Good expectation-setting model.
+
+9) Sinolle Dental Centre — sinolledental.com/booking
+   - Simple form: full name, phone, email, preferred date/time, notes.
+   - Promise: respond within 2 hours. Extended hours (to 10pm by request).
+   - Clean, focused, low-friction; no service or branch selection.
+
+10) Dental Signature — dentalsignaturegh.com/contact-us
+   - Wix form: first name, last name, email, phone, select date, time,
+     "How can we help?", select location (East Legon, Haatso).
+   - Success message: "Thanks for submitting! We'd get back to you ASAP."
+   - Two branches; basic but complete enough.
+
+11) ProDent Specialist Dental Clinic — prodentgh.com/contact
+   - Premium branding, Airport Residential, strong service pages.
+   - "Book Appointment" goes to a generic contact form (name, email, subject,
+     phone, message). No date/time/service fields.
+   - Phone/WhatsApp is the real booking mechanism.
+
+12) Sonrisa Dental Clinic — sonrisagh.com/appointment-booking
+   - Established practice (Tse Addo), strong service/technology content.
+   - Has a dedicated appointment page; form fields not fully verified
+     (page timed out during research).
+
+13) Excel Dental Clinic — exceldentalghana.com/appointment
+   - WordPress booking plugin; visible service dropdown only (general dental
+     care, implants, cosmetic, whitening, pediatric, advanced oral care,
+     comfort dentistry, smile renewal).
+   - 5.0 rating on 492 reviews used prominently. Contact by phone/email.
+   - Booking mechanics are basic and partly hidden by the plugin.
+
+14) Omabod Dental & Wellness — omabodent.com/contact-us
+   - Form: full name, phone, location, "How can we help?", "Where did you
+     hear about us?" (Google / Social Media / Recommendation).
+   - Content/SEO-heavy (blog, service pages, "15 Best Dental Clinics" list).
+   - Strong marketing attribution; booking remains a request form.
+
+15) Ningels Specialist Dental Clinic — ningelsdental.com/page-appointment
+   - WordPress/Contact Form 7: name, email, phone, "Book a date", message,
+     CAPTCHA.
+   - Dated design (2018 footer); no time, service or branch fields.
+
+16) Community Dental Practice — commdentalgh.com
+   - Appointment CTA goes to a third-party provider profile on afridoctor.com
+     (health directory/marketplace).
+   - Phone numbers prominent; Tema location.
+   - Example of outsourcing booking to a directory.
+
+Tier 3 — Booking via WhatsApp / phone only
+
+17) Right Dental Care — rightdentalcare.com/appointments
+   - Says "Kindly submit your preferred time and we will get in touch", but
+     the button opens a WhatsApp link (wa.link/8gpt8l).
+   - Luxury, minimal brand; phone/email; closed Sundays & Mondays.
+   - WhatsApp-first, no on-site form.
+
+18) Platinum Orthodontics & Advanced Dentistry — platinum-dental.com
+   - Premium orthodontics/Invisalign positioning; "Book Online" leads to
+     contact page / phone / WhatsApp (+233 302 998750).
+   - Free mini Invisalign consultation promoted by phone.
+   - No self-service calendar.
+
+19) Parley Dental — parleydental.com/appointment
+   - SEO-heavy ("Best Dental Clinic in Accra/Osu/Ghana" landing pages).
+   - Has an appointment page; form not fully verified (timed out).
+   - Good example of local-SEO strategy rather than booking innovation.
+
+Related non-dental but relevant pattern:
+
+20) Bushroad Medical Center — bushroadmedcenter.com
+   - Appointment requests stored in a Google Sheet via Apps Script, with email
+     alerts and a staff sheet to confirm/complete/cancel.
+   - Publishes a standard price list (e.g. General Dental GHS 250).
+   - Low-cost, practical backend pattern for a small clinic MVP.
+
+
+3. BOOKING FLOW ARCHETYPES
+--------------------------
+A. WhatsApp / phone only
+   CTA -> tel: or wa.me. No data capture. Common, trusted, zero build cost.
+
+B. Basic request form
+   Name, phone, email, preferred date/time, notes -> staff confirms.
+   Examples: Sinolle, Dental Signature, Ningels, ProDent.
+
+C. Rich single-page request
+   Branch + service + calendar + time slot + details + notes.
+   Examples: Akcess, Dentoc.
+
+D. Multi-step wizard
+   Step 1 service, Step 2 date/time, Step 3 personal details, then review.
+   Examples: Brighton, Smile Center.
+
+E. WhatsApp handoff
+   Form composes a pre-filled WhatsApp message; patient sends it.
+   Example: Amoah. Good for privacy and low backend cost.
+
+F. Third-party marketplace / directory
+   Clinic profile on an aggregator; booking + payment handled centrally.
+   Examples: Community Dental via afridoctor, myhealthGH.
+
+G. Instant paid booking (rare)
+   Real availability + online payment + receipt + self-service changes.
+   Example: myhealthGH. Almost no single clinic does this.
+
+
+4. RECURRING UX / CONTENT PATTERNS
+----------------------------------
+Entry points
+- Persistent "Book Appointment" in header and hero.
+- Same CTA repeated on service pages, mid-page sections and footer.
+- Floating WhatsApp button on many sites.
+- Phone number click-to-call in header/footer.
+- Emergency dental care given its own CTA.
+
+Step order (when a flow exists)
+1. Choose service / reason for visit.
+2. Choose branch / location (multi-site clinics).
+3. Choose date.
+4. Choose time.
+5. Enter personal details.
+6. Review and submit.
+7. Confirmation / "what happens next".
+
+Form fields (most to least common)
+- Full name — universal, required.
+- Phone number — universal, required; primary contact key.
+- Email — common; often optional.
+- Preferred date — common.
+- Preferred time — sometimes a free-text preference; better sites use slots.
+- Service / reason — common on richer forms (10-16 options typical).
+- Branch / location — required for multi-site practices.
+- Message / notes — common, optional.
+- "How did you hear about us?" — Omabod.
+- SMS/email consent — Bethel.
+- Referral — Akcess (optional).
+- Honeypot field — Amoah, Dentoc.
+- reCAPTCHA / CAPTCHA — Bethel, Ningels.
+- Insurance details — almost never captured at booking.
+- Date of birth / new-vs-returning patient — rarely captured.
+
+Confirmation model
+- "We'll call/WhatsApp you to confirm" is the norm.
+- Stated response times: 2 hours (Sinolle, Amoah), 24 hours (Akcess),
+  one business day (Dentoc, Total House).
+- Some show a success panel; few send automated email/SMS.
+- Very few offer reschedule/cancel or reminders online.
+- myhealthGH is the exception: instant confirmation, receipts, dashboard.
+
+Trust signals
+- Google review quotes, star ratings and review counts.
+- Before/after galleries.
+- Dentist profiles with BDS/MDC/GDA credentials, years of experience and
+  specialist training.
+- Insurance provider logos.
+- "Official dental provider" / international training claims.
+- Transparent pricing or "pocket-friendly" messaging.
+- Sterilisation, technology and comfort claims.
+- Location map, opening hours, multiple phone lines.
+- Privacy wording and medical-data warnings (Amoah is the strongest).
+
+Content architecture
+Home, About, Services (often individual pages), Team/Doctors, Gallery,
+Reviews/Testimonials, Blog, FAQs, Insurance, Patient information/forms,
+Contact, Book Appointment, Emergency care, Membership plans.
+
+SEO patterns
+- Location landing pages ("Best dental clinic in Accra / Osu / Ghana").
+- Service + city pages (orthodontics in Accra, implants Ghana).
+- Long-form blog and FAQ content.
+- "15 Best Dental Clinics in Accra" listicles used for backlinks and leads.
+
+Commercial patterns
+- Membership / loyalty plans: Smile Club (Amoah), Smile Club (Smile Center),
+  in-house membership plans (Bethel).
+- Session packages and per-session pricing (Smile Center).
+- Free mini consultations for high-value treatments (Platinum/Invisalign).
+- Financing/payment plans mentioned by some (Right Dental, Bethel).
+
+
+5. GHANA-SPECIFIC PATTERNS
+--------------------------
+- WhatsApp is the default booking and follow-up channel. Many "Book" buttons
+  are wa.me links rather than forms.
+- Phone remains king: click-to-call numbers in header, footer and every
+  section.
+- Mobile money is expected: MTN MoMo, Telecel Cash, AirtelTigo Money.
+  Paystack is the common card/mobile-money gateway (myhealthGH).
+- Multi-branch networks are common (Dentoc 6, Bethel 3, Akcess 3,
+  Dental Signature 2, Total House 3).
+- Saturday openings are standard; a few offer late evenings or Sunday
+  emergency cover.
+- Insurance is a major trust/decision factor; logos are displayed, but
+  eligibility is rarely captured online.
+- Emergency dental care is called out separately.
+- All sites are English-only; no Twi/Ga/Ewe localisation observed.
+- Mobile-first layouts dominate; most sites are lightweight brochure sites
+  with forms.
+- Regulatory context referenced by the most mature player: MDC (Medical and
+  Dental Council) and HeFRA facility licensing.
+
+
+6. WHAT IS MISSING IN THE MARKET (OPPORTUNITIES)
+------------------------------------------------
+- Real-time availability and instant confirmation.
+- Online deposit/payment at booking (only myhealthGH does this well).
+- Automated SMS/WhatsApp/email reminders and no-show reduction.
+- Self-service reschedule/cancel and waitlists.
+- Patient accounts / appointment history / documents.
+- Insurance eligibility capture and verification at booking.
+- Structured emergency triage (severity, pain level, swelling, trauma).
+- Multi-language support (English + Twi/Ga/Ewe).
+- Accessibility (WCAG) and low-bandwidth optimisation.
+- Calendar sync (.ics) and Google/Outlook integration.
+- Transparent pricing and cost estimates before the visit.
+- Clear data-protection consent aligned with Ghana's Data Protection Act.
+- Better validation, fewer CAPTCHAs, fewer dead links and faster pages.
+- Analytics/funnel tracking on booking drop-off.
+
+
+7. IMPLICATIONS FOR OUR BUILD
+-----------------------------
+Assumption: we are building TWO related products, e.g.
+(A) a clinic-owned booking system, and
+(B) a multi-clinic marketplace or clinic admin dashboard. Adjust if wrong.
+
+Recommended patient flow (mobile-first, under 60 seconds):
+1. Reason for visit (cards, not a long dropdown) with "Not sure / Emergency".
+2. Branch or "nearest to me" (geolocation optional).
+3. Date -> available slots only (no past dates, no closed days, buffer times).
+4. Patient details: full name + Ghana phone (auto-format 0XX / +233).
+   Email optional. Notes optional. Consent checkbox.
+5. Review screen: service, branch, clinician, date/time, estimated price.
+6. Submit -> instant confirmation (if slot is held) or "request received"
+   with a clear response-time promise and WhatsApp fallback.
+7. Confirmation page + SMS/WhatsApp message + .ics + reschedule link.
+
+Minimum data model
+- Clinic (branches, hours, timezone Africa/Accra, closures)
+- Clinician (specialties, services, availability)
+- Service (name, duration, price/GHS, deposit, category)
+- Appointment (patient, clinic, clinician, service, start/end, status,
+  source, notes, consent, payment status)
+- Patient (name, phone, email, DOB optional, preferred channel)
+- Payment (provider, amount, currency GHS, status, receipt)
+- Notification log (channel, template, status)
+
+Status model
+requested -> pending_confirmation -> confirmed -> checked_in -> completed
+                                      -> no_show
+                                      -> cancelled / rescheduled
+
+Key differentiators to win in Ghana
+- WhatsApp-native notifications and confirmations (not just email).
+- Mobile money + card via Paystack, with optional deposit.
+- Real availability, instant confirmation, self-service reschedule.
+- Low-friction: no account required; phone number is the identity.
+- Trust: verified clinic badge (MDC/HeFRA), reviews, transparent pricing.
+- Works on cheap Android phones and poor networks (small payloads, offline-
+  tolerant forms, retry).
+
+Suggested stack (pragmatic)
+- Frontend: mobile-first PWA; server-rendered or lightweight SPA.
+- Backend: REST/JSON API; Postgres; unique constraint on
+  (clinician_id, start_time) to prevent double booking; row-level locking or
+  transactional slot hold.
+- Auth: phone OTP for patients; role-based accounts for staff/admin.
+- Payments: Paystack (MoMo + card), webhooks for confirmation.
+- Notifications: WhatsApp Business API / SMS gateway + email fallback.
+- Admin: calendar day/week view, drag-to-reschedule, status board, no-show
+  tracking, export.
+
+Build order
+Phase 1 (MVP): clinic profile, services, branches, request form, staff
+confirmation, WhatsApp/SMS notification, basic admin list.
+Phase 2: real availability + slot holds, instant confirmation, deposits,
+reminders, reschedule links.
+Phase 3: marketplace (multiple clinics, verified badges, search by location/
+service), reviews, payouts, analytics.
+
+
+8. SOURCE LIST
+--------------
+Primary sites inspected (booking pages where available):
+- akcessdental.com/appointment
+- myhealthgh.com/how-it-works
+- dentocdentalclinic.com
+- brightondentalgh.com/appointment
+- smilecentergh.com/book/simple
+- betheldentalghana.com
+- amoahdental.com.gh
+- totalhouseclinic.com/book
+- sinolledental.com/booking
+- dentalsignaturegh.com/contact-us
+- prodentgh.com/contact
+- sonrisagh.com/appointment-booking
+- exceldentalghana.com/appointment
+- omabodent.com/contact-us
+- ningelsdental.com/page-appointment
+- commdentalgh.com
+- rightdentalcare.com/appointments
+- platinum-dental.com/contact-us
+- parleydental.com/appointment
+- bushroadmedcenter.com/book
+
+Reference lists / discovery:
+- omabodent.com/best-dental-clinics-in-accra-ghana
+
+Notes / limitations
+- Some pages are JavaScript-heavy or timed out; those are marked "not fully
+  verified". Re-check live before copying any specific field or price.
+- Prices, hours and branch lists change; verify with the clinic.
+- This file records observed public patterns, not legal or medical advice.

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Track a booking with KALI Dental Clinic. Online booking and tracking are not yet available.">
+  <title>Track Booking | KALI Dental Clinic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo" aria-label="KALI Dental Clinic home">
+        <img src="assets/logo.png" alt="KALI Dental Clinic logo">
+      </a>
+      <nav aria-label="Main navigation">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="track-booking.html" class="nav-action-link" aria-current="page">Track Booking</a>
+        <a href="dashboard.html" class="nav-action-link">Dashboard</a>
+        <a href="#" class="btn primary" data-booking-link title="Online booking is coming soon">Book Appointment</a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="track-booking.html" aria-current="page">Track Booking</a></li>
+    </ul>
+    <div class="mobile-menu-actions">
+      <a href="#" class="btn primary" data-booking-link title="Online booking is coming soon">Book Appointment</a>
+      <a href="dashboard.html" class="btn outline">Staff Dashboard</a>
+    </div>
+    <a href="dashboard.html" class="mobile-dashboard">Receptionist / Business Owner Access</a>
+  </div>
+
+  <main id="main">
+    <section class="placeholder-hero">
+      <div class="container">
+        <div class="placeholder-card">
+          <span class="eyebrow">Track Booking</span>
+          <h1>Booking Tracking Is Coming.</h1>
+          <p>Online booking and booking tracking are not yet available. Once the booking system is implemented, patients will be able to check their appointment status from this page.</p>
+          <div class="placeholder-actions">
+            <a href="contact.html" class="btn primary">Contact the Clinic</a>
+            <a href="index.html" class="btn outline">Back to Home</a>
+          </div>
+          <span class="placeholder-note">Placeholder page — no tracking is active</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <img src="assets/logo.png" alt="KALI Dental Clinic logo" class="footer-logo">
+          <p>Thoughtful dental care with a focus on your comfort, confidence and oral health.</p>
+        </div>
+        <div class="footer-column">
+          <h3>Explore</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Patient Links</h3>
+          <ul>
+            <li><a href="#" data-booking-link>Book Appointment</a></li>
+            <li><a href="track-booking.html">Track Booking</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Clinic</h3>
+          <ul>
+            <li><a href="about.html">Our Approach</a></li>
+            <li><a href="services.html">Dental Treatments</a></li>
+            <li><a href="dashboard.html">Staff Access</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© <span id="year"></span> KALI Dental Clinic. All rights reserved.</p>
+        <p>Designed by Abrantyie Digital</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explore dental services at KALI Dental Clinic, from consultations and cleaning to fillings, root canal treatment, crowns, braces and children's dental care.">
+  <title>Dental Services | KALI Dental Clinic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      const client = window.getSupabaseClient ? window.getSupabaseClient() : null;
+      const grid = document.querySelector('.services-grid');
+      if (!client || !grid) return;
+      
+      grid.innerHTML = '<p style="color:var(--muted);">Loading services...</p>';
+      
+      try {
+        const { data, error } = await client
+          .from('services')
+          .select('*')
+          .eq('is_active', true)
+          .order('display_order');
+        
+        if (error) {
+          grid.innerHTML = '<p style="color:var(--muted);">Unable to load services at this time.</p>';
+          return;
+        }
+        
+        if (!data || data.length === 0) {
+          grid.innerHTML = '<p style="color:var(--muted);">No services available.</p>';
+          return;
+        }
+        
+        grid.innerHTML = '';
+        data.forEach(service => {
+          const article = document.createElement('article');
+          article.className = 'service-card';
+          const totalPrice = parseFloat(service.total_price || 0).toLocaleString('en-GH');
+          const bookingAmt = parseFloat(service.booking_amount || 0).toLocaleString('en-GH');
+          const isFull = service.payment_type === 'full';
+          article.innerHTML = `
+            <div class="service-image"><img src="assets/${getServiceImage(service.name)}" alt="${service.name}" loading="lazy"></div>
+            <div class="service-content">
+              <h3>${escapeHtml(service.name)}</h3>
+              <p>${escapeHtml(service.description || '')}</p>
+              <p style="font-weight:600; color:var(--green); margin-bottom:6px;">Total: GH₵${totalPrice}</p>
+              <p style="font-size:0.8rem; color:var(--muted); margin-bottom:12px;">${isFull ? 'Full Payment' : 'Deposit'}: GH₵${bookingAmt}</p>
+              <a href="book-appointment.html?service=${encodeURIComponent(service.id)}" class="text-link">Book Now <span aria-hidden="true">→</span></a>
+            </div>
+          `;
+          grid.appendChild(article);
+        });
+      } catch (e) {
+        grid.innerHTML = '<p style="color:var(--muted);">Unable to load services at this time.</p>';
+      }
+    });
+    
+    function getServiceImage(name) {
+      const n = name.toLowerCase();
+      if (n.includes('consultation')) return 'dental-consultation.png';
+      if (n.includes('cleaning')) return 'teeth-cleaning.png';
+      if (n.includes('filling')) return 'tooth-filling.png';
+      if (n.includes('extraction')) return 'tooth-extraction.png';
+      if (n.includes('root')) return 'root-canal.png';
+      if (n.includes('whitening')) return 'teeth-whitening.png';
+      if (n.includes('crown')) return 'dental-crowns.png';
+      if (n.includes('bridge')) return 'dental-crowns.png';
+      if (n.includes('brace')) return 'braces.png';
+      if (n.includes('child')) return 'childrens-dental-care.png';
+      return 'dental-consultation.png';
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</head>
+<body class="services-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo" aria-label="KALI Dental Clinic home">
+        <img src="assets/logo.png" alt="KALI Dental Clinic logo">
+      </a>
+      <nav aria-label="Main navigation">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html" aria-current="page">Services</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="track-booking.html" class="nav-action-link">Track Booking</a>
+        <a href="dashboard.html" class="nav-action-link">Dashboard</a>
+        <a href="#" class="btn primary" data-booking-link title="Online booking is coming soon">Book Appointment</a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html" aria-current="page">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="track-booking.html">Track Booking</a></li>
+    </ul>
+    <div class="mobile-menu-actions">
+      <a href="#" class="btn primary" data-booking-link title="Online booking is coming soon">Book Appointment</a>
+      <a href="dashboard.html" class="btn outline">Staff Dashboard</a>
+    </div>
+    <a href="dashboard.html" class="mobile-dashboard">Receptionist / Business Owner Access</a>
+  </div>
+
+  <main id="main">
+    <section class="services-hero">
+      <div class="container">
+        <div class="services-hero-intro">
+          <span class="eyebrow">Our Services</span>
+          <h1>Dental Care for Every Smile.</h1>
+          <p>Explore the dental services available at KALI Dental Clinic. Each service begins with a conversation about your needs, your comfort and the right next step for you.</p>
+          <div class="hero-actions">
+            <a href="#" class="btn primary" data-booking-link title="Online booking is coming soon">Book Appointment <span aria-hidden="true">→</span></a>
+            <a href="contact.html" class="btn outline">Contact the Clinic</a>
+          </div>
+        </div>
+
+        <div class="services-hero-band">
+          <div class="services-hero-photo">
+            <img src="assets/hero.png" alt="A dentist speaking with a patient at KALI Dental Clinic" width="720" height="511">
+          </div>
+          <div class="services-hero-note">
+            <span class="note-label">Care at a glance</span>
+            <h2>Ten services. One thoughtful approach.</h2>
+            <p>From prevention to restorative and cosmetic care, support is available at every stage.</p>
+            <ul class="services-hero-tags">
+              <li>Consultation &amp; prevention</li>
+              <li>Restorative dental care</li>
+              <li>Cosmetic &amp; orthodontic care</li>
+              <li>Children's dentistry</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section services-catalogue">
+      <div class="container services-layout">
+        <aside class="services-sidebar">
+          <span class="eyebrow">Treatments</span>
+          <h2>Complete Care, Clearly Explained.</h2>
+          <p class="description">Descriptions below explain what each service generally involves. Your dentist will discuss suitability, options and aftercare with you directly.</p>
+          <nav class="services-jump" aria-label="Jump to a service">
+            <span class="services-jump-label">Jump to a service</span>
+            <ul>
+              <li><a href="#dental-consultation">Dental Consultation</a></li>
+              <li><a href="#teeth-cleaning">Teeth Cleaning</a></li>
+              <li><a href="#tooth-filling">Tooth Filling</a></li>
+              <li><a href="#root-canal">Root Canal</a></li>
+              <li><a href="#tooth-extraction">Tooth Extraction</a></li>
+              <li><a href="#dental-crowns">Dental Crowns</a></li>
+              <li><a href="#dental-bridges">Dental Bridges</a></li>
+              <li><a href="#teeth-whitening">Teeth Whitening</a></li>
+              <li><a href="#braces">Braces Consultation</a></li>
+              <li><a href="#childrens-dental-care">Children's Care</a></li>
+            </ul>
+          </nav>
+        </aside>
+
+        <div class="services-list">
+          <article class="service-row" id="dental-consultation">
+            <div class="service-thumb">
+              <img src="assets/dental-consultation.png" alt="Dental consultation" width="720" height="473">
+            </div>
+            <div class="service-row-body">
+              <span class="service-number">01</span>
+              <div class="service-row-head">
+                <h3>Dental Consultation</h3>
+                <span class="service-category">Prevention</span>
+              </div>
+              <p>A chance to discuss your dental concerns, have your mouth examined and receive guidance on appropriate next steps.</p>
+              <a href="#" class="text-link" data-booking-link title="Online booking is coming soon">Book Appointment <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+
+          <article class="service-row" id="teeth-cleaning">
+            <div class="service-thumb">
+              <img src="assets/teeth-cleaning.png" alt="Teeth cleaning and polishing" width="720" height="472">
+            </div>
+            <div class="service-row-body">
+              <span class="service-number">02</span>
+              <div class="service-row-head">
+                <h3>Teeth Cleaning &amp; Polishing</h3>
+                <span class="service-category">Prevention</span>
+              </div>
+              <p>Professional removal of plaque and surface staining, followed by polishing to support everyday oral hygiene.</p>
+              <a href="#" class="text-link" data-booking-link title="Online booking is coming soon">Book Appointment <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+
+          <article class="service-row" id="tooth-filling">
+            <div class="service-thumb">
+              <img src="assets/tooth-filling.png" alt="Tooth filling treatment" width="720" height="718">
+            </div>
+            <div class="service-row-body">
+              <span class="service-number">03</span>
+              <div class="service-row-head">
+                <h3>Tooth Filling</h3>
+                <span class="service-category">Restorative</span>
+              </div>
+              <p>A restorative treatment for teeth affected by decay or minor damage, using suitable filling materials.</p>
+              <a href="#" class="text-link" data-booking-link title="Online booking is coming soon">Book Appointment <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+
+          <article class="service-row" id="root-canal">
+            <div class="service-thumb">
+              <img src="assets/root-canal.png" alt="Root canal treatment" width="720" height="393">
+            </div>
+            <div class="service-row-body">
+              <span class="service-number">04</span>
+              <div class="service-row-head">
+                <h3>Root Canal Treatment</h3>
+                <span class="service-category">Restorative</span>
+              </div>
+              <p>Treatment for infection or damage inside a tooth, aimed at relieving symptoms and preserving the tooth where possible.</p>
+              <a href="#" class="text-link" data-booking-link title="Online booking is coming soon">Book Appointment <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+
+          <article class="service-row" id="tooth-extraction">
+            <div class="service-thumb">
+              <img src="assets/tooth-extraction.png" alt="Tooth extraction treatment" width="720" height="471">
+            </div>
+            <div class="service-row-body">
+              <span class="service-number">05</span>
+              <div class="service-row-head">
+                <h3>Tooth Extraction</h3>
+                <span class="service-category">Restorative</span>
+              </div>
+              <p>Removal of a tooth when it cannot be saved or when removal is the most appropriate option. Your dentist will explain the procedure and aftercare.</p>
+              <a href="#" class="text-link" data-booking-link title="Online booking is coming soon">Book Appointment <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+
+          <article class="service-row" id="dental-crowns">
+            <div class="service-thumb">
+              <img src="assets/dental-crowns.png" alt="Dental crown restoration" width="720" height="716">
+            </div>
+            <div class="service-row-body">
+              <span class="service-number">06</span>
+              <div class="service-row-head">
+                <h3>Dental Crowns</h3>
+                <span class="service-category">Restorative</span>
+              </div>
+              <p>A custom-made restoration designed to protect and improve the appearance of a damaged or weakened tooth.</p>
+              <a href="#" class="text-link" data-booking-link title="Online booking is coming soon">Book Appointment <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+
+          <article class="service-row" id="dental-bridges">
+            <div class="service-thumb">
+              <img src="assets/dental-bridges.png" alt="Dental bridge restoration" width="720" height="716">
+            </div>
+            <div class="service-row-body">
+              <span class="service-number">07</span>
+              <div class="service-row-head">
+                <h3>Dental Bridges</h3>
+                <span class="service-category">Restorative</span>
+              </div>
+              <p>A fixed solution for replacing one or more missing teeth, planned around your dental health and needs.</p>
+              <a href="#" class="text-link" data-booking-link title="Online booking is coming soon">Book Appointment <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+
+          <article class="service-row" id="teeth-whitening">
+            <div class="service-thumb">
+              <img src="assets/teeth-whitening.png" alt="Teeth whitening treatment" width="720" height="394">
+            </div>
+            <div class="service-row-body">
+              <span class="service-number">08</span>
+              <div class="service-row-head">
+                <h3>Teeth Whitening</h3>
+                <span class="service-category">Cosmetic</span>
+              </div>
+              <p>Professional whitening options for stained or discoloured teeth, with suitability and expectations discussed beforehand.</p>
+              <a href="#" class="text-link" data-booking-link title="Online booking is coming soon">Book Appointment <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+
+          <article class="service-row" id="braces">
+            <div class="service-thumb">
+              <img src="assets/braces.png" alt="Braces consultation" width="720" height="416">
+            </div>
+            <div class="service-row-body">
+              <span class="service-number">09</span>
+              <div class="service-row-head">
+                <h3>Braces Consultation</h3>
+                <span class="service-category">Orthodontics</span>
+              </div>
+              <p>A consultation to discuss tooth alignment concerns, suitable orthodontic options and what treatment may involve.</p>
+              <a href="#" class="text-link" data-booking-link title="Online booking is coming soon">Book Appointment <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+
+          <article class="service-row" id="childrens-dental-care">
+            <div class="service-thumb">
+              <img src="assets/childrens-dental-care.png" alt="Children's dental care" width="720" height="470">
+            </div>
+            <div class="service-row-body">
+              <span class="service-number">10</span>
+              <div class="service-row-head">
+                <h3>Children's Dental Care</h3>
+                <span class="service-category">Children</span>
+              </div>
+              <p>Gentle, age-appropriate dental care for younger patients, with time to help them feel comfortable.</p>
+              <a href="#" class="text-link" data-booking-link title="Online booking is coming soon">Book Appointment <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section services-help-section">
+      <div class="container">
+        <div class="help-panel">
+          <div>
+            <span class="eyebrow">Help Choosing</span>
+            <h2>Not Sure Which Service You Need?</h2>
+            <p>You do not have to work it out on your own. Contact the clinic to describe your concern and get guidance on arranging the right appointment. Please do not use this website to self-diagnose.</p>
+          </div>
+          <div class="help-actions">
+            <a href="contact.html" class="btn outline">Contact the Clinic</a>
+            <a href="#" class="btn primary" data-booking-link title="Online booking is coming soon">Book Appointment</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="booking-section">
+      <div class="container booking-content">
+        <span class="eyebrow">Take the First Step</span>
+        <h2>Ready to Arrange Your Visit?</h2>
+        <p>Get in touch with KALI Dental Clinic to discuss your dental needs and arrange an appointment.</p>
+        <a href="#" class="btn" data-booking-link title="Online booking is coming soon">Book Your Appointment <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <img src="assets/logo.png" alt="KALI Dental Clinic logo" class="footer-logo">
+          <p>Thoughtful dental care with a focus on your comfort, confidence and oral health.</p>
+        </div>
+        <div class="footer-column">
+          <h3>Explore</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Patient Links</h3>
+          <ul>
+            <li><a href="#" data-booking-link>Book Appointment</a></li>
+            <li><a href="track-booking.html">Track Booking</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Clinic</h3>
+          <ul>
+            <li><a href="about.html">Our Approach</a></li>
+            <li><a href="services.html">Dental Treatments</a></li>
+            <li><a href="dashboard.html">Staff Access</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© <span id="year"></span> KALI Dental Clinic. All rights reserved.</p>
+        <p>Designed by Abrantyie Digital</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

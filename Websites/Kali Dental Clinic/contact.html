@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact KALI Dental Clinic to ask questions or arrange a visit. Contact details are placeholders until confirmed.">
+  <title>Contact Us | KALI Dental Clinic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body class="contact-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo" aria-label="KALI Dental Clinic home">
+        <img src="assets/logo.png" alt="KALI Dental Clinic logo">
+      </a>
+      <nav aria-label="Main navigation">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html" aria-current="page">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="track-booking.html" class="nav-action-link">Track Booking</a>
+        <a href="dashboard.html" class="nav-action-link">Dashboard</a>
+        <a href="#" class="btn primary" data-booking-link title="Online booking is coming soon">Book Appointment</a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" aria-current="page">Contact</a></li>
+      <li><a href="track-booking.html">Track Booking</a></li>
+    </ul>
+    <div class="mobile-menu-actions">
+      <a href="#" class="btn primary" data-booking-link title="Online booking is coming soon">Book Appointment</a>
+      <a href="dashboard.html" class="btn outline">Staff Dashboard</a>
+    </div>
+    <a href="dashboard.html" class="mobile-dashboard">Receptionist / Business Owner Access</a>
+  </div>
+
+  <main id="main">
+    <section class="contact-hero">
+      <div class="container contact-hero-inner">
+        <span class="eyebrow">Contact Us</span>
+        <h1>We're Here to Help You Smile.</h1>
+        <p>Have a question about dental care or need help arranging a visit? Use the contact details below once they are supplied by the clinic, or request an appointment online when booking becomes available.</p>
+        <div class="hero-actions">
+          <a href="#" class="btn primary" data-booking-link title="Online booking is coming soon">Book Appointment <span aria-hidden="true">→</span></a>
+          <a href="track-booking.html" class="btn outline">Track Booking</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container contact-grid">
+        <div class="contact-content">
+          <span class="eyebrow">Visit or Contact Us</span>
+          <h2>Clinic Contact Details.</h2>
+          <p>The following details are placeholders. Replace them with the clinic's confirmed information before publishing.</p>
+          <div class="contact-details">
+            <div class="contact-detail">
+              <div class="contact-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+              <div><h3>Our Location</h3><p>University of Cape Coast Dental Clinic<br>School of Medical Sciences, University of Cape Coast<br>Cape Coast, Ghana</p></div>
+            </div>
+            <div class="contact-detail">
+              <div class="contact-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2Z"/></svg></div>
+              <div><h3>Phone / WhatsApp</h3><p><a href="tel:+233559411844">055 941 1844</a></p></div>
+            </div>
+            <div class="contact-detail">
+              <div class="contact-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="m4 7 8 6 8-6"/></svg></div>
+              <div><h3>Email</h3><p><a href="mailto:piersalledev1@gmail.com">piersalledev1@gmail.com</a></p></div>
+            </div>
+            <div class="contact-detail">
+              <div class="contact-detail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+              <div><h3>Opening Hours</h3><p>Clinic opening hours to be added.</p></div>
+            </div>
+          </div>
+          <span class="placeholder-note">Contact details pending full confirmation</span>
+        </div>
+        <div class="contact-visual contact-map">
+          <h3>UCC Dental Clinic, Cape Coast</h3>
+          <p class="map-note">This is a demonstration location used to showcase Google Maps integration. KALI Dental Clinic is not physically located at UCC Dental Clinic.</p>
+          <div class="map-embed">
+            <iframe src="https://www.google.com/maps?q=5.10557,-1.28364&z=16&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="UCC Dental Clinic, Cape Coast - demonstration location"></iframe>
+          </div>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=5.10557,-1.28364" class="btn outline" target="_blank" rel="noopener">Get Directions</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="booking-section">
+      <div class="container booking-content">
+        <span class="eyebrow">Appointments</span>
+        <h2>Need to Arrange a Visit?</h2>
+        <p>Online booking is not yet available. Once it is, this page will link directly to the clinic's booking flow.</p>
+        <a href="#" class="btn" data-booking-link title="Online booking is coming soon">Book Your Appointment <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <img src="assets/logo.png" alt="KALI Dental Clinic logo" class="footer-logo">
+          <p>Thoughtful dental care with a focus on your comfort, confidence and oral health.</p>
+        </div>
+        <div class="footer-column">
+          <h3>Explore</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Patient Links</h3>
+          <ul>
+            <li><a href="#" data-booking-link>Book Appointment</a></li>
+            <li><a href="track-booking.html">Track Booking</a></li>
+            <li><a href="contact.html">Get in Touch</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Clinic</h3>
+          <ul>
+            <li><a href="about.html">Our Approach</a></li>
+            <li><a href="services.html">Dental Treatments</a></li>
+            <li><a href="dashboard.html">Staff Access</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© <span id="year"></span> KALI Dental Clinic. All rights reserved.</p>
+        <p>Designed by Abrantyie Digital</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+
