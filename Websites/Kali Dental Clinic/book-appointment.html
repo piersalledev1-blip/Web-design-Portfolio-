@@ -701,7 +701,11 @@
 
     // Calendar
     const calendarGrid = document.getElementById('calendarGrid');
-    const today = new Date();
+    const accraParts = new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Accra',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+    const accraYear = Number(accraParts.find(p=>p.type==='year').value);
+    const accraMonth = Number(accraParts.find(p=>p.type==='month').value);
+    const accraDay = Number(accraParts.find(p=>p.type==='day').value);
+    const today = new Date(accraYear,accraMonth-1,accraDay);
     today.setHours(0,0,0,0);
     function renderCalendar(){
       calendarGrid.innerHTML='';
@@ -786,7 +790,7 @@
       const email = document.getElementById('contactEmail').value;
       const fullName = document.getElementById('fullName').value;
       if(!fullName){ alert('Please enter your full name'); return; }
-      if(!/^\d{10}$/.test(phone)){ alert('Please enter a valid 10-digit phone number'); return; }
+      if(!/^0[235]\d{8}$/.test(phone)){ alert('Please enter a valid Ghanaian mobile number'); return; }
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ alert('Please enter a valid email'); return; }
       document.getElementById('step3').classList.remove('active');
       document.getElementById('step4').classList.add('active');
