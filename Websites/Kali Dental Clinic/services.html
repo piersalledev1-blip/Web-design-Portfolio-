@@ -53,7 +53,7 @@
           const due = Number(service.booking_amount || 0).toLocaleString('en-GH', {minimumFractionDigits:2, maximumFractionDigits:2});
           const article = row || document.createElement('article');
           article.className = 'service-row';
-          article.id = 'service-' + service.id;
+          article.id = row ? row.id : 'service-' + service.id;
           if (!row) article.innerHTML = '<div class="service-row-body"><span class="service-number"></span><div class="service-row-head"><h3></h3><span class="service-category">Dental care</span></div><p></p></div>';
           article.querySelector('.service-number').textContent = String(index + 1).padStart(2, '0');
           article.querySelector('h3').textContent = service.name;
@@ -78,6 +78,18 @@
           body.insertBefore(price, body.querySelector('a'));
           list.appendChild(article);
         });
+        const jumpList = document.querySelector('.services-jump ul');
+        if (jumpList) {
+          jumpList.innerHTML = '';
+          Array.from(list.querySelectorAll('.service-row')).forEach(article => {
+            const item = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = '#' + article.id;
+            link.textContent = article.querySelector('h3')?.textContent || 'View service';
+            item.appendChild(link);
+            jumpList.appendChild(item);
+          });
+        }
       } catch (error) {
         console.error('Service catalogue load failed:', error);
         list.innerHTML = '<p class="catalogue-state error">We could not load the current service list. Please refresh or contact the clinic before booking.</p>';
