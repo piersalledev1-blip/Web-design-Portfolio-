@@ -717,10 +717,13 @@
         d.setDate(today.getDate()+i);
         if(i>7) break;
         const btn = document.createElement('button');
-        btn.className = 'calendar-day';
-        btn.innerHTML = `<span class="calendar-day-name">${d.toLocaleDateString('en-US',{weekday:'short'})}</span><span class="calendar-day-num">${d.getDate()}</span>`;
+        const isSunday = d.getDay() === 0;
+        btn.className = 'calendar-day' + (isSunday ? ' disabled' : '');
+        btn.disabled = isSunday;
+        btn.setAttribute('aria-label', d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}) + (isSunday ? ' — clinic closed' : ''));
+        btn.innerHTML = `<span class="calendar-day-name">${isSunday ? 'Closed' : d.toLocaleDateString('en-US',{weekday:'short'})}</span><span class="calendar-day-num">${d.getDate()}</span>`;
         btn.addEventListener('click', ()=>{
-          if(d < today) return;
+          if(d < today || isSunday) return;
           document.querySelectorAll('.calendar-day').forEach(b=>b.classList.remove('selected'));
           btn.classList.add('selected');
           state.date = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
@@ -741,6 +744,7 @@
       if(!client||!state.service||!state.dateIso){slots.innerHTML='<p>Availability is unavailable.</p>';return;}
       const {data,error}=await client.functions.invoke('get-availability',{body:{date:state.dateIso,service_id:state.service.id}});
       if(error||!data?.busy_intervals){slots.innerHTML='<p style="color:var(--muted);">Could not check availability. Refresh and try again.</p>';return;}
+      if(data.closed){slots.innerHTML='<p class="catalogue-state">The clinic is closed on Sundays. Please choose another day.</p>';return;}
       slots.innerHTML='';
       const duration=Number(data.duration_minutes||30);
       timeOptions.forEach(t=>{
