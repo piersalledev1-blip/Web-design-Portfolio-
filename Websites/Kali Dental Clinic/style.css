@@ -2955,3 +2955,77 @@ button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
   .footer { padding: 36px 0 16px; }
   .footer-grid { gap: 24px 18px; padding-bottom: 22px; }
 }
+
+
+/* Contact page: lead with useful contact information, not a redundant hero. */
+.contact-main-section { padding-top: 76px; }
+.contact-page-heading {
+  max-width: 760px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+.contact-page-heading h1 {
+  margin: 12px 0 16px;
+  color: var(--green);
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  line-height: 1.08;
+}
+.contact-page-heading p {
+  max-width: 620px;
+  margin: 0 auto;
+  color: var(--muted);
+  line-height: 1.8;
+}
+.contact-main-section .contact-grid { align-items: stretch; }
+.contact-main-section .contact-content h2 {
+  margin-bottom: 28px;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+}
+.contact-main-section .contact-details { gap: 26px; }
+.contact-main-section .contact-detail p { line-height: 1.75; }
+.contact-main-section .contact-detail a:not(.text-link) {
+  color: var(--green);
+  text-decoration: none;
+}
+.contact-main-section .contact-detail a:not(.text-link):hover { text-decoration: underline; }
+.contact-main-section .contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+.contact-main-section .contact-map {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 30px;
+}
+.contact-main-section .contact-map h2 {
+  margin-bottom: 8px;
+  color: var(--green);
+  font-size: 1.6rem;
+}
+.contact-main-section .contact-map > p {
+  margin-bottom: 20px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+.contact-main-section .map-embed {
+  width: 100%;
+  min-height: 390px;
+  margin-bottom: 22px;
+}
+@media (max-width: 900px) {
+  .contact-main-section { padding-top: 58px; }
+  .contact-page-heading { margin-bottom: 36px; text-align: left; }
+  .contact-page-heading p { margin-left: 0; }
+  .contact-main-section .map-embed { min-height: 340px; }
+}
+@media (max-width: 640px) {
+  .contact-main-section { padding-top: 46px; }
+  .contact-page-heading h1 { font-size: clamp(2.4rem, 11vw, 3.2rem); }
+  .contact-main-section .contact-map { padding: 22px; }
+  .contact-main-section .map-embed { min-height: 280px; }
+  .contact-main-section .contact-actions { display: grid; grid-template-columns: 1fr; width: 100%; }
+  .contact-main-section .contact-actions .btn { width: 100%; }
+}
