@@ -3040,3 +3040,31 @@ button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
   .contact-main-section .contact-actions { display: grid; grid-template-columns: 1fr; width: 100%; }
   .contact-main-section .contact-actions .btn { width: 100%; }
 }
+
+/* 2026-11-09 — definitive responsive logo sizing.
+   Higher-specificity selectors override the earlier generic and mobile logo rules. */
+@media (min-width: 901px) {
+  .navbar .nav-container > .logo > img {
+    width: 250px;
+    height: 84px;
+    max-width: none;
+    object-fit: contain;
+    object-position: left center;
+  }
+}
+@media (min-width: 1440px) {
+  .navbar .nav-container > .logo > img {
+    width: clamp(340px, 25vw, 440px);
+    height: clamp(100px, 7.5vw, 140px);
+  }
+}
+@media (max-width: 900px) {
+  .navbar .nav-container { height: 80px; }
+  .navbar .nav-container > .logo > img {
+    width: clamp(176px, 56vw, 210px);
+    height: 66px;
+    max-width: none;
+    object-fit: contain;
+    object-position: left center;
+  }
+}
