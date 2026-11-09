@@ -2847,3 +2847,111 @@ button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
     scroll-behavior: auto !important;
   }
 }
+
+
+/* 2026-11-09 — targeted desktop and services-page corrections */
+@media (min-width: 901px) {
+  .nav-container { height: 94px; }
+  .logo img {
+    width: 232px;
+    height: 78px;
+    object-fit: contain;
+    object-position: left center;
+  }
+
+  /* Keep the complete homepage hero visible in a normal desktop viewport. */
+  .hero-grid {
+    min-height: calc(100svh - 94px);
+    padding-top: 42px;
+    padding-bottom: 42px;
+    align-items: center;
+  }
+  .hero-image {
+    height: min(500px, calc(100svh - 210px));
+    min-height: 360px;
+  }
+}
+
+/* The services introduction uses a warm, high-contrast surface. */
+.services-hero {
+  background: #fbfaf6;
+  padding: 64px 0 76px;
+}
+.services-hero-intro h1 { color: #173d32; }
+.services-hero-intro > p {
+  color: #4d5c53;
+  line-height: 1.85;
+}
+.services-hero-intro .eyebrow { color: #526e5b; }
+
+/* Separate the image and the "Care at a glance" panel instead of layering them. */
+.services-hero-band {
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+  align-items: center;
+  gap: clamp(24px, 3vw, 42px);
+  margin-top: 46px;
+}
+.services-hero-photo {
+  height: clamp(350px, 34vw, 440px);
+  border-radius: 8px;
+}
+.services-hero-note {
+  margin: 0;
+  align-self: center;
+  padding: clamp(28px, 3vw, 40px);
+  border-radius: 8px;
+  box-shadow: 0 18px 42px rgba(16, 47, 39, .12);
+}
+.services-hero-note h2 { line-height: 1.15; }
+.services-hero-note p { color: #e0e9e1; }
+
+/* Make service-category labels understandable at a glance. */
+.service-category {
+  color: #254c3b;
+  background: #e8efe7;
+  border: 1px solid #d5e1d5;
+  border-radius: 999px;
+  padding: 6px 11px;
+  font-size: .72rem;
+  line-height: 1.2;
+}
+
+/* A shorter footer: less vertical padding and tighter columns. */
+.footer { padding: 42px 0 18px; }
+.footer-grid {
+  gap: 28px;
+  padding-bottom: 28px;
+}
+.footer-about { max-width: 290px; }
+.footer-about p {
+  max-width: 270px;
+  margin-top: 12px;
+  font-size: .82rem;
+  line-height: 1.6;
+}
+.footer-logo {
+  width: 176px;
+  max-height: 64px;
+  object-fit: contain;
+  object-position: left center;
+}
+.footer-column h3 { margin-bottom: 13px; }
+.footer-column ul { gap: 8px; }
+.footer-column a { font-size: .78rem; }
+.footer-bottom { padding-top: 16px; font-size: .72rem; }
+
+@media (max-width: 900px) {
+  .services-hero-band {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 34px;
+  }
+  .services-hero-photo { height: min(430px, 58vw); }
+  .services-hero-note { margin: 0; }
+}
+@media (max-width: 640px) {
+  .services-hero { padding: 52px 0 60px; }
+  .services-hero-photo { height: 270px; }
+  .footer { padding: 36px 0 16px; }
+  .footer-grid { gap: 24px 18px; padding-bottom: 22px; }
+}
