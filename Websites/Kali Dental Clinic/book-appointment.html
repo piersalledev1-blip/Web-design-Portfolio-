@@ -809,7 +809,11 @@
       const client=window.getSupabaseClient?window.getSupabaseClient():null;
       if(!client)return;
       const {data,error}=await client.functions.invoke('track-booking',{body:{booking_reference:createdBooking.booking_reference,tracking_code:createdBooking.tracking_code}});
-      if(error||!data?.booking){sessionStorage.removeItem('kali_pending_booking');createdBooking=null;return;}
+      if(error||!data?.booking){
+        if(error?.context?.status===404){sessionStorage.removeItem('kali_pending_booking');createdBooking=null;return;}
+        document.getElementById('bookingNotice').textContent='We could not check the saved booking right now. Refresh to retry; your saved payment details have been kept.';
+        return;
+      }
       const booking=data.booking;
       if(booking.status!=='pending_payment'){sessionStorage.removeItem('kali_pending_booking');createdBooking=null;return;}
       state.service={
