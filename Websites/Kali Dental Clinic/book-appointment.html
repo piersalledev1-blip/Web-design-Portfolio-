@@ -578,29 +578,7 @@
       </div>
     </div>
 
-    <section class="confirmation-section" id="confirmationSection">
-      <div class="confirmation-card">
-        <div class="confirmation-icon">✓</div>
-        <span class="eyebrow">Booking Status</span>
-        <h2 style="color:var(--green); font-size:clamp(2rem,4vw,3rem); margin:12px 0;">Your booking has been received</h2>
-        <div style="text-align:left; max-width:420px; margin:18px auto; background:var(--ivory); padding:18px; border-radius:10px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Service</span><span id="confService">-</span></div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Total service cost</span><span id="confTotal">-</span></div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Amount paid</span><span id="confPaid">-</span></div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Outstanding balance</span><span id="confBalance">-</span></div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Payment status</span><span>Demo - Not paid</span></div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Date</span><span id="confDate">-</span></div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Time</span><span id="confTime">-</span></div>
-          <div style="display:flex; justify-content:space-between;"><span style="color:var(--muted);">Booking reference</span><span id="confRef">KALI-DEMO</span></div>
-        </div>
-        <p style="color:var(--muted); max-width:480px; margin:0 auto;">This is a frontend demonstration. Payment is not connected and no booking has been saved to a backend. In a live system, Paystack verification and backend confirmation would be required.</p>
-        <div class="demo-badge">Demonstration only — not a real appointment</div>
-        <div style="margin-top:28px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-          <a href="track-booking.html" class="btn outline">Track My Booking</a>
-          <button class="btn primary" id="newBooking">Book Another Appointment</button>
-        </div>
-      </div>
-    </section>
+
   </main>
 
   <footer class="footer">
@@ -843,9 +821,6 @@
         sessionStorage.setItem('kali_tracking_code',createdBooking.tracking_code);
         window.location.assign(payment.authorization_url);
       }catch(error){alert(error.message||'Something went wrong.');btn.disabled=false;btn.textContent=createdBooking?'Retry Payment →':'Proceed to Payment →';}
-    });
-    document.getElementById('newBooking').addEventListener('click', ()=>{
-      location.reload();
     });
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
