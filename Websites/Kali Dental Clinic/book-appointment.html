@@ -838,6 +838,8 @@
         btn.textContent='Connecting to Paystack...';
         const {data:payment,error:paymentError}=await client.functions.invoke('paystack-initialize',{body:{appointment_id:createdBooking.appointment_id,tracking_code:createdBooking.tracking_code}});
         if(paymentError||!payment?.authorization_url)throw new Error(payment?.error||'Payment could not be started. Select retry to try again.');
+        sessionStorage.setItem('kali_booking_reference',createdBooking.booking_reference);
+        sessionStorage.setItem('kali_tracking_code',createdBooking.tracking_code);
         window.location.assign(payment.authorization_url);
       }catch(error){alert(error.message||'Something went wrong.');btn.disabled=false;btn.textContent=createdBooking?'Retry Payment →':'Proceed to Payment →';}
     });
