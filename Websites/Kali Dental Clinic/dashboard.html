@@ -69,6 +69,11 @@
           <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
             <h2 id="welcomeStaff" style="color:var(--green);">Appointments</h2><button id="refreshAppointments" class="btn outline">Refresh</button>
           </div>
+          <form id="staffProfileForm" style="display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin:18px 0;padding:16px;background:var(--ivory);border:1px solid var(--border);border-radius:8px;">
+            <div class="form-group" style="flex:1;min-width:220px;margin:0;"><label for="staffDisplayName">Staff display name</label><input id="staffDisplayName" type="text" minlength="2" maxlength="100" autocomplete="name" required></div>
+            <button class="btn outline" id="saveStaffName" type="submit">Save name</button>
+            <span id="staffProfileMessage" role="status" style="font-size:.85rem;color:var(--muted);"></span>
+          </form>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0;">
             <select id="statusFilter" aria-label="Filter appointments"><option value="all">All appointments</option><option value="pending_payment">Awaiting payment</option><option value="confirmed">Confirmed</option><option value="checked_in">Checked in</option><option value="in_progress">In progress</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select>
           </div>
@@ -136,8 +141,8 @@
       }).join(''):'<tr><td colspan="5" style="padding:20px;color:var(--muted);">No appointments found.</td></tr>';
       setMessage(rows.length+' appointment(s) displayed.');
       document.getElementById('appointmentRows').querySelectorAll('button[data-id]').forEach(btn=>btn.addEventListener('click',async()=>{
-        btn.disabled=true;const {error}=await client.from('appointments').update({status:btn.dataset.status}).eq('id',btn.dataset.id);
-        if(error){setMessage('Could not update appointment status.');btn.disabled=false;return;}await loadAppointments();
+        btn.disabled=true;const {error}=await client.rpc('transition_appointment_status',{p_appointment_id:btn.dataset.id,p_new_status:btn.dataset.status});
+        if(error){setMessage(error.message||'Could not update appointment status.');btn.disabled=false;return;}await loadAppointments();
       }));
     }
     async function enterWorkspace(){
@@ -146,15 +151,32 @@
       if(error||!staff||!staff.is_active){await client.auth.signOut();setMessage('This account is not authorized for clinic staff access. Ask the clinic owner to provision a staff profile.');return;}
       loginForm.hidden=true;workspace.hidden=false;signOut.hidden=false;
       document.getElementById('welcomeStaff').textContent='Welcome, '+staff.full_name+' · '+staff.role;
+      document.getElementById('staffDisplayName').value=staff.full_name||'';
       await loadAppointments();
     }
     loginForm.addEventListener('submit',async e=>{
       e.preventDefault();const btn=document.getElementById('loginButton');btn.disabled=true;btn.textContent='Signing in...';
       const {error}=await client.auth.signInWithPassword({email:document.getElementById('staffEmail').value,password:document.getElementById('staffPassword').value});
-      if(error)setMessage('Sign-in failed. Check your credentials.');else await enterWorkspace();
+      if(error){
+        const messageText=String(error.message||'').toLowerCase();
+        setMessage(error.code==='email_not_confirmed'||messageText.includes('email not confirmed')
+          ? 'This staff account email is not confirmed. Confirm the email in Supabase Authentication → Users, then sign in again.'
+          : 'Sign-in failed. Check your email and password.');
+      }else await enterWorkspace();
       btn.disabled=false;btn.textContent='Sign in';
     });
-    signOut.addEventListener('click',async()=>{await client.auth.signOut();location.reload();});
+    document.getElementById('staffProfileForm').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const btn=document.getElementById('saveStaffName'),status=document.getElementById('staffProfileMessage');
+      const fullName=document.getElementById('staffDisplayName').value.trim();
+      if(fullName.length<2||fullName.length>100){status.textContent='Enter a name between 2 and 100 characters.';return;}
+      btn.disabled=true;status.textContent='Saving...';
+      const {error}=await client.rpc('complete_staff_setup',{p_full_name:fullName});
+      if(error){status.textContent=error.message||'Could not update your name.';}
+      else{document.getElementById('welcomeStaff').textContent='Welcome, '+fullName+' · '+document.getElementById('welcomeStaff').textContent.split(' · ').pop();status.textContent='Name updated.';}
+      btn.disabled=false;
+    });
+    document.getElementById('signOut').addEventListener('click',async()=>{await client.auth.signOut();location.reload();});
     document.getElementById('refreshAppointments').addEventListener('click',loadAppointments);
     document.getElementById('statusFilter').addEventListener('change',loadAppointments);
     client.auth.getSession().then(({data})=>{if(data.session)enterWorkspace();});
