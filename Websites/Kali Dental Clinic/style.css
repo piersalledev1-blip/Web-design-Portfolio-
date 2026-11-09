@@ -2861,10 +2861,10 @@ button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 
   /* Scale the brand mark up on large desktop displays without crowding laptops. */
   @media (min-width: 1440px) {
-    .nav-container { height: clamp(100px, 6.5vw, 118px); }
+    .nav-container { height: clamp(112px, 7.5vw, 142px); }
     .logo img {
-      width: clamp(260px, 18vw, 340px);
-      height: clamp(88px, 6vw, 112px);
+      width: clamp(360px, 24vw, 440px);
+      height: clamp(112px, 7.5vw, 140px);
     }
     .nav-links { gap: clamp(24px, 2.8vw, 46px); }
     .nav-actions { gap: clamp(18px, 2vw, 30px); }
