@@ -2746,7 +2746,8 @@ h2 { font-size: clamp(2.1rem, 4.1vw, 3.35rem); letter-spacing: -.045em; line-hei
 .approach-item { padding: 23px; }
 .service-icon-card { padding: 25px; }
 .help-panel { border-radius: 6px; background: #eef2eb; }
-.booking-section { background: #edf2eb; }
+/* Keep the shared booking CTA dark: its heading and paragraph colours are light. */
+.booking-section { background: #173d32; color: #fff; }
 .footer {
   background: #102f27;
   color: #dce5dd;
