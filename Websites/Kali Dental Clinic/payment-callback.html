@@ -38,13 +38,16 @@
       <div class="booking-card-main">
         <span class="eyebrow">Paystack Return</span>
         <h1 id="paymentHeading" style="color:var(--green);margin:12px 0;">Verifying payment</h1>
-        <p id="paymentMessage" style="color:var(--muted);">We are checking the booking record. The clinic confirms payment only after Paystack's verified webhook is received.</p>
+        <p id="paymentMessage" style="color:var(--muted);">We are checking the booking record. The clinic confirms payment only after the transaction is verified directly with Paystack or through its signed webhook.</p>
         <div id="trackingCredentials" hidden style="margin:24px 0;padding:18px;background:var(--ivory);border-radius:10px;text-align:left;">
           <p><strong>Booking reference:</strong> <span id="callbackReference"></span></p>
           <p style="margin-top:8px;"><strong>Private tracking code:</strong> <span id="callbackCode" style="overflow-wrap:anywhere;"></span></p>
           <p style="margin-top:10px;color:var(--muted);font-size:.85rem;">Save these details. You need both to track your appointment.</p>
         </div>
-        <a href="track-booking.html" class="btn primary">Track Your Booking</a>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px;">
+          <a href="track-booking.html" class="btn primary">Track Your Booking</a>
+          <a id="retryPayment" href="book-appointment.html" class="btn outline" hidden>Return to Payment</a>
+        </div>
       </div>
     </div>
   </main>
@@ -61,23 +64,52 @@
   <script>
     (async()=>{
       const ref=sessionStorage.getItem('kali_booking_reference'),code=sessionStorage.getItem('kali_tracking_code');
+      const paystackReference=new URLSearchParams(location.search).get('reference')||new URLSearchParams(location.search).get('trxref');
       const creds=document.getElementById('trackingCredentials');
+      const retry=document.getElementById('retryPayment');
       if(ref&&code){creds.hidden=false;document.getElementById('callbackReference').textContent=ref;document.getElementById('callbackCode').textContent=code;}
       if(!ref||!code){document.getElementById('paymentMessage').textContent='Payment has returned, but this browser does not have the tracking credentials. Use the details saved during booking to track your appointment.';return;}
-      const client=window.getSupabaseClient();let confirmed=false;
+      const client=window.getSupabaseClient();let confirmed=false,failed=false;
       for(let i=0;i<8;i++){
         try{
+          if(paystackReference){
+            const {data:verification,error:verificationError}=await client.functions.invoke('verify-payment',{body:{reference:paystackReference,tracking_code:code}});
+            if(!verificationError&&verification?.provider_status==='failed'){
+              document.getElementById('paymentHeading').textContent='Payment not completed';
+              document.getElementById('paymentMessage').textContent='Paystack reports that this payment did not complete. You can return to the saved booking and try again.';
+              retry.hidden=false;failed=true;break;
+            }
+            if(!verificationError&&verification?.provider_status==='abandoned'){
+              document.getElementById('paymentHeading').textContent='Payment was abandoned';
+              document.getElementById('paymentMessage').textContent='The payment was not completed. Return to the saved booking if you want to try again.';
+              retry.hidden=false;failed=true;break;
+            }
+          }
           const {data,error}=await client.functions.invoke('track-booking',{body:{booking_reference:ref,tracking_code:code}});
           if(!error&&data?.booking){
             const b=data.booking;
-            if(b.status==='confirmed'){document.getElementById('paymentHeading').textContent='Payment verified';document.getElementById('paymentMessage').textContent='Your appointment is confirmed. Keep your booking reference and tracking code.';confirmed=true;break;}
-            if(b.status==='pending_payment'){document.getElementById('paymentHeading').textContent='Payment pending verification';document.getElementById('paymentMessage').textContent='Your payment is not yet confirmed. The page will check again shortly.';}
-            else {document.getElementById('paymentHeading').textContent='Booking status: '+b.status.replaceAll('_',' ');document.getElementById('paymentMessage').textContent='Check your booking status using the tracking page.';break;}
+            if(b.status==='confirmed'){
+              document.getElementById('paymentHeading').textContent='Payment verified';
+              document.getElementById('paymentMessage').textContent='Your appointment is confirmed. Keep your booking reference and tracking code.';
+              sessionStorage.removeItem('kali_pending_booking');
+              confirmed=true;break;
+            }
+            if(b.status==='pending_payment'){
+              document.getElementById('paymentHeading').textContent='Payment pending verification';
+              document.getElementById('paymentMessage').textContent='Paystack has not yet confirmed this payment. We are checking again.';
+            }else{
+              document.getElementById('paymentHeading').textContent='Booking status: '+b.status.replaceAll('_',' ');
+              document.getElementById('paymentMessage').textContent='Check your booking status using the tracking page.';
+              break;
+            }
           }
-        }catch(e){}
+        }catch(e){console.error('Payment verification check failed:',e);}
         await new Promise(resolve=>setTimeout(resolve,3500));
       }
-      if(!confirmed&&document.getElementById('paymentHeading').textContent==='Payment pending verification')document.getElementById('paymentMessage').textContent='Payment is still awaiting verification. Your booking status may update shortly; use Track Your Booking to check again.';
+      if(!confirmed&&!failed&&document.getElementById('paymentHeading').textContent==='Payment pending verification'){
+        document.getElementById('paymentMessage').textContent='Payment is still awaiting verification. Your booking is saved. Use Track Your Booking to check again, or return to payment later.';
+        retry.hidden=false;
+      }
     })();
   </script>
 </body>
