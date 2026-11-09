@@ -2859,6 +2859,17 @@ button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
     object-position: left center;
   }
 
+  /* Scale the brand mark up on large desktop displays without crowding laptops. */
+  @media (min-width: 1440px) {
+    .nav-container { height: clamp(100px, 6.5vw, 118px); }
+    .logo img {
+      width: clamp(260px, 18vw, 340px);
+      height: clamp(88px, 6vw, 112px);
+    }
+    .nav-links { gap: clamp(24px, 2.8vw, 46px); }
+    .nav-actions { gap: clamp(18px, 2vw, 30px); }
+  }
+
   /* Keep the complete homepage hero visible in a normal desktop viewport. */
   .hero-grid {
     min-height: calc(100svh - 94px);
