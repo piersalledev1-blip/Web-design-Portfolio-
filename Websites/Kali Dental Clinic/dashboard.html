@@ -75,9 +75,9 @@
             <span id="staffProfileMessage" role="status" style="font-size:.85rem;color:var(--muted);"></span>
           </form>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0;">
-            <select id="statusFilter" aria-label="Filter appointments"><option value="all">All appointments</option><option value="pending_payment">Awaiting payment</option><option value="confirmed">Confirmed</option><option value="checked_in">Checked in</option><option value="in_progress">In progress</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select>
+            <select id="statusFilter" aria-label="Filter appointments"><option value="all">All appointments</option><option value="pending_payment">Awaiting payment</option><option value="confirmed">Confirmed</option><option value="checked_in">Checked in</option><option value="in_progress">In progress</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option><option value="clinic_cancelled">Clinic cancelled</option><option value="no_show">No-show</option><option value="expired">Expired</option></select>
           </div>
-          <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:760px;"><thead><tr style="text-align:left;border-bottom:1px solid var(--border);"><th style="padding:12px;">Appointment</th><th style="padding:12px;">Patient</th><th style="padding:12px;">Date & time</th><th style="padding:12px;">Status</th><th style="padding:12px;">Action</th></tr></thead><tbody id="appointmentRows"></tbody></table></div>
+          <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:760px;"><thead><tr style="text-align:left;border-bottom:1px solid var(--border);"><th style="padding:12px;">Appointment</th><th style="padding:12px;">Patient</th><th style="padding:12px;">Date & time</th><th style="padding:12px;">Status</th><th style="padding:12px;">Payment</th><th style="padding:12px;">Action</th></tr></thead><tbody id="appointmentRows"></tbody></table></div>
         </section>
       </div>
     </section>
@@ -128,7 +128,7 @@
     function setMessage(v){message.textContent=v;}
     async function loadAppointments(){
       setMessage('Loading appointments...');
-      const {data,error}=await client.from('appointments').select('id,booking_reference,status,starts_at,ends_at,service:services(name),patient:patients(full_name,phone_local,email)').order('starts_at',{ascending:false}).limit(200);
+      const {data,error}=await client.from('appointments').select('id,booking_reference,status,starts_at,ends_at,total_price,amount_due_now,balance_due,service:services(name),patient:patients(full_name,phone_local,email),payments(status,amount,paid_at,created_at)').order('starts_at',{ascending:false}).limit(200);
       if(error){setMessage('Unable to load appointments. Check staff permissions.');return;}
       const filter=document.getElementById('statusFilter').value,rows=(data||[]).filter(a=>filter==='all'||a.status===filter);
       document.getElementById('appointmentRows').innerHTML=rows.length?rows.map(a=>{
@@ -137,8 +137,12 @@
         if(a.status==='confirmed')actions='<button class="btn outline" data-id="'+a.id+'" data-status="checked_in">Check in</button>';
         else if(a.status==='checked_in')actions='<button class="btn outline" data-id="'+a.id+'" data-status="in_progress">Start</button>';
         else if(a.status==='in_progress')actions='<button class="btn outline" data-id="'+a.id+'" data-status="completed">Complete</button>';
-        return '<tr style="border-bottom:1px solid var(--border);"><td style="padding:12px;"><strong>'+esc(a.service?.name||'Dental service')+'</strong><br><small>'+esc(a.booking_reference)+'</small></td><td style="padding:12px;">'+esc(a.patient?.full_name)+'<br><small>'+esc(a.patient?.phone_local)+'</small></td><td style="padding:12px;">'+esc(date)+'</td><td style="padding:12px;">'+esc(a.status.replaceAll('_',' '))+'</td><td style="padding:12px;">'+actions+'</td></tr>';
-      }).join(''):'<tr><td colspan="5" style="padding:20px;color:var(--muted);">No appointments found.</td></tr>';
+        const payment=(a.payments||[]).slice().sort((x,y)=>new Date(y.created_at)-new Date(x.created_at))[0];
+        const paymentStatus=payment?.status||'not started';
+        const paymentAmount=payment?'GH₵'+Number(payment.amount||0).toLocaleString('en-GH',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+        const balance=Number(a.balance_due||0)>0?' · Balance GH₵'+Number(a.balance_due).toLocaleString('en-GH',{minimumFractionDigits:2,maximumFractionDigits:2}):'';
+        return '<tr style="border-bottom:1px solid var(--border);"><td style="padding:12px;"><strong>'+esc(a.service?.name||'Dental service')+'</strong><br><small>'+esc(a.booking_reference)+'</small></td><td style="padding:12px;">'+esc(a.patient?.full_name)+'<br><small>'+esc(a.patient?.phone_local)+'</small></td><td style="padding:12px;">'+esc(date)+'</td><td style="padding:12px;">'+esc(a.status.replaceAll('_',' '))+'</td><td style="padding:12px;">'+esc(paymentStatus)+'<br><small>'+esc(paymentAmount+balance)+'</small></td><td style="padding:12px;">'+actions+'</td></tr>';
+      }).join(''):'<tr><td colspan="6" style="padding:20px;color:var(--muted);">No appointments found.</td></tr>';
       setMessage(rows.length+' appointment(s) displayed.');
       document.getElementById('appointmentRows').querySelectorAll('button[data-id]').forEach(btn=>btn.addEventListener('click',async()=>{
         btn.disabled=true;const {error}=await client.rpc('transition_appointment_status',{p_appointment_id:btn.dataset.id,p_new_status:btn.dataset.status});
