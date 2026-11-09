@@ -33,15 +33,18 @@
       </div>
     </div>
   </header>
-  <main id="main" style="min-height:60vh; padding:80px 0;">
-    <div class="container" style="max-width:600px; text-align:center;">
-      <div style="background:var(--white); border:1px solid var(--border); border-radius:12px; padding:48px 32px;">
-        <h1 style="color:var(--green); margin-bottom:16px;">Payment Processing</h1>
-        <p style="color:var(--muted); margin-bottom:24px;">We are checking your payment status. Confirmation may take a short time as we verify with our payment processor.</p>
-        <p style="color:var(--muted); font-size:0.9rem;">Please do not close this page. If you have completed payment, your appointment will be confirmed once verification is complete.</p>
-        <div style="margin-top:32px;">
-          <a href="track-booking.html" class="btn primary">Track Your Booking</a>
+  <main id="main" style="min-height:60vh;padding:72px 0;">
+    <div class="container" style="max-width:680px;text-align:center;">
+      <div class="booking-card-main">
+        <span class="eyebrow">Paystack Return</span>
+        <h1 id="paymentHeading" style="color:var(--green);margin:12px 0;">Verifying payment</h1>
+        <p id="paymentMessage" style="color:var(--muted);">We are checking the booking record. The clinic confirms payment only after Paystack's verified webhook is received.</p>
+        <div id="trackingCredentials" hidden style="margin:24px 0;padding:18px;background:var(--ivory);border-radius:10px;text-align:left;">
+          <p><strong>Booking reference:</strong> <span id="callbackReference"></span></p>
+          <p style="margin-top:8px;"><strong>Private tracking code:</strong> <span id="callbackCode" style="overflow-wrap:anywhere;"></span></p>
+          <p style="margin-top:10px;color:var(--muted);font-size:.85rem;">Save these details. You need both to track your appointment.</p>
         </div>
+        <a href="track-booking.html" class="btn primary">Track Your Booking</a>
       </div>
     </div>
   </main>
@@ -54,6 +57,28 @@
   </footer>
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+  <script>
+    (async()=>{
+      const ref=sessionStorage.getItem('kali_booking_reference'),code=sessionStorage.getItem('kali_tracking_code');
+      const creds=document.getElementById('trackingCredentials');
+      if(ref&&code){creds.hidden=false;document.getElementById('callbackReference').textContent=ref;document.getElementById('callbackCode').textContent=code;}
+      if(!ref||!code){document.getElementById('paymentMessage').textContent='Payment has returned, but this browser does not have the tracking credentials. Use the details saved during booking to track your appointment.';return;}
+      const client=window.getSupabaseClient();let confirmed=false;
+      for(let i=0;i<8;i++){
+        try{
+          const {data,error}=await client.functions.invoke('track-booking',{body:{booking_reference:ref,tracking_code:code}});
+          if(!error&&data?.booking){
+            const b=data.booking;
+            if(b.status==='confirmed'){document.getElementById('paymentHeading').textContent='Payment verified';document.getElementById('paymentMessage').textContent='Your appointment is confirmed. Keep your booking reference and tracking code.';confirmed=true;break;}
+            if(b.status==='pending_payment'){document.getElementById('paymentHeading').textContent='Payment pending verification';document.getElementById('paymentMessage').textContent='Your payment is not yet confirmed. The page will check again shortly.';}
+            else {document.getElementById('paymentHeading').textContent='Booking status: '+b.status.replaceAll('_',' ');document.getElementById('paymentMessage').textContent='Check your booking status using the tracking page.';break;}
+          }
+        }catch(e){}
+        await new Promise(resolve=>setTimeout(resolve,3500));
+      }
+      if(!confirmed&&document.getElementById('paymentHeading').textContent==='Payment pending verification')document.getElementById('paymentMessage').textContent='Payment is still awaiting verification. Your booking status may update shortly; use Track Your Booking to check again.';
+    })();
   </script>
 </body>
 </html>
