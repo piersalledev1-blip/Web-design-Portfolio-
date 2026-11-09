@@ -872,7 +872,12 @@
           window.location.assign('payment-callback.html?reference='+encodeURIComponent(payment.reference));
           return;
         }
-        if(paymentError||!payment?.authorization_url)throw new Error(payment?.error||'Payment could not be started. Select retry to try again.');
+        if(paymentError){
+          let details=null;
+          try{if(paymentError.context?.json)details=await paymentError.context.json();}catch(e){}
+          throw new Error(details?.error||'Payment could not be started. Select retry to try again.');
+        }
+        if(!payment?.authorization_url)throw new Error(payment?.error||'Payment could not be started. Select retry to try again.');
         window.location.assign(payment.authorization_url);
       }catch(error){alert(error.message||'Something went wrong.');btn.disabled=false;btn.textContent=createdBooking?'Retry Payment →':'Proceed to Payment →';}
     });
