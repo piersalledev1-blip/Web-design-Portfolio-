@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Complete your KALI Dental Clinic staff account securely.">
+  <title>Activate Staff Account | KALI Dental Clinic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <style>
+    body.staff-setup-page{background:#f5f6f1;min-height:100vh}
+    .setup-wrap{min-height:calc(100vh - 90px);display:grid;place-items:center;padding:52px 20px}
+    .setup-card{width:min(100%,540px);background:#fff;border:1px solid #e0e7df;border-radius:16px;padding:clamp(26px,5vw,46px);box-shadow:0 22px 70px rgba(23,61,50,.09)}
+    .setup-eyebrow{color:#557362;font-size:.76rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+    .setup-card h1{font-family:'Playfair Display',serif;color:#173d32;font-size:clamp(2rem,5vw,2.8rem);line-height:1.1;margin:12px 0}
+    .setup-card .intro{color:#647168;line-height:1.7;margin-bottom:26px}
+    .setup-form{display:grid;gap:17px}
+    .setup-form label{display:block;color:#304438;font-weight:700;font-size:.86rem;margin-bottom:8px}
+    .setup-form input{width:100%;height:52px;padding:0 15px;border:1px solid #d9e2d9;border-radius:8px;background:#fbfcfa;color:#25382e;font:inherit;outline:none}
+    .setup-form input:focus{border-color:#47745e;box-shadow:0 0 0 4px rgba(71,116,94,.12)}
+    .password-rules{background:#f5f8f3;border-radius:9px;padding:14px 16px;margin-top:-4px}
+    .password-rules p{font-size:.8rem;color:#68766c;margin-bottom:8px}
+    .password-rules ul{display:grid;grid-template-columns:1fr 1fr;gap:7px 14px;list-style:none;padding:0;margin:0}
+    .password-rules li{font-size:.77rem;color:#78847b}
+    .password-rules li::before{content:'○';margin-right:7px;color:#a0aaa2}
+    .password-rules li.valid{color:#286344}
+    .password-rules li.valid::before{content:'✓';color:#286344;font-weight:700}
+    .setup-submit{width:100%;height:54px;margin-top:4px}
+    .setup-message{min-height:22px;margin:16px 0 0;font-size:.88rem;color:#53645a;line-height:1.6}
+    .setup-message.error{color:#a33737}
+    .setup-message.success{color:#24613f}
+    .setup-footer{text-align:center;color:#849087;font-size:.77rem;margin-top:22px}
+    .setup-loading{padding:22px;background:#f6f8f4;border-radius:8px;color:#526258;line-height:1.6}
+    @media(max-width:480px){.password-rules ul{grid-template-columns:1fr}}
+  </style>
+</head>
+<body class="staff-setup-page">
+  <main class="setup-wrap">
+    <section class="setup-card">
+      <span class="setup-eyebrow">KALI Dental Clinic · Staff Portal</span>
+      <h1>Activate your account.</h1>
+      <p class="intro">Set up your staff profile to access the clinic dashboard. Use your invited email address and create a strong password.</p>
+      <div id="setupLoading" class="setup-loading" role="status">Verifying your invitation link…</div>
+      <form id="setupForm" class="setup-form" hidden>
+        <div>
+          <label for="staffName">Full name</label>
+          <input id="staffName" name="staffName" type="text" autocomplete="name" minlength="2" maxlength="100" required placeholder="Enter your full name">
+        </div>
+        <div>
+          <label for="staffPassword">Create password</label>
+          <input id="staffPassword" name="staffPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="Create a strong password">
+        </div>
+        <div>
+          <label for="confirmPassword">Confirm password</label>
+          <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="Enter the password again">
+        </div>
+        <div class="password-rules">
+          <p>Password requirements</p>
+          <ul>
+            <li id="rule-length">At least 8 characters</li>
+            <li id="rule-upper">One uppercase letter</li>
+            <li id="rule-lower">One lowercase letter</li>
+            <li id="rule-number">One number</li>
+            <li id="rule-symbol">One symbol</li>
+          </ul>
+        </div>
+        <button id="setupSubmit" class="btn primary setup-submit" type="submit">Activate account</button>
+      </form>
+      <p id="setupMessage" class="setup-message" role="status" aria-live="polite"></p>
+      <p class="setup-footer">Your account is restricted to authorised clinic staff.</p>
+    </section>
+  </main>
+  <script>
+    (async () => {
+      const loading=document.getElementById('setupLoading');
+      const form=document.getElementById('setupForm');
+      const message=document.getElementById('setupMessage');
+      const submit=document.getElementById('setupSubmit');
+      const client=window.getSupabaseClient?window.getSupabaseClient():null;
+      const showError=text=>{message.className='setup-message error';message.textContent=text;};
+      if(!client){loading.hidden=true;showError('The secure account service could not load. Refresh this page and try again.');return;}
+      try{
+        const query=new URLSearchParams(location.search);
+        const hash=new URLSearchParams(location.hash.replace(/^#/,''));
+        const tokenHash=query.get('token_hash')||hash.get('token_hash');
+        const authType=query.get('type')||hash.get('type')||'invite';
+        const code=query.get('code');
+        if(tokenHash){
+          const {error}=await client.auth.verifyOtp({token_hash:tokenHash,type:authType==='invite'?'invite':authType});
+          if(error)throw error;
+        }else if(code){
+          const {error}=await client.auth.exchangeCodeForSession(code);
+          if(error)throw error;
+        }
+        let {data:{session}}=await client.auth.getSession();
+        if(!session && hash.get('access_token') && hash.get('refresh_token')){
+          const {data,error}=await client.auth.setSession({access_token:hash.get('access_token'),refresh_token:hash.get('refresh_token')});
+          if(error)throw error;
+          session=data.session;
+        }
+        if(!session)throw new Error('This invitation link is invalid or has expired. Ask the clinic administrator to send a new invitation.');
+        const {data:{user}}=await client.auth.getUser();
+        if(!user)throw new Error('We could not verify this invited account. Request a fresh invitation.');
+        document.getElementById('staffName').value=user.user_metadata?.full_name||user.user_metadata?.name||'';
+        loading.hidden=true;
+        form.hidden=false;
+        // Remove one-time credentials from the visible address bar after session establishment.
+        history.replaceState({},document.title,location.pathname);
+      }catch(error){
+        loading.hidden=true;
+        showError(error.message||'Invitation verification failed. Ask the clinic administrator to resend the invitation.');
+      }
+      const password=document.getElementById('staffPassword');
+      const rules={
+        'rule-length':v=>v.length>=8,
+        'rule-upper':v=>/[A-Z]/.test(v),
+        'rule-lower':v=>/[a-z]/.test(v),
+        'rule-number':v=>/[0-9]/.test(v),
+        'rule-symbol':v=>/[^A-Za-z0-9]/.test(v)
+      };
+      function validatePassword(){
+        const v=password.value;
+        Object.entries(rules).forEach(([id,test])=>document.getElementById(id).classList.toggle('valid',test(v)));
+        return Object.values(rules).every(test=>test(v));
+      }
+      password.addEventListener('input',validatePassword);
+      form.addEventListener('submit',async event=>{
+        event.preventDefault();
+        message.className='setup-message';message.textContent='';
+        const name=document.getElementById('staffName').value.trim();
+        const pass=password.value;
+        const confirm=document.getElementById('confirmPassword').value;
+        if(name.length<2){showError('Enter your full name.');return;}
+        if(!validatePassword()){showError('Your password does not meet all the requirements.');return;}
+        if(pass!==confirm){showError('The passwords do not match.');return;}
+        submit.disabled=true;submit.textContent='Activating account…';
+        try{
+          const {error:updateError}=await client.auth.updateUser({password:pass,data:{full_name:name,name}});
+          if(updateError)throw updateError;
+          const {error:profileError}=await client.rpc('complete_staff_setup',{p_full_name:name});
+          if(profileError)throw profileError;
+          message.className='setup-message success';
+          message.textContent='Your staff account is ready. Opening the clinic dashboard…';
+          setTimeout(()=>location.assign('dashboard.html'),900);
+        }catch(error){
+          showError(error.message||'Account setup could not be completed. Contact the clinic administrator.');
+          submit.disabled=false;submit.textContent='Activate account';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
