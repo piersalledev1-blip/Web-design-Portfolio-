@@ -31,7 +31,9 @@ jobs:
 
       - name: Prepare website
         run: |
-          mkdir _site
+          mkdir -p _site/portfolio
+          cp index.html style.css script.js _site/portfolio/
+          cp -r assets pages _site/portfolio/
           cp -r "Websites/Kali Dental Clinic/." _site/
 
       - name: Upload website
