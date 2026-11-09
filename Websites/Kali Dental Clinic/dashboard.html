@@ -158,7 +158,8 @@
     document.getElementById('refreshAppointments').addEventListener('click',loadAppointments);
     document.getElementById('statusFilter').addEventListener('change',loadAppointments);
     client.auth.getSession().then(({data})=>{if(data.session)enterWorkspace();});
-    window.setInterval(()=>{if(!workspace.hidden&&!document.hidden)loadAppointments();},30000);\n    document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!workspace.hidden)loadAppointments();});
+    window.setInterval(()=>{if(!workspace.hidden&&!document.hidden)loadAppointments();},30000);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!workspace.hidden)loadAppointments();});
   </script>
 </body>
 </html>
