@@ -623,7 +623,7 @@
 
   <script>
       let services = [];
-    const timeOptions = ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '01:00 PM', '01:30 PM', '02:00 PM', '02:30 PM', '03:00 PM'];
+    const timeOptions = Array.from({length:26}, (_,i) => { const mins=7*60+i*30; const h=Math.floor(mins/60), m=mins%60; return `${h%12||12}:${String(m).padStart(2,'0')} ${h<12?'AM':'PM'}`; });
     const busyIntervals = [];
     const state = { service: null, date: null, dateIso: null, time: null, bookingFor: 'self' };
 
@@ -748,8 +748,8 @@
         if(meridiem==='PM'&&hh!==12)hh+=12;if(meridiem==='AM'&&hh===12)hh=0;
         const slotStart=new Date(state.dateIso+'T'+String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')+':00Z');
         const slotEnd=new Date(slotStart.getTime()+duration*60000);
-        const busy=data.busy_intervals.some(x=>new Date(x.starts_at)<slotEnd&&new Date(x.ends_at)>slotStart);
-        const btn=document.createElement('button');btn.type='button';btn.className='time-slot'+(busy?' disabled':'');btn.disabled=busy;btn.textContent=t+(busy?' · Unavailable':'');
+        const closingTime=new Date(state.dateIso+'T20:00:00Z');\n        const isPast=slotStart<=new Date();\n        const outsideHours=slotEnd>closingTime;\n        const busy=isPast||outsideHours||data.busy_intervals.some(x=>new Date(x.starts_at)<slotEnd&&new Date(x.ends_at)>slotStart);
+        const btn=document.createElement('button');btn.type='button';btn.className='time-slot'+(busy?' disabled':'');btn.disabled=busy;btn.textContent=t+(isPast?' · Passed':outsideHours?' · Outside opening hours':busy?' · Unavailable':'');
         btn.addEventListener('click',()=>{document.querySelectorAll('.time-slot').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.time=t;updateSummary();});
         slots.appendChild(btn);
       });
