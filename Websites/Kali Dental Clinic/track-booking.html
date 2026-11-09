@@ -52,23 +52,115 @@
     </div>
   </div>
 
-  <main id="main" style="min-height:60vh;padding:64px 0;">
-    <section class="container" style="max-width:760px;">
-      <div class="booking-card-main">
-        <span class="eyebrow">Patient Portal</span><h1 style="color:var(--green);margin:10px 0;">Track your appointment</h1>
-        <p style="color:var(--muted);margin-bottom:26px;">Use the booking reference and private tracking code shown after checkout. Keep the tracking code private.</p>
-        <form id="trackingForm" class="form-grid">
-          <div class="form-group full"><label for="bookingReference">Booking reference</label><input id="bookingReference" required autocomplete="off" placeholder="KALI-XXXXXXXX"></div>
-          <div class="form-group full"><label for="trackingCode">Private tracking code</label><input id="trackingCode" required autocomplete="off" autocapitalize="characters" placeholder="32-character code"></div>
-          <div class="form-group full"><button class="btn primary" id="trackSubmit" type="submit">Find Booking</button></div>
-        </form>
-        <p id="trackingMessage" role="status" style="margin-top:18px;color:var(--muted);"></p>
-        <div id="trackingResult" hidden style="margin-top:24px;padding:22px;background:var(--ivory);border-radius:10px;">
-          <h2 id="trackStatus" style="color:var(--green);margin-bottom:12px;"></h2><div id="trackDetails" style="display:grid;gap:9px;"></div>
-        </div>
+  <main id="main" class="track-page-main">
+    <section class="container track-shell">
+      <div class="track-heading">
+        <span class="eyebrow">Patient Portal</span>
+        <h1>Track your appointment.</h1>
+        <p>Enter the booking reference and private tracking code provided after you submit your booking. Your details are checked securely against the clinic's booking system.</p>
       </div>
+      <div class="track-layout">
+        <section class="track-form-card" aria-labelledby="trackFormTitle">
+          <h2 id="trackFormTitle">Find your booking</h2>
+          <p class="track-intro">Both details are required to protect your booking information.</p>
+          <form id="trackingForm" class="track-form">
+            <div class="form-group">
+              <label for="bookingReference">Booking reference</label>
+              <input id="bookingReference" name="bookingReference" required autocomplete="off" spellcheck="false" placeholder="e.g. KALI-XXXXXXXX">
+            </div>
+            <div class="form-group">
+              <label for="trackingCode">Private tracking code</label>
+              <input id="trackingCode" name="trackingCode" required autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Enter your private tracking code">
+            </div>
+            <button class="btn primary" id="trackSubmit" type="submit">Track Booking <span aria-hidden="true">→</span></button>
+          </form>
+          <p id="trackingMessage" class="track-message" role="status" aria-live="polite"></p>
+        </section>
+        <aside class="track-help-card">
+          <h3>Where can I find these details?</h3>
+          <p>Your booking reference and tracking code are shown after your booking is created and are also saved in the same browser after checkout.</p>
+          <ul>
+            <li>Use the booking reference exactly as shown.</li>
+            <li>Keep your tracking code private.</li>
+            <li>If you lose the code, contact the clinic for help.</li>
+          </ul>
+          <p style="margin-top:20px;">Need assistance? <a href="contact.html#contact-details">Contact the clinic</a>.</p>
+        </aside>
+      </div>
+      <section id="trackingResult" class="track-result-card" hidden aria-live="polite">
+        <div class="track-result-top">
+          <div><span class="eyebrow">Booking status</span><h2 id="trackStatus">Appointment</h2></div>
+          <span class="track-status-pill" id="trackStatusPill">Status</span>
+        </div>
+        <div id="trackDetails" class="track-detail-grid"></div>
+        <p class="track-result-note">This information reflects the latest status recorded by the clinic booking system. Payment confirmation is verified by the payment provider's server notification.</p>
+      </section>
     </section>
   </main>
+  <script>
+    (() => {
+      const params = new URLSearchParams(location.search);
+      const referenceInput = document.getElementById('bookingReference');
+      const codeInput = document.getElementById('trackingCode');
+      referenceInput.value = params.get('reference') || sessionStorage.getItem('kali_booking_reference') || '';
+      codeInput.value = params.get('code') || sessionStorage.getItem('kali_tracking_code') || '';
+      const form = document.getElementById('trackingForm');
+      const message = document.getElementById('trackingMessage');
+      const result = document.getElementById('trackingResult');
+      const submit = document.getElementById('trackSubmit');
+      const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+      const pretty = value => String(value ?? '—').replaceAll('_',' ').replace(/\b\w/g, ch => ch.toUpperCase());
+      if (params.get('reference') && params.get('code')) {
+        // Keep URL credentials out of the address bar after populating the form.
+        history.replaceState(null, '', location.pathname);
+      }
+      form.addEventListener('submit', async event => {
+        event.preventDefault();
+        submit.disabled = true;
+        submit.textContent = 'Checking booking…';
+        message.classList.remove('error');
+        message.textContent = 'Checking the clinic booking system…';
+        result.hidden = true;
+        try {
+          const client = window.getSupabaseClient ? window.getSupabaseClient() : null;
+          if (!client) throw new Error('The tracking service is unavailable. Please refresh and try again.');
+          const { data, error } = await client.functions.invoke('track-booking', {
+            body: {
+              booking_reference: referenceInput.value.trim().toUpperCase(),
+              tracking_code: codeInput.value.trim().toUpperCase()
+            }
+          });
+          if (error || !data?.booking) throw new Error(data?.error || 'No booking matched those details. Check the reference and tracking code.');
+          const booking = data.booking;
+          const when = new Date(booking.starts_at);
+          if (Number.isNaN(when.getTime())) throw new Error('The booking date could not be read. Please contact the clinic.');
+          document.getElementById('trackStatus').textContent = pretty(booking.status);
+          document.getElementById('trackStatusPill').textContent = pretty(booking.status);
+          const rows = [
+            ['Booking reference', booking.reference],
+            ['Service', booking.service?.name || 'Appointment'],
+            ['Appointment date', when.toLocaleDateString('en-GH', {dateStyle:'full', timeZone:'Africa/Accra'})],
+            ['Appointment time', when.toLocaleTimeString('en-GH', {hour:'numeric', minute:'2-digit', timeZone:'Africa/Accra'})],
+            ['Payment status', pretty(booking.payment_status)],
+            ['Treatment total', 'GH₵' + Number(booking.total_price).toFixed(2)],
+            ['Paid now', 'GH₵' + Number(booking.amount_due_now).toFixed(2)],
+            ['Remaining balance', 'GH₵' + Number(booking.balance_due).toFixed(2)]
+          ];
+          document.getElementById('trackDetails').innerHTML = rows.map(([label, value]) =>
+            '<div class="track-detail-row"><span>' + escapeHtml(label) + '</span><strong>' + escapeHtml(value) + '</strong></div>'
+          ).join('');
+          result.hidden = false;
+          message.textContent = 'Booking details retrieved successfully.';
+        } catch (error) {
+          message.classList.add('error');
+          message.textContent = error.message || 'Unable to retrieve the booking. Please try again.';
+        } finally {
+          submit.disabled = false;
+          submit.innerHTML = 'Track Booking <span aria-hidden="true">→</span>';
+        }
+      });
+    })();
+  </script>
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
