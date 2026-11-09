@@ -129,7 +129,7 @@
       document.getElementById('appointmentRows').innerHTML=rows.length?rows.map(a=>{
         const d=new Date(a.starts_at),date=d.toLocaleString('en-GH',{dateStyle:'medium',timeStyle:'short',timeZone:'Africa/Accra'});
         let actions='';
-        if(a.status==='confirmed')actions='<button class="btn outline" data-id="'+a.id+'" data-status="checked_in">Check in</button> <button class="btn outline" data-id="'+a.id+'" data-status="cancelled">Cancel</button>';
+        if(a.status==='confirmed')actions='<button class="btn outline" data-id="'+a.id+'" data-status="checked_in">Check in</button>';
         else if(a.status==='checked_in')actions='<button class="btn outline" data-id="'+a.id+'" data-status="in_progress">Start</button>';
         else if(a.status==='in_progress')actions='<button class="btn outline" data-id="'+a.id+'" data-status="completed">Complete</button>';
         return '<tr style="border-bottom:1px solid var(--border);"><td style="padding:12px;"><strong>'+esc(a.service?.name||'Dental service')+'</strong><br><small>'+esc(a.booking_reference)+'</small></td><td style="padding:12px;">'+esc(a.patient?.full_name)+'<br><small>'+esc(a.patient?.phone_local)+'</small></td><td style="padding:12px;">'+esc(date)+'</td><td style="padding:12px;">'+esc(a.status.replaceAll('_',' '))+'</td><td style="padding:12px;">'+actions+'</td></tr>';
@@ -157,7 +157,7 @@
     signOut.addEventListener('click',async()=>{await client.auth.signOut();location.reload();});
     document.getElementById('refreshAppointments').addEventListener('click',loadAppointments);
     document.getElementById('statusFilter').addEventListener('change',loadAppointments);
-    client.auth.getSession().then(({data})=>{if(data.session)enterWorkspace();});
+    client.auth.getSession().then(({data})=>{if(data.session)enterWorkspace();});\n    window.setInterval(()=>{if(!workspace.hidden&&!document.hidden)loadAppointments();},30000);\n    document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!workspace.hidden)loadAppointments();});
   </script>
 </body>
 </html>
