@@ -3260,3 +3260,8 @@ button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
   .track-detail-grid { grid-template-columns: 1fr; }
   .track-result-top { align-items: flex-start; flex-direction: column; }
 }
+
+
+.catalogue-state { padding: 30px; color: #526158; background: #f7f8f4; border: 1px solid #e5ebe3; border-radius: 10px; line-height: 1.7; }
+.catalogue-state.error { color: #8e3434; background: #fff8f7; border-color: #f0d9d6; }
+.service-live-price { color: #254b39 !important; font-size: .84rem; font-weight: 700; margin: 12px 0 8px !important; }
