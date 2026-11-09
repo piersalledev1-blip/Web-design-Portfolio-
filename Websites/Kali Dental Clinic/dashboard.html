@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Staff access for KALI Dental Clinic. The staff dashboard is not yet available.">
+  <meta name="description" content="Staff access for KALI Dental Clinic. Secure staff access for appointment management.">
   <title>Staff Dashboard | KALI Dental Clinic</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -50,23 +52,31 @@
     </div>
   </div>
 
-  <main id="main">
-    <section class="placeholder-hero">
-      <div class="container">
-        <div class="placeholder-card">
-          <span class="eyebrow">Staff Access</span>
-          <h1>The Staff Dashboard Is Coming.</h1>
-          <p>This area is reserved for receptionist and clinic owner access. No authentication or dashboard functionality is implemented yet, and no booking data is stored on this website.</p>
-          <div class="placeholder-actions">
-            <a href="index.html" class="btn primary">Back to Home</a>
-            <a href="contact.html" class="btn outline">Contact the Clinic</a>
-          </div>
-          <span class="placeholder-note">Placeholder page — staff access is not active</span>
+  <main id="main" style="min-height:65vh;padding:56px 0;">
+    <section class="container">
+      <div class="booking-card-main">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+          <div><span class="eyebrow">Secure Staff Portal</span><h1 style="color:var(--green);margin:8px 0;">Clinic dashboard</h1></div>
+          <button id="signOut" class="btn outline" hidden>Sign out</button>
         </div>
+        <form id="staffLogin" style="max-width:440px;display:grid;gap:16px;margin-top:24px;">
+          <div class="form-group"><label for="staffEmail">Staff email</label><input id="staffEmail" type="email" autocomplete="username" required></div>
+          <div class="form-group"><label for="staffPassword">Password</label><input id="staffPassword" type="password" autocomplete="current-password" required></div>
+          <button class="btn primary" id="loginButton" type="submit">Sign in</button>
+        </form>
+        <p id="dashboardMessage" role="status" style="margin-top:18px;color:var(--muted);"></p>
+        <section id="staffWorkspace" hidden style="margin-top:28px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+            <h2 id="welcomeStaff" style="color:var(--green);">Appointments</h2><button id="refreshAppointments" class="btn outline">Refresh</button>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0;">
+            <select id="statusFilter" aria-label="Filter appointments"><option value="all">All appointments</option><option value="pending_payment">Awaiting payment</option><option value="confirmed">Confirmed</option><option value="checked_in">Checked in</option><option value="in_progress">In progress</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select>
+          </div>
+          <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:760px;"><thead><tr style="text-align:left;border-bottom:1px solid var(--border);"><th style="padding:12px;">Appointment</th><th style="padding:12px;">Patient</th><th style="padding:12px;">Date & time</th><th style="padding:12px;">Status</th><th style="padding:12px;">Action</th></tr></thead><tbody id="appointmentRows"></tbody></table></div>
+        </section>
       </div>
     </section>
   </main>
-
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
@@ -106,5 +116,48 @@
       </div>
     </div>
   </footer>
+  <script>
+    const loginForm=document.getElementById('staffLogin'),message=document.getElementById('dashboardMessage'),workspace=document.getElementById('staffWorkspace'),signOut=document.getElementById('signOut');
+    const client=window.getSupabaseClient();
+    const esc=v=>String(v??'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    function setMessage(v){message.textContent=v;}
+    async function loadAppointments(){
+      setMessage('Loading appointments...');
+      const {data,error}=await client.from('appointments').select('id,booking_reference,status,starts_at,ends_at,service:services(name),patient:patients(full_name,phone_local,email)').order('starts_at',{ascending:false}).limit(200);
+      if(error){setMessage('Unable to load appointments. Check staff permissions.');return;}
+      const filter=document.getElementById('statusFilter').value,rows=(data||[]).filter(a=>filter==='all'||a.status===filter);
+      document.getElementById('appointmentRows').innerHTML=rows.length?rows.map(a=>{
+        const d=new Date(a.starts_at),date=d.toLocaleString('en-GH',{dateStyle:'medium',timeStyle:'short',timeZone:'Africa/Accra'});
+        let actions='';
+        if(a.status==='confirmed')actions='<button class="btn outline" data-id="'+a.id+'" data-status="checked_in">Check in</button> <button class="btn outline" data-id="'+a.id+'" data-status="cancelled">Cancel</button>';
+        else if(a.status==='checked_in')actions='<button class="btn outline" data-id="'+a.id+'" data-status="in_progress">Start</button>';
+        else if(a.status==='in_progress')actions='<button class="btn outline" data-id="'+a.id+'" data-status="completed">Complete</button>';
+        return '<tr style="border-bottom:1px solid var(--border);"><td style="padding:12px;"><strong>'+esc(a.service?.name||'Dental service')+'</strong><br><small>'+esc(a.booking_reference)+'</small></td><td style="padding:12px;">'+esc(a.patient?.full_name)+'<br><small>'+esc(a.patient?.phone_local)+'</small></td><td style="padding:12px;">'+esc(date)+'</td><td style="padding:12px;">'+esc(a.status.replaceAll('_',' '))+'</td><td style="padding:12px;">'+actions+'</td></tr>';
+      }).join(''):'<tr><td colspan="5" style="padding:20px;color:var(--muted);">No appointments found.</td></tr>';
+      setMessage(rows.length+' appointment(s) displayed.');
+      document.getElementById('appointmentRows').querySelectorAll('button[data-id]').forEach(btn=>btn.addEventListener('click',async()=>{
+        btn.disabled=true;const {error}=await client.from('appointments').update({status:btn.dataset.status}).eq('id',btn.dataset.id);
+        if(error){setMessage('Could not update appointment status.');btn.disabled=false;return;}await loadAppointments();
+      }));
+    }
+    async function enterWorkspace(){
+      const {data:{user}}=await client.auth.getUser();if(!user)return;
+      const {data:staff,error}=await client.from('staff_profiles').select('full_name,role,is_active').eq('user_id',user.id).maybeSingle();
+      if(error||!staff||!staff.is_active){await client.auth.signOut();setMessage('This account is not authorized for clinic staff access. Ask the clinic owner to provision a staff profile.');return;}
+      loginForm.hidden=true;workspace.hidden=false;signOut.hidden=false;
+      document.getElementById('welcomeStaff').textContent='Welcome, '+staff.full_name+' · '+staff.role;
+      await loadAppointments();
+    }
+    loginForm.addEventListener('submit',async e=>{
+      e.preventDefault();const btn=document.getElementById('loginButton');btn.disabled=true;btn.textContent='Signing in...';
+      const {error}=await client.auth.signInWithPassword({email:document.getElementById('staffEmail').value,password:document.getElementById('staffPassword').value});
+      if(error)setMessage('Sign-in failed. Check your credentials.');else await enterWorkspace();
+      btn.disabled=false;btn.textContent='Sign in';
+    });
+    signOut.addEventListener('click',async()=>{await client.auth.signOut();location.reload();});
+    document.getElementById('refreshAppointments').addEventListener('click',loadAppointments);
+    document.getElementById('statusFilter').addEventListener('change',loadAppointments);
+    client.auth.getSession().then(({data})=>{if(data.session)enterWorkspace();});
+  </script>
 </body>
 </html>
