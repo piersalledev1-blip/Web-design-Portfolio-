@@ -484,7 +484,7 @@
             <p style="color:var(--muted); font-size:0.85rem; margin-top:12px;">Select a date to see available times.</p>
             <h3 style="margin-top:24px; color:var(--green);">Available times</h3>
             <div class="time-slots" id="timeSlots"></div>
-            <p style="color:var(--muted); font-size:0.8rem; margin-top:10px;">Times shown are for demonstration only. Actual availability may differ.</p>
+            <p style="color:var(--muted); font-size:0.8rem; margin-top:10px;">Availability is checked against current clinic bookings. A selected time is confirmed only after the booking is created.</p>
             <div class="booking-actions">
               <button class="btn outline" id="backTo1">← Back</button>
               <button class="btn primary" id="toStep3">Continue <span aria-hidden="true">→</span></button>
@@ -581,8 +581,8 @@
     <section class="confirmation-section" id="confirmationSection">
       <div class="confirmation-card">
         <div class="confirmation-icon">✓</div>
-        <span class="eyebrow">Booking Confirmation</span>
-        <h2 style="color:var(--green); font-size:clamp(2rem,4vw,3rem); margin:12px 0;">You're all set (Demo)</h2>
+        <span class="eyebrow">Booking Status</span>
+        <h2 style="color:var(--green); font-size:clamp(2rem,4vw,3rem); margin:12px 0;">Your booking has been received</h2>
         <div style="text-align:left; max-width:420px; margin:18px auto; background:var(--ivory); padding:18px; border-radius:10px;">
           <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Service</span><span id="confService">-</span></div>
           <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--muted);">Total service cost</span><span id="confTotal">-</span></div>
@@ -646,8 +646,8 @@
   <script>
       let services = [];
     const timeOptions = ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '01:00 PM', '01:30 PM', '02:00 PM', '02:30 PM', '03:00 PM'];
-    const bookedDemo = new Set();
-    const state = { service: null, date: null, time: null, bookingFor: 'self' };
+    const busyIntervals = [];
+    const state = { service: null, date: null, dateIso: null, time: null, bookingFor: 'self' };
 
     const serviceGrid = document.getElementById('serviceGrid');
     
@@ -734,7 +734,7 @@
     today.setHours(0,0,0,0);
     function renderCalendar(){
       calendarGrid.innerHTML='';
-      for(let i=0;i<7;i++){
+      for(let i=0;i<8;i++){
         const d = new Date(today);
         d.setDate(today.getDate()+i);
         if(i>7) break;
@@ -746,6 +746,7 @@
           document.querySelectorAll('.calendar-day').forEach(b=>b.classList.remove('selected'));
           btn.classList.add('selected');
           state.date = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+          state.dateIso = [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
           updateSummary();
           renderTimes();
         });
@@ -754,22 +755,23 @@
     }
     renderCalendar();
 
-    function renderTimes(){
-      const slots = document.getElementById('timeSlots');
+    async function renderTimes(){
+      const slots=document.getElementById('timeSlots');
+      slots.innerHTML='<p style="color:var(--muted);">Checking live availability...</p>';
+      const client=window.getSupabaseClient?window.getSupabaseClient():null;
+      if(!client||!state.service||!state.dateIso){slots.innerHTML='<p>Availability is unavailable.</p>';return;}
+      const {data,error}=await client.functions.invoke('get-availability',{body:{date:state.dateIso,service_id:state.service.id}});
+      if(error||!data?.busy_intervals){slots.innerHTML='<p style="color:var(--muted);">Could not check availability. Refresh and try again.</p>';return;}
       slots.innerHTML='';
+      const duration=Number(data.duration_minutes||30);
       timeOptions.forEach(t=>{
-        const key = (state.date||'')+'_'+t;
-        const btn = document.createElement('button');
-        btn.className = 'time-slot';
-        if(bookedDemo.has(key)) btn.classList.add('disabled');
-        btn.textContent = t;
-        btn.addEventListener('click', ()=>{
-          if(btn.classList.contains('disabled')) return;
-          document.querySelectorAll('.time-slot').forEach(b=>b.classList.remove('selected'));
-          btn.classList.add('selected');
-          state.time = t;
-          updateSummary();
-        });
+        const [clock,meridiem]=t.split(' ');let [hh,mm]=clock.split(':').map(Number);
+        if(meridiem==='PM'&&hh!==12)hh+=12;if(meridiem==='AM'&&hh===12)hh=0;
+        const slotStart=new Date(state.dateIso+'T'+String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')+':00Z');
+        const slotEnd=new Date(slotStart.getTime()+duration*60000);
+        const busy=data.busy_intervals.some(x=>new Date(x.starts_at)<slotEnd&&new Date(x.ends_at)>slotStart);
+        const btn=document.createElement('button');btn.type='button';btn.className='time-slot'+(busy?' disabled':'');btn.disabled=busy;btn.textContent=t+(busy?' · Unavailable':'');
+        btn.addEventListener('click',()=>{document.querySelectorAll('.time-slot').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.time=t;updateSummary();});
         slots.appendChild(btn);
       });
     }
@@ -817,96 +819,27 @@
       document.getElementById('step3').classList.add('active');
       document.querySelectorAll('.booking-progress-step').forEach((s,i)=>{ if(i===3){s.classList.remove('active');} if(i===2){s.classList.remove('completed');s.classList.add('active');}});
     });
-    document.getElementById('completeBooking').addEventListener('click', async ()=>{
-      const btn = document.getElementById('completeBooking');
-      if(btn.disabled) return;
-      if(!state.service || !state.date || !state.time) {
-        alert('Please complete all steps');
-        return;
-      }
-      const fullName = document.getElementById('fullName').value;
-      const phone = document.getElementById('contactPhone').value;
-      const email = document.getElementById('contactEmail').value;
-      if(!fullName || !/^\d{10}$/.test(phone) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        alert('Please provide valid details');
-        return;
-      }
-      btn.disabled = true;
-      btn.textContent = 'Processing...';
-      
-      const client = window.getSupabaseClient ? window.getSupabaseClient() : null;
-      if(!client) {
-        alert('System error. Please try again.');
-        btn.disabled = false;
-        btn.textContent = 'Proceed to Payment →';
-        return;
-      }
-      
-      try {
-        // Convert date to YYYY-MM-DD format
-        const dateParts = state.date.split(' ');
-        const months = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
-        const year = dateParts[2];
-        const month = months[dateParts[1]] || '01';
-        const day = dateParts[0].padStart(2,'0');
-        const appointmentDate = year + '-' + month + '-' + day;
-        
-        // Convert time to HH:MM:SS
-        const timeStr = state.time;
-        const [time, meridiem] = timeStr.split(' ');
-        let [hours, minutes] = time.split(':').map(Number);
-        if(meridiem === 'PM' && hours !== 12) hours += 12;
-        if(meridiem === 'AM' && hours === 12) hours = 0;
-        const startTime = String(hours).padStart(2,'0') + ':' + String(minutes).padStart(2,'0') + ':00';
-        
-        const idempotencyKey = crypto.randomUUID();
-        
-        const { data: bookingData, error: bookingError } = await client.functions.invoke('create-booking', {
-          body: {
-            service_id: state.service.id,
-            appointment_date: appointmentDate,
-            appointment_time: startTime,
-            patient_name: fullName,
-            patient_phone: phone,
-            patient_email: email,
-            booker_name: fullName,
-            booker_phone: phone,
-            booker_email: email,
-            booking_for: 'self',
-            idempotency_key: idempotencyKey
-          }
-        });
-        
-        if(bookingError || !bookingData?.success) {
-          alert(bookingData?.error || 'Booking failed. Please try again.');
-          btn.disabled = false;
-          btn.textContent = 'Proceed to Payment →';
-          return;
+    let createdBooking=null;
+    document.getElementById('completeBooking').addEventListener('click',async()=>{
+      const btn=document.getElementById('completeBooking');if(btn.disabled)return;
+      if(!state.service||!state.dateIso||!state.time){alert('Please complete all steps.');return;}
+      const fullName=document.getElementById('fullName').value.trim(),phone=document.getElementById('contactPhone').value.trim(),email=document.getElementById('contactEmail').value.trim();
+      if(fullName.length<2||!/^0[235]\d{8}$/.test(phone)||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert('Enter a valid name, Ghanaian phone number and email address.');return;}
+      const client=window.getSupabaseClient?window.getSupabaseClient():null;if(!client){alert('Booking service is unavailable.');return;}
+      btn.disabled=true;btn.textContent='Processing...';
+      try{
+        if(!createdBooking){
+          let [hh,mm]=state.time.split(' ')[0].split(':').map(Number);const meridiem=state.time.split(' ')[1];
+          if(meridiem==='PM'&&hh!==12)hh+=12;if(meridiem==='AM'&&hh===12)hh=0;
+          const appointmentTime=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')+':00';
+          const {data,error}=await client.functions.invoke('create-booking',{body:{service_id:state.service.id,appointment_date:state.dateIso,appointment_time:appointmentTime,patient_name:fullName,patient_phone:phone,patient_email:email}});
+          if(error||!data?.success)throw new Error(data?.error||'Booking could not be created.');createdBooking=data;
         }
-        
-        // Initialize payment
-        const { data: payData, error: payError } = await client.functions.invoke('paystack-initialize', {
-          body: {
-            appointment_id: bookingData.appointment_id,
-            tracking_code: bookingData.tracking_code
-          }
-        });
-        
-        if(payError || !payData?.authorization_url) {
-          alert('Payment initialization failed. Please try again.');
-          btn.disabled = false;
-          btn.textContent = 'Proceed to Payment →';
-          return;
-        }
-        
-        // Redirect to Paystack
-        window.location.href = payData.authorization_url;
-        
-      } catch(e) {
-        alert('An error occurred. Please try again.');
-        btn.disabled = false;
-        btn.textContent = 'Proceed to Payment →';
-      }
+        btn.textContent='Connecting to Paystack...';
+        const {data:payment,error:paymentError}=await client.functions.invoke('paystack-initialize',{body:{appointment_id:createdBooking.appointment_id,tracking_code:createdBooking.tracking_code}});
+        if(paymentError||!payment?.authorization_url)throw new Error(payment?.error||'Payment could not be started. Select retry to try again.');
+        window.location.assign(payment.authorization_url);
+      }catch(error){alert(error.message||'Something went wrong.');btn.disabled=false;btn.textContent=createdBooking?'Retry Payment →':'Proceed to Payment →';}
     });
     document.getElementById('newBooking').addEventListener('click', ()=>{
       location.reload();
