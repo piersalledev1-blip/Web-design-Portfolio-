@@ -13,75 +13,77 @@
   <script src="supabase-config.js"></script>
   <script src="script.js" defer></script>
   <script>
-    document.addEventListener('DOMContentLoaded', async function() {
+    document.addEventListener('DOMContentLoaded', async () => {
       const client = window.getSupabaseClient ? window.getSupabaseClient() : null;
-      const grid = document.querySelector('.services-grid');
-      if (!client || !grid) return;
-      
-      grid.innerHTML = '<p style="color:var(--muted);">Loading services...</p>';
-      
+      const list = document.querySelector('.services-list');
+      if (!list) return;
+      list.innerHTML = '<p class="catalogue-state">Loading available services…</p>';
+      if (!client) {
+        list.innerHTML = '<p class="catalogue-state error">The service catalogue is temporarily unavailable. Please refresh or contact the clinic.</p>';
+        return;
+      }
+      const details = {
+        'dental consultation': 'A chance to discuss your dental concerns, have your mouth examined and receive guidance on appropriate next steps. Your dentist can assess your oral health and explain whether further treatment or preventive care may be helpful.',
+        'teeth cleaning polishing': 'Professional removal of plaque and hardened deposits that regular brushing cannot remove, followed by polishing to help reduce surface stains. Your dentist or hygienist can also discuss brushing, flossing and ways to care for your gums between visits.',
+        'tooth filling': 'A restorative treatment for a tooth affected by decay or minor damage. The affected area is cleaned and restored with a suitable filling material to help protect the tooth and restore its function.',
+        'root canal treatment': 'Treatment for infection or inflammation affecting the soft tissue inside a tooth. The affected tissue is treated and the tooth is sealed, with the aim of relieving symptoms and preserving the natural tooth where possible.',
+        'tooth extraction': 'Removal of a tooth when it cannot be restored or when removal is the most appropriate option. The dentist will assess the tooth, explain the procedure and provide aftercare guidance for recovery.',
+        'teeth whitening': 'Professional options for improving the appearance of stained or discoloured teeth. Suitability, expected results and any sensitivity considerations should be discussed with the dental team before treatment.',
+        'dental crowns': 'A custom-made covering designed to protect and restore a weakened, damaged or heavily treated tooth. The dentist assesses the tooth and discusses the appropriate crown option and preparation involved.',
+        'dental bridges': 'A fixed dental restoration used to replace one or more missing teeth by attaching an artificial tooth to supporting teeth or implants. Your dentist will assess whether a bridge is suitable for your oral health.',
+        'braces consultation': 'An assessment to discuss tooth alignment, bite concerns and possible orthodontic options. The consultation helps determine whether braces or another approach may be suitable and what the treatment process could involve.',
+        'childrens dental care': 'Dental care for younger patients, with attention to their age, comfort and developing teeth. Visits may include an oral health assessment, preventive guidance and advice for parents or guardians.'
+      };
+      const slug = value => String(value || '').toLowerCase().replace(/&/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
+      const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
       try {
-        const { data, error } = await client
-          .from('services')
-          .select('*')
-          .eq('is_active', true)
-          .order('display_order');
-        
-        if (error) {
-          grid.innerHTML = '<p style="color:var(--muted);">Unable to load services at this time.</p>';
+        const { data, error } = await client.from('services').select('id,name,description,total_price,booking_amount,payment_type,is_active,display_order').eq('is_active', true).order('display_order');
+        if (error) throw error;
+        if (!data?.length) {
+          list.innerHTML = '<p class="catalogue-state">There are currently no services available to book. Please contact the clinic for assistance.</p>';
           return;
         }
-        
-        if (!data || data.length === 0) {
-          grid.innerHTML = '<p style="color:var(--muted);">No services available.</p>';
-          return;
-        }
-        
-        grid.innerHTML = '';
-        data.forEach(service => {
-          const article = document.createElement('article');
-          article.className = 'service-card';
-          const totalPrice = parseFloat(service.total_price || 0).toLocaleString('en-GH');
-          const bookingAmt = parseFloat(service.booking_amount || 0).toLocaleString('en-GH');
-          const isFull = service.payment_type === 'full';
-          article.innerHTML = `
-            <div class="service-image"><img src="assets/${getServiceImage(service.name)}" alt="${service.name}" loading="lazy"></div>
-            <div class="service-content">
-              <h3>${escapeHtml(service.name)}</h3>
-              <p>${escapeHtml(service.description || '')}</p>
-              <p style="font-weight:600; color:var(--green); margin-bottom:6px;">Total: GH₵${totalPrice}</p>
-              <p style="font-size:0.8rem; color:var(--muted); margin-bottom:12px;">${isFull ? 'Full Payment' : 'Deposit'}: GH₵${bookingAmt}</p>
-              <a href="book-appointment.html?service=${encodeURIComponent(service.id)}" class="text-link">Book Now <span aria-hidden="true">→</span></a>
-            </div>
-          `;
-          grid.appendChild(article);
+        const existing = new Map(Array.from(list.querySelectorAll('.service-row')).map(row => [slug(row.querySelector('h3')?.textContent), row]));
+        list.innerHTML = '';
+        data.forEach((service, index) => {
+          const key = slug(service.name);
+          const row = existing.get(key);
+          const explanation = details[key] || service.description || 'Contact the clinic to learn more about this service and whether it is suitable for your needs.';
+          const total = Number(service.total_price || 0).toLocaleString('en-GH', {minimumFractionDigits:2, maximumFractionDigits:2});
+          const due = Number(service.booking_amount || 0).toLocaleString('en-GH', {minimumFractionDigits:2, maximumFractionDigits:2});
+          const article = row || document.createElement('article');
+          article.className = 'service-row';
+          article.id = 'service-' + service.id;
+          if (!row) article.innerHTML = '<div class="service-row-body"><span class="service-number"></span><div class="service-row-head"><h3></h3><span class="service-category">Dental care</span></div><p></p></div>';
+          article.querySelector('.service-number').textContent = String(index + 1).padStart(2, '0');
+          article.querySelector('h3').textContent = service.name;
+          article.querySelector('.service-row-body > p').textContent = explanation;
+          const price = document.createElement('p');
+          price.className = 'service-live-price';
+          price.textContent = 'Total: GH₵' + total + ' · ' + (service.payment_type === 'full' ? 'Full payment' : 'Deposit due now') + ': GH₵' + due;
+          const body = article.querySelector('.service-row-body');
+          const oldPrice = body.querySelector('.service-live-price');
+          if (oldPrice) oldPrice.remove();
+          const link = body.querySelector('a');
+          if (link) {
+            link.href = 'book-appointment.html?service=' + encodeURIComponent(service.id);
+            link.textContent = 'Book this service →';
+          } else {
+            const anchor = document.createElement('a');
+            anchor.className = 'text-link';
+            anchor.href = 'book-appointment.html?service=' + encodeURIComponent(service.id);
+            anchor.textContent = 'Book this service →';
+            body.appendChild(anchor);
+          }
+          body.insertBefore(price, body.querySelector('a'));
+          list.appendChild(article);
         });
-      } catch (e) {
-        grid.innerHTML = '<p style="color:var(--muted);">Unable to load services at this time.</p>';
+      } catch (error) {
+        console.error('Service catalogue load failed:', error);
+        list.innerHTML = '<p class="catalogue-state error">We could not load the current service list. Please refresh or contact the clinic before booking.</p>';
       }
     });
-    
-    function getServiceImage(name) {
-      const n = name.toLowerCase();
-      if (n.includes('consultation')) return 'dental-consultation.png';
-      if (n.includes('cleaning')) return 'teeth-cleaning.png';
-      if (n.includes('filling')) return 'tooth-filling.png';
-      if (n.includes('extraction')) return 'tooth-extraction.png';
-      if (n.includes('root')) return 'root-canal.png';
-      if (n.includes('whitening')) return 'teeth-whitening.png';
-      if (n.includes('crown')) return 'dental-crowns.png';
-      if (n.includes('bridge')) return 'dental-crowns.png';
-      if (n.includes('brace')) return 'braces.png';
-      if (n.includes('child')) return 'childrens-dental-care.png';
-      return 'dental-consultation.png';
-    }
-    
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-  </script>
+  </script>>
 </head>
 <body class="services-page">
   <a class="skip-link" href="#main">Skip to content</a>
