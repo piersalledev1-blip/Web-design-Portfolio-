@@ -856,6 +856,14 @@
         }
         btn.textContent='Connecting to Paystack...';
         const {data:payment,error:paymentError}=await client.functions.invoke('paystack-initialize',{body:{appointment_id:createdBooking.appointment_id,tracking_code:createdBooking.tracking_code}});
+        if(paymentError?.context?.status===410){
+          sessionStorage.removeItem('kali_pending_booking');
+          sessionStorage.removeItem('kali_booking_reference');
+          sessionStorage.removeItem('kali_tracking_code');
+          alert('The five-minute payment window has expired. Please choose a new appointment time.');
+          window.location.assign('book-appointment.html');
+          return;
+        }
         if(payment?.already_paid){
           window.location.assign('payment-callback.html?reference='+encodeURIComponent(payment.reference));
           return;
