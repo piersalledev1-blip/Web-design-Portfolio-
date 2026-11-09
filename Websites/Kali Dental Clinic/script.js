@@ -54,32 +54,6 @@
     });
   }
 
-  function showToast(message) {
-    if (!toast) {
-      toast = document.createElement("div");
-      toast.className = "toast";
-      toast.setAttribute("role", "status");
-      toast.setAttribute("aria-live", "polite");
-      document.body.appendChild(toast);
-    }
-
-    toast.textContent = message;
-    toast.classList.add("show");
-
-    window.clearTimeout(toastTimer);
-    toastTimer = window.setTimeout(function () {
-      toast.classList.remove("show");
-    }, 4200);
-  }
-
-  document.querySelectorAll("[data-booking-link]").forEach(function (link) {
-    link.addEventListener("click", function (event) {
-      event.preventDefault();
-      showToast(
-        "Online booking is coming soon. Please contact the clinic to arrange an appointment."
-      );
-    });
-  });
 
   var year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
