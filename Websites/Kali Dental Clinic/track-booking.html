@@ -31,7 +31,7 @@
       </nav>
       <div class="nav-actions">
         <a href="track-booking.html" class="nav-action-link" aria-current="page">Track Booking</a>
-        <a href="book-appointment.html" class="btn primary" title="Online booking is coming soon">Book Appointment</a>
+        <a href="book-appointment.html" class="btn primary">Book Appointment</a>
       </div>
       <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenu">
         <span></span><span></span>
@@ -48,7 +48,7 @@
       <li><a href="track-booking.html" aria-current="page">Track Booking</a></li>
     </ul>
     <div class="mobile-menu-actions">
-      <a href="book-appointment.html" class="btn primary" title="Online booking is coming soon">Book Appointment</a>
+      <a href="book-appointment.html" class="btn primary">Book Appointment</a>
     </div>
   </div>
 
@@ -119,7 +119,7 @@
         const client=window.getSupabaseClient();const {data,error}=await client.functions.invoke('track-booking',{body:{booking_reference:document.getElementById('bookingReference').value,tracking_code:document.getElementById('trackingCode').value}});
         if(error||!data?.booking)throw new Error(data?.error||'Booking not found. Check both details.');
         const b=data.booking,when=new Date(b.starts_at);
-        document.getElementById('trackStatus').textContent=b.status.replaceAll('_',' ').replace(/\\b\\w/g,x=>x.toUpperCase());
+        document.getElementById('trackStatus').textContent=b.status.replaceAll('_',' ').split(' ').map(x=>x.charAt(0).toUpperCase()+x.slice(1)).join(' ');
         const rows=[['Reference',b.reference],['Service',b.service?.name||'Appointment'],['Date',when.toLocaleDateString('en-GH',{dateStyle:'full',timeZone:'Africa/Accra'})],['Time',when.toLocaleTimeString('en-GH',{hour:'numeric',minute:'2-digit',timeZone:'Africa/Accra'})],['Payment',b.payment_status.replaceAll('_',' ')],['Total','GH₵'+Number(b.total_price).toFixed(2)],['Paid now','GH₵'+Number(b.amount_due_now).toFixed(2)],['Balance','GH₵'+Number(b.balance_due).toFixed(2)]];
         document.getElementById('trackDetails').innerHTML=rows.map(([k,v])=>'<div style="display:flex;justify-content:space-between;gap:16px;"><span style="color:var(--muted)">'+k+'</span><strong>'+String(v).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))+'</strong></div>').join('');
         result.hidden=false;message.textContent='Status retrieved from the clinic booking system.';
