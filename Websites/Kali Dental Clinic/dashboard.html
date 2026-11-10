@@ -14,6 +14,17 @@
   <script src="script.js" defer></script>
   <style>
 [hidden]{display:none!important}
+body.staff-theme-dark .staff-workspace{background:#203128;border-color:#354b3c;color:#e7eee8}
+body.staff-theme-dark .staff-workspace-heading h1{color:#e7eee8}
+body.staff-theme-dark .staff-workspace-heading p,body.staff-theme-dark .staff-auth-message{color:#bdcabe}
+body.staff-theme-dark .staff-table-wrap{border-color:#3b5142}
+body.staff-theme-dark .staff-appointments-table th{background:#293d31;color:#d4e1d7}
+body.staff-theme-dark .staff-appointments-table td{color:#dbe7de;border-color:#34493a}
+body.staff-theme-dark .staff-appointments-table tr.is-past{background:#1a2920}
+body.staff-theme-dark .staff-appointments-table tr.is-past td{color:#9caaa0}
+body.staff-theme-dark .staff-table-tools label{color:#dbe7de}
+body.staff-theme-dark .staff-table-tools select{background:#1a2920;color:#e7eee8;border-color:#465b4c}
+
 .staff-portal-main{min-height:calc(100svh - 108px);padding:clamp(42px,7vh,86px) 0;background:radial-gradient(circle at 12% 18%,rgba(190,211,190,.38),transparent 30%),linear-gradient(135deg,#f7f8f3,#edf2eb)}
 .staff-portal-shell{max-width:1120px}
 .staff-login-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.82fr);gap:clamp(36px,7vw,92px);align-items:center}
@@ -132,9 +143,9 @@
         <section class="staff-login-card" aria-labelledby="staffLoginTitle">
           <div class="staff-login-card-head"><span class="staff-login-icon" aria-hidden="true">K</span><div><span class="staff-login-kicker">STAFF ACCESS</span><h2 id="staffLoginTitle">Welcome back</h2></div></div>
           <p class="staff-login-intro">Use your authorised clinic account to continue.</p>
-          <form id="staffLogin" class="staff-login-form">
+          <form id="staffLogin" class="staff-login-form" autocomplete="off">
             <div class="form-group"><label for="staffEmail">Work email</label><input id="staffEmail" type="email" autocomplete="username" required placeholder="name@clinic.com"></div>
-            <div class="form-group"><label for="staffPassword">Password</label><input id="staffPassword" type="password" autocomplete="current-password" required placeholder="Enter your password"></div>
+            <div class="form-group"><label for="staffPassword">Password</label><input id="staffPassword" type="password" autocomplete="new-password" required placeholder="Enter your password"></div>
             <button class="btn primary staff-login-submit" id="loginButton" type="submit">Sign in to dashboard <span aria-hidden="true">→</span></button>
           </form>
           <div class="staff-login-help"><span>Having trouble accessing your account?</span><button type="button" id="showResetForm">Forgot password?</button></div>
@@ -149,7 +160,7 @@
       <section id="staffWorkspace" class="staff-workspace" hidden>
         <div class="staff-workspace-heading"><div><span class="eyebrow">STAFF WORKSPACE</span><h1 id="welcomeStaff">Appointments</h1><p>Review and manage the clinic's appointment schedule.</p></div><div class="staff-workspace-actions"><a href="staff-settings.html" class="btn outline">Settings</a><button id="refreshAppointments" class="btn outline">Refresh</button><button id="signOut" class="btn outline" hidden>Sign out</button></div></div>
         
-        <div class="staff-table-tools"><label class="staff-filter-label" for="statusFilter">View appointments</label><select id="statusFilter" aria-label="Filter appointments"><option value="active">Upcoming &amp; active</option><option value="pending_payment">Awaiting payment</option><option value="confirmed">Confirmed</option><option value="in_progress">In progress</option><option value="completed">Completed</option><option value="clinic_cancelled">Clinic cancelled</option><option value="no_show">No-show</option><option value="expired">Expired</option><option value="all">All appointments</option></select></div>
+        <div class="staff-table-tools"><label class="staff-filter-label" for="statusFilter">View appointments</label><select id="statusFilter" aria-label="Filter appointments"><option value="active">Upcoming &amp; active</option><option value="pending_payment">Awaiting payment</option><option value="confirmed">Confirmed</option><option value="in_progress">In progress</option><option value="completed">Completed</option><option value="cancelled">Patient cancelled</option><option value="clinic_cancelled">Clinic cancelled</option><option value="no_show">No-show</option><option value="expired">Expired</option><option value="all">All appointments</option></select></div>
         <div class="staff-table-wrap"><table class="staff-appointments-table"><thead><tr><th>Booking</th><th>Patient</th><th>Date &amp; time</th><th>Status</th><th>Payment summary</th><th>Actions</th></tr></thead><tbody id="appointmentRows"></tbody></table></div>
         <p id="dashboardMessageWorkspace" class="staff-auth-message" role="status" aria-live="polite"></p>
       </section>
@@ -198,7 +209,9 @@
     const loginForm=document.getElementById('staffLogin'),loginPanel=document.getElementById('staffLoginPanel'),message=document.getElementById('dashboardMessage'),workspace=document.getElementById('staffWorkspace'),signOut=document.getElementById('signOut'),client=window.getSupabaseClient();
     const esc=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     let idleTimer=null;
-    const SESSION_IDLE_MS=15*60*1000;
+    const SESSION_IDLE_MS=15*60*1000,SESSION_MAX_MS=8*60*60*1000;
+    const savedTheme=sessionStorage.getItem('kali_staff_theme')||'light';
+    document.body.classList.toggle('staff-theme-dark',savedTheme==='dark');
     function setMessage(v,type=''){message.textContent=v;message.className='staff-auth-message'+(type?' '+type:'');}
     function resetIdleTimer(){
       if(idleTimer)clearTimeout(idleTimer);
@@ -251,6 +264,7 @@
     }
     async function enterWorkspace(){
       loginPanel.hidden=true;workspace.hidden=true;signOut.hidden=true;
+      const started=Number(sessionStorage.getItem('kali_staff_session_started_at')||0);if(started&&Date.now()-started>SESSION_MAX_MS){await client.auth.signOut();sessionStorage.removeItem('kali_staff_session_started_at');loginPanel.hidden=false;setMessage('Your staff session has expired. Sign in again.');return;}
       const {data:{user},error:userError}=await client.auth.getUser();
       if(userError||!user){loginPanel.hidden=false;return;}
       const {data:staff,error}=await client.from('staff_profiles').select('full_name,role,is_active').eq('user_id',user.id).maybeSingle();
@@ -261,7 +275,7 @@
       e.preventDefault();const btn=document.getElementById('loginButton');btn.disabled=true;btn.textContent='Signing in…';setMessage('');
       const {error}=await client.auth.signInWithPassword({email:document.getElementById('staffEmail').value.trim(),password:document.getElementById('staffPassword').value});
       if(error){const msg=String(error.message||'').toLowerCase();setMessage(error.code==='email_not_confirmed'||msg.includes('email not confirmed')?'This staff email has not been confirmed. Contact the clinic administrator.':'Sign-in failed. Check your email and password.','error');}
-      else await enterWorkspace();
+      else {sessionStorage.setItem('kali_staff_session_started_at',String(Date.now()));await enterWorkspace();}
       btn.disabled=false;btn.innerHTML='Sign in to dashboard <span aria-hidden="true">→</span>';
     });
     document.getElementById('showResetForm').addEventListener('click',()=>{document.getElementById('passwordResetRequest').hidden=false;document.getElementById('resetEmail').value=document.getElementById('staffEmail').value.trim();document.getElementById('resetEmail').focus();setMessage('');});
@@ -272,11 +286,11 @@
       catch(error){setMessage('We could not send the reset email. Please try again or contact the clinic administrator.','error');}
       finally{btn.disabled=false;btn.textContent='Send reset link';}
     });
-    document.getElementById('signOut').addEventListener('click',async()=>{await client.auth.signOut();if(idleTimer)clearTimeout(idleTimer);workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;loginForm.reset();setMessage('You have been signed out.');});
+    document.getElementById('signOut').addEventListener('click',async()=>{await client.auth.signOut();sessionStorage.removeItem('kali_staff_session_started_at');if(idleTimer)clearTimeout(idleTimer);workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;loginForm.reset();setMessage('You have been signed out.');});
     document.getElementById('refreshAppointments').addEventListener('click',loadAppointments);
     document.getElementById('statusFilter').addEventListener('change',loadAppointments);
     client.auth.getSession().then(({data})=>{if(data.session)enterWorkspace();else{loginPanel.hidden=false;workspace.hidden=true;signOut.hidden=true;}});
-    client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||!session){if(!workspace.hidden){workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;setMessage('Your session ended. Sign in again.');}}});
+    client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||!session){sessionStorage.removeItem('kali_staff_session_started_at');if(!workspace.hidden){workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;setMessage('Your session ended. Sign in again.');}}});
     window.setInterval(()=>{if(!workspace.hidden&&!document.hidden)loadAppointments();},30000);
     document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!workspace.hidden){resetIdleTimer();loadAppointments();}});
   </script>>
