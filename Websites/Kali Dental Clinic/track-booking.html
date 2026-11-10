@@ -78,7 +78,7 @@
         </section>
         <aside class="track-help-card">
           <h3>Where can I find these details?</h3>
-          <p>Your booking reference and tracking code are shown after your booking is created and are also saved in the same browser after checkout.</p>
+          <p>Your booking reference and private tracking code are provided after checkout. Enter them here whenever you want to look up your booking.</p>
           <ul>
             <li>Use the booking reference exactly as shown.</li>
             <li>Keep your tracking code private.</li>
@@ -102,18 +102,17 @@
       const params = new URLSearchParams(location.search);
       const referenceInput = document.getElementById('bookingReference');
       const codeInput = document.getElementById('trackingCode');
-      referenceInput.value = params.get('reference') || sessionStorage.getItem('kali_booking_reference') || '';
-      codeInput.value = params.get('code') || sessionStorage.getItem('kali_tracking_code') || '';
+      referenceInput.value = '';
+      codeInput.value = '';
+      sessionStorage.removeItem('kali_booking_reference');
+      sessionStorage.removeItem('kali_tracking_code');
       const form = document.getElementById('trackingForm');
       const message = document.getElementById('trackingMessage');
       const result = document.getElementById('trackingResult');
       const submit = document.getElementById('trackSubmit');
       const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
       const pretty = value => String(value ?? '—').replaceAll('_',' ').replace(/\b\w/g, ch => ch.toUpperCase());
-      if (params.get('reference') && params.get('code')) {
-        // Keep URL credentials out of the address bar after populating the form.
-        history.replaceState(null, '', location.pathname);
-      }
+      if (params.has('reference') || params.has('code')) history.replaceState(null, '', location.pathname);
       form.addEventListener('submit', async event => {
         event.preventDefault();
         submit.disabled = true;
@@ -200,24 +199,6 @@
       </div>
     </div>
   </footer>
-  <script>
-    const params=new URLSearchParams(location.search);
-    document.getElementById('bookingReference').value=params.get('reference')||sessionStorage.getItem('kali_booking_reference')||'';
-    document.getElementById('trackingCode').value=params.get('code')||sessionStorage.getItem('kali_tracking_code')||'';
-    const form=document.getElementById('trackingForm'),message=document.getElementById('trackingMessage'),result=document.getElementById('trackingResult');
-    form.addEventListener('submit',async e=>{
-      e.preventDefault();const btn=document.getElementById('trackSubmit');btn.disabled=true;btn.textContent='Checking...';message.textContent='';result.hidden=true;
-      try{
-        const client=window.getSupabaseClient();const {data,error}=await client.functions.invoke('track-booking',{body:{booking_reference:document.getElementById('bookingReference').value,tracking_code:document.getElementById('trackingCode').value}});
-        if(error||!data?.booking)throw new Error(data?.error||'Booking not found. Check both details.');
-        const b=data.booking,when=new Date(b.starts_at);
-        document.getElementById('trackStatus').textContent=b.status.replaceAll('_',' ').split(' ').map(x=>x.charAt(0).toUpperCase()+x.slice(1)).join(' ');
-        const rows=[['Reference',b.reference],['Service',b.service?.name||'Appointment'],['Date',when.toLocaleDateString('en-GH',{dateStyle:'full',timeZone:'Africa/Accra'})],['Time',when.toLocaleTimeString('en-GH',{hour:'numeric',minute:'2-digit',timeZone:'Africa/Accra'})],['Payment',b.payment_status.replaceAll('_',' ')],['Total','GH₵'+Number(b.total_price).toFixed(2)],['Paid now','GH₵'+Number(b.amount_due_now).toFixed(2)],['Balance','GH₵'+Number(b.balance_due).toFixed(2)]];
-        document.getElementById('trackDetails').innerHTML=rows.map(([k,v])=>'<div style="display:flex;justify-content:space-between;gap:16px;"><span style="color:var(--muted)">'+k+'</span><strong>'+String(v).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))+'</strong></div>').join('');
-        result.hidden=false;message.textContent='Status retrieved from the clinic booking system.';
-      }catch(err){message.textContent=err.message||'Unable to retrieve booking.';}
-      finally{btn.disabled=false;btn.textContent='Find Booking';}
-    });
-  </script>
+
 </body>
 </html>
