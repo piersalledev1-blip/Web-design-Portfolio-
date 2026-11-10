@@ -206,6 +206,8 @@ body.staff-theme-dark .staff-table-tools select{background:#1a2920;color:#e7eee8
     </div>
   </footer>
   <script>
+    const themePreference=sessionStorage.getItem('kali_staff_theme')||'light';
+    document.body.classList.toggle('staff-theme-dark',themePreference==='dark');
     const loginForm=document.getElementById('staffLogin'),loginPanel=document.getElementById('staffLoginPanel'),message=document.getElementById('dashboardMessage'),workspace=document.getElementById('staffWorkspace'),signOut=document.getElementById('signOut'),client=window.getSupabaseClient();
     const esc=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     let idleTimer=null;
