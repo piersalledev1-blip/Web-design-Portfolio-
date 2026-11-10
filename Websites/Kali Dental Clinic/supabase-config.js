@@ -9,6 +9,7 @@ let supabaseClient = null;
 function initSupabase() {
   if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
     if (!supabaseClient) {
+      try { localStorage.removeItem('sb-gwtaaljthqosalpjerrx-auth-token'); } catch (error) { /* Storage may be unavailable in private browsing. */ }
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, { auth: { storage: window.sessionStorage, persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
       console.log('Supabase client initialized');
     }
