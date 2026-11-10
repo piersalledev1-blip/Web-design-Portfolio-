@@ -93,7 +93,7 @@
       if(downloadButton)downloadButton.addEventListener('click',downloadCredentials);
       if(ref&&code){creds.hidden=false;document.getElementById('callbackReference').textContent=ref;document.getElementById('callbackCode').textContent=code;}
       if(!ref||!code){
-        document.getElementById('paymentMessage').textContent='Payment has returned, but this browser does not have the tracking credentials. Use the booking ID and tracking code saved during booking to track your appointment.';
+        document.getElementById('paymentMessage').textContent='Payment has returned, but this browser does not have the booking credentials. Use the booking ID and tracking code you saved after booking to track your appointment.';
         return;
       }
       const client=window.getSupabaseClient();let confirmed=false,failed=false;
@@ -118,13 +118,13 @@
             bookingSnapshot=b;
             if(b.status==='confirmed'){
               document.getElementById('paymentHeading').textContent='Payment verified';
-              document.getElementById('paymentMessage').textContent='Your appointment is confirmed. Download and keep your booking details.';
+              document.getElementById('paymentMessage').textContent='Your payment has been verified and your appointment is booked for the scheduled date and time. Your visit has not happened yet. Keep your booking ID and tracking code, and contact the clinic if you need to make a change.';
               sessionStorage.removeItem('kali_pending_booking');
               confirmed=true;break;
             }
             if(b.status==='pending_payment'){
               document.getElementById('paymentHeading').textContent='Payment pending verification';
-              document.getElementById('paymentMessage').textContent='Paystack has not yet confirmed this payment. You can still save your booking ID and tracking code.';
+              document.getElementById('paymentMessage').textContent='Your booking is recorded, but Paystack has not confirmed the payment yet. Do not make another payment while this status is pending. Save your booking ID and tracking code, then check again shortly.';
             }else{
               document.getElementById('paymentHeading').textContent='Booking status: '+b.status.replaceAll('_',' ');
               document.getElementById('paymentMessage').textContent='Save your booking ID and tracking code. Use them on the tracking page to check the latest status.';
@@ -135,7 +135,7 @@
         await new Promise(resolve=>setTimeout(resolve,3500));
       }
       if(!confirmed&&!failed&&document.getElementById('paymentHeading').textContent==='Payment pending verification'){
-        document.getElementById('paymentMessage').textContent='Payment is still awaiting verification. Your booking is saved. Download your credentials and use Track Your Booking to check again.';
+        document.getElementById('paymentMessage').textContent='We have not received final payment confirmation yet. Your booking is saved, but payment is not marked as complete. Keep your booking ID and tracking code and use Track Your Booking to check again. If the status does not update, contact the clinic before trying another payment.';
         retry.hidden=false;
       }
     })();
