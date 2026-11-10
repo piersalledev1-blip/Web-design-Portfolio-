@@ -1,4 +1,4 @@
-We are preparing the KALI DENTAL CLINIC website for Paystack test-mode integration.
+KALI DENTAL CLINIC website — Paystack live-mode integration notes.
 
 The Supabase project already has two deployed Edge Functions:
 
