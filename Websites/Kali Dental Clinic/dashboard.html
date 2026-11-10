@@ -210,11 +210,17 @@ body.staff-theme-dark .staff-table-tools select{background:#1a2920;color:#e7eee8
     document.body.classList.toggle('staff-theme-dark',themePreference==='dark');
     const loginForm=document.getElementById('staffLogin'),loginPanel=document.getElementById('staffLoginPanel'),message=document.getElementById('dashboardMessage'),workspace=document.getElementById('staffWorkspace'),signOut=document.getElementById('signOut'),client=window.getSupabaseClient();
     const esc=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-    let idleTimer=null;
+    let idleTimer=null,maxSessionTimer=null;
     const SESSION_IDLE_MS=15*60*1000,SESSION_MAX_MS=8*60*60*1000;
     const savedTheme=sessionStorage.getItem('kali_staff_theme')||'light';
     document.body.classList.toggle('staff-theme-dark',savedTheme==='dark');
     function setMessage(v,type=''){message.textContent=v;message.className='staff-auth-message'+(type?' '+type:'');}
+    function scheduleMaxSessionExpiry(){
+      if(maxSessionTimer)clearTimeout(maxSessionTimer);
+      const started=Number(sessionStorage.getItem('kali_staff_session_started_at')||Date.now());
+      const remaining=Math.max(0,SESSION_MAX_MS-(Date.now()-started));
+      maxSessionTimer=setTimeout(async()=>{await client.auth.signOut();sessionStorage.removeItem('kali_staff_session_started_at');sessionStorage.removeItem('kali_staff_last_activity_at');workspace.hidden=true;loginPanel.hidden=false;setMessage('Your maximum staff session duration has ended. Sign in again.');},remaining);
+    }
     function resetIdleTimer(){
       if(workspace.hidden)return;
       sessionStorage.setItem('kali_staff_last_activity_at',String(Date.now()));
@@ -274,7 +280,7 @@ body.staff-theme-dark .staff-table-tools select{background:#1a2920;color:#e7eee8
       if(userError||!user){loginPanel.hidden=false;return;}
       const {data:staff,error}=await client.from('staff_profiles').select('full_name,role,is_active').eq('user_id',user.id).maybeSingle();
       if(error||!staff||!staff.is_active){await client.auth.signOut();loginPanel.hidden=false;setMessage('This account is not authorised for clinic staff access. Ask the clinic administrator for access.','error');return;}
-      workspace.hidden=false;signOut.hidden=false;document.getElementById('welcomeStaff').textContent='Appointments';await loadAppointments();resetIdleTimer();
+      workspace.hidden=false;signOut.hidden=false;document.getElementById('welcomeStaff').textContent='Appointments';scheduleMaxSessionExpiry();await loadAppointments();resetIdleTimer();
     }
     loginForm.addEventListener('submit',async e=>{
       e.preventDefault();const btn=document.getElementById('loginButton');btn.disabled=true;btn.textContent='Signing in…';setMessage('');
@@ -291,11 +297,11 @@ body.staff-theme-dark .staff-table-tools select{background:#1a2920;color:#e7eee8
       catch(error){setMessage('We could not send the reset email. Please try again or contact the clinic administrator.','error');}
       finally{btn.disabled=false;btn.textContent='Send reset link';}
     });
-    document.getElementById('signOut').addEventListener('click',async()=>{await client.auth.signOut();sessionStorage.removeItem('kali_staff_session_started_at');sessionStorage.removeItem('kali_staff_last_activity_at');if(idleTimer)clearTimeout(idleTimer);workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;loginForm.reset();setMessage('You have been signed out.');});
+    document.getElementById('signOut').addEventListener('click',async()=>{await client.auth.signOut();sessionStorage.removeItem('kali_staff_session_started_at');sessionStorage.removeItem('kali_staff_last_activity_at');if(idleTimer)clearTimeout(idleTimer);if(maxSessionTimer)clearTimeout(maxSessionTimer);workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;loginForm.reset();setMessage('You have been signed out.');});
     document.getElementById('refreshAppointments').addEventListener('click',loadAppointments);
     document.getElementById('statusFilter').addEventListener('change',loadAppointments);
     client.auth.getSession().then(({data})=>{if(data.session)enterWorkspace();else{loginPanel.hidden=false;workspace.hidden=true;signOut.hidden=true;}});
-    client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||!session){sessionStorage.removeItem('kali_staff_session_started_at');sessionStorage.removeItem('kali_staff_last_activity_at');if(!workspace.hidden){workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;setMessage('Your session ended. Sign in again.');}}});
+    client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||!session){if(maxSessionTimer)clearTimeout(maxSessionTimer);sessionStorage.removeItem('kali_staff_session_started_at');sessionStorage.removeItem('kali_staff_last_activity_at');if(!workspace.hidden){workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;setMessage('Your session ended. Sign in again.');}}});
     window.setInterval(()=>{if(!workspace.hidden&&!document.hidden)loadAppointments();},30000);
     document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!workspace.hidden){resetIdleTimer();loadAppointments();}});
   </script>>
