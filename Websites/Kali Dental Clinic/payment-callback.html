@@ -39,6 +39,11 @@
         <span class="eyebrow">Paystack Return</span>
         <h1 id="paymentHeading" style="color:var(--green);margin:12px 0;">Verifying payment</h1>
         <p id="paymentMessage" style="color:var(--muted);">We are checking the booking record. The clinic confirms payment only after the transaction is verified directly with Paystack or through its signed webhook.</p>
+        <div id="appointmentSummary" hidden style="margin:24px 0;padding:20px;background:var(--ivory);border:1px solid var(--border);border-radius:12px;text-align:left;">
+          <h2 style="font-size:1.1rem;margin:0 0 14px;color:var(--green);">Your appointment summary</h2>
+          <div id="appointmentSummaryRows" style="display:grid;gap:10px;"></div>
+          <p style="margin:16px 0 0;color:var(--muted);font-size:.84rem;line-height:1.65;">Payment verification confirms your booking and payment record only. It does not mean your clinic visit or dental treatment has taken place.</p>
+        </div>
         <div id="trackingCredentials" hidden style="margin:24px 0;padding:18px;background:var(--ivory);border-radius:10px;text-align:left;">
           <p><strong>Booking ID:</strong> <span id="callbackReference"></span></p>
           <p style="margin-top:8px;"><strong>Private tracking code:</strong> <span id="callbackCode" style="overflow-wrap:anywhere;"></span></p>
@@ -117,8 +122,23 @@
             const b=data.booking;
             bookingSnapshot=b;
             if(b.status==='confirmed'){
-              document.getElementById('paymentHeading').textContent='Payment verified';
-              document.getElementById('paymentMessage').textContent='Your payment has been verified and your appointment is booked for the scheduled date and time. Your visit has not happened yet. Keep your booking ID and tracking code, and contact the clinic if you need to make a change.';
+              document.getElementById('paymentHeading').textContent='Appointment booked';
+              document.getElementById('paymentMessage').textContent='Your payment has been verified and your appointment is scheduled. Please keep your booking details and arrive at the clinic for your appointment. If you need to change your booking, contact the clinic.';
+              const summary=document.getElementById('appointmentSummary'),rows=document.getElementById('appointmentSummaryRows');
+              const appointmentDate=new Date(b.starts_at);
+              const dateLabel=Number.isNaN(appointmentDate.getTime())?'To be confirmed':appointmentDate.toLocaleString('en-GH',{dateStyle:'full',timeStyle:'short',timeZone:'Africa/Accra'});
+              const money=value=>'GH₵'+Number(value||0).toFixed(2);
+              const details=[
+                ['Booking reference',b.reference||ref],
+                ['Appointment status','Scheduled — clinic visit pending'],
+                ['Service',b.service?.name||'Dental appointment'],
+                ['Date and time',dateLabel],
+                ['Treatment total',money(b.total_price)],
+                ['Paid now',money(b.amount_due_now)],
+                ['Remaining balance',money(b.balance_due)]
+              ];
+              rows.innerHTML=details.map(([label,value])=>'<div style="display:flex;justify-content:space-between;gap:18px;border-bottom:1px solid rgba(23,61,50,.1);padding-bottom:8px;font-size:.88rem;"><span style="color:var(--muted)">'+String(label).replace(/[&<>"]/g,'')+'</span><strong style="text-align:right;overflow-wrap:anywhere;">'+String(value??'—').replace(/[&<>"]/g,'')+'</strong></div>').join('');
+              summary.hidden=false;
               sessionStorage.removeItem('kali_pending_booking');
               confirmed=true;break;
             }
