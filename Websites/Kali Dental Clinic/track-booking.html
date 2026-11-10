@@ -63,14 +63,14 @@
         <section class="track-form-card" aria-labelledby="trackFormTitle">
           <h2 id="trackFormTitle">Find your booking</h2>
           <p class="track-intro">Both details are required to protect your booking information.</p>
-          <form id="trackingForm" class="track-form">
+          <form id="trackingForm" class="track-form" autocomplete="off">
             <div class="form-group">
               <label for="bookingReference">Booking reference</label>
-              <input id="bookingReference" name="bookingReference" required autocomplete="off" spellcheck="false" placeholder="e.g. KALI-XXXXXXXX">
+              <input id="bookingReference" required autocomplete="new-password" spellcheck="false" placeholder="e.g. KALI-XXXXXXXX">
             </div>
             <div class="form-group">
               <label for="trackingCode">Private tracking code</label>
-              <input id="trackingCode" name="trackingCode" required autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Enter your private tracking code">
+              <input id="trackingCode" required autocomplete="new-password" autocapitalize="characters" spellcheck="false" placeholder="Enter your private tracking code">
             </div>
             <button class="btn primary" id="trackSubmit" type="submit">Track Booking <span aria-hidden="true">→</span></button>
           </form>
