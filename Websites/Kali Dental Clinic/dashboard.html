@@ -245,12 +245,13 @@ body.staff-theme-dark .staff-table-tools select{background:#1a2920;color:#e7eee8
         const payments=Array.isArray(a.payments)?a.payments:[];
         const paid=payments.filter(p=>['success','successful','succeeded','paid'].includes(String(p.status||'').toLowerCase())).reduce((sum,p)=>sum+Number(p.amount||0),0);
         const balance=Number(a.balance_due||0);
-        const paymentLabel=paid>0?'Paid GH₵'+paid.toFixed(2):'Paid now GH₵'+Number(a.amount_due_now||0).toFixed(2);
-        const balanceLabel='Balance GH₵'+balance.toFixed(2);
+        const paymentLabel=paid>0?'Paid GH₵'+paid.toFixed(2):(a.status==='pending_payment'?'Awaiting payment':'No payment recorded');
+        const totalLabel='Total GH₵'+Number(a.total_price||0).toFixed(2);
+        const balanceLabel='Balance due GH₵'+balance.toFixed(2);
         const statusLabel=a.status==='checked_in'?'In progress':a.status.replaceAll('_',' ');
         const rowClass=isPast||['completed','clinic_cancelled','cancelled','no_show','expired'].includes(a.status)?'is-past':'';
         const actionMarkup=actions?'<div class="staff-row-actions">'+actions+'</div>':'<span>—</span>';
-        return '<tr class="'+rowClass+'"><td data-label="Booking"><strong>'+esc(a.service?.name||'Dental service')+'</strong><br><small>Ref: '+esc(a.booking_reference)+'</small><small class="staff-id">ID: '+esc(a.id)+'</small></td><td data-label="Patient">'+esc(a.patient?.full_name)+'<br><small>'+esc(a.patient?.phone_local)+'</small></td><td data-label="Date & time">'+esc(date)+'</td><td data-label="Status"><span class="staff-status '+esc(a.status)+'">'+esc(statusLabel)+'</span></td><td data-label="Payment"><span class="staff-payment-line">'+esc(paymentLabel)+'</span><span class="staff-payment-line">'+esc(balanceLabel)+'</span></td><td data-label="Actions">'+actionMarkup+'</td></tr>';
+        return '<tr class="'+rowClass+'"><td data-label="Booking"><strong>'+esc(a.service?.name||'Dental service')+'</strong><br><small>Ref: '+esc(a.booking_reference)+'</small><small class="staff-id">ID: '+esc(a.id)+'</small></td><td data-label="Patient">'+esc(a.patient?.full_name)+'<br><small>'+esc(a.patient?.phone_local)+'</small></td><td data-label="Date & time">'+esc(date)+'</td><td data-label="Status"><span class="staff-status '+esc(a.status)+'">'+esc(statusLabel)+'</span></td><td data-label="Payment"><span class="staff-payment-line">'+esc(totalLabel)+'</span><span class="staff-payment-line">'+esc(paymentLabel)+'</span><span class="staff-payment-line">'+esc(balanceLabel)+'</span></td><td data-label="Actions">'+actionMarkup+'</td></tr>';
       }).join(''):'<tr><td colspan="6">No appointments found for this view.</td></tr>';
       status.textContent=rows.length+' appointment(s) displayed.';
       document.getElementById('appointmentRows').querySelectorAll('button[data-id]').forEach(btn=>btn.addEventListener('click',async()=>{
