@@ -216,8 +216,10 @@ body.staff-theme-dark .staff-table-tools select{background:#1a2920;color:#e7eee8
     document.body.classList.toggle('staff-theme-dark',savedTheme==='dark');
     function setMessage(v,type=''){message.textContent=v;message.className='staff-auth-message'+(type?' '+type:'');}
     function resetIdleTimer(){
+      if(workspace.hidden)return;
+      sessionStorage.setItem('kali_staff_last_activity_at',String(Date.now()));
       if(idleTimer)clearTimeout(idleTimer);
-      if(!workspace.hidden)idleTimer=setTimeout(async()=>{await client.auth.signOut();workspace.hidden=true;loginPanel.hidden=false;setMessage('You were signed out after 15 minutes of inactivity. Sign in again.');},SESSION_IDLE_MS);
+      idleTimer=setTimeout(async()=>{await client.auth.signOut();sessionStorage.removeItem('kali_staff_session_started_at');sessionStorage.removeItem('kali_staff_last_activity_at');workspace.hidden=true;loginPanel.hidden=false;setMessage('You were signed out after 15 minutes of inactivity. Sign in again.');},SESSION_IDLE_MS);
     }
     ['pointerdown','keydown','touchstart','mousemove'].forEach(evt=>document.addEventListener(evt,resetIdleTimer,{passive:true}));
     async function loadAppointments(){
@@ -267,7 +269,7 @@ body.staff-theme-dark .staff-table-tools select{background:#1a2920;color:#e7eee8
     }
     async function enterWorkspace(){
       loginPanel.hidden=true;workspace.hidden=true;signOut.hidden=true;
-      const started=Number(sessionStorage.getItem('kali_staff_session_started_at')||0);if(started&&Date.now()-started>SESSION_MAX_MS){await client.auth.signOut();sessionStorage.removeItem('kali_staff_session_started_at');loginPanel.hidden=false;setMessage('Your staff session has expired. Sign in again.');return;}
+      const started=Number(sessionStorage.getItem('kali_staff_session_started_at')||0),lastActivity=Number(sessionStorage.getItem('kali_staff_last_activity_at')||0);if((started&&Date.now()-started>SESSION_MAX_MS)||(lastActivity&&Date.now()-lastActivity>SESSION_IDLE_MS)){await client.auth.signOut();sessionStorage.removeItem('kali_staff_session_started_at');sessionStorage.removeItem('kali_staff_last_activity_at');loginPanel.hidden=false;setMessage('Your staff session has expired. Sign in again.');return;}
       const {data:{user},error:userError}=await client.auth.getUser();
       if(userError||!user){loginPanel.hidden=false;return;}
       const {data:staff,error}=await client.from('staff_profiles').select('full_name,role,is_active').eq('user_id',user.id).maybeSingle();
@@ -278,7 +280,7 @@ body.staff-theme-dark .staff-table-tools select{background:#1a2920;color:#e7eee8
       e.preventDefault();const btn=document.getElementById('loginButton');btn.disabled=true;btn.textContent='Signing in…';setMessage('');
       const {error}=await client.auth.signInWithPassword({email:document.getElementById('staffEmail').value.trim(),password:document.getElementById('staffPassword').value});
       if(error){const msg=String(error.message||'').toLowerCase();setMessage(error.code==='email_not_confirmed'||msg.includes('email not confirmed')?'This staff email has not been confirmed. Contact the clinic administrator.':'Sign-in failed. Check your email and password.','error');}
-      else {sessionStorage.setItem('kali_staff_session_started_at',String(Date.now()));await enterWorkspace();}
+      else {sessionStorage.setItem('kali_staff_session_started_at',String(Date.now()));sessionStorage.setItem('kali_staff_last_activity_at',String(Date.now()));await enterWorkspace();}
       btn.disabled=false;btn.innerHTML='Sign in to dashboard <span aria-hidden="true">→</span>';
     });
     document.getElementById('showResetForm').addEventListener('click',()=>{document.getElementById('passwordResetRequest').hidden=false;document.getElementById('resetEmail').value=document.getElementById('staffEmail').value.trim();document.getElementById('resetEmail').focus();setMessage('');});
@@ -289,11 +291,11 @@ body.staff-theme-dark .staff-table-tools select{background:#1a2920;color:#e7eee8
       catch(error){setMessage('We could not send the reset email. Please try again or contact the clinic administrator.','error');}
       finally{btn.disabled=false;btn.textContent='Send reset link';}
     });
-    document.getElementById('signOut').addEventListener('click',async()=>{await client.auth.signOut();sessionStorage.removeItem('kali_staff_session_started_at');if(idleTimer)clearTimeout(idleTimer);workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;loginForm.reset();setMessage('You have been signed out.');});
+    document.getElementById('signOut').addEventListener('click',async()=>{await client.auth.signOut();sessionStorage.removeItem('kali_staff_session_started_at');sessionStorage.removeItem('kali_staff_last_activity_at');if(idleTimer)clearTimeout(idleTimer);workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;loginForm.reset();setMessage('You have been signed out.');});
     document.getElementById('refreshAppointments').addEventListener('click',loadAppointments);
     document.getElementById('statusFilter').addEventListener('change',loadAppointments);
     client.auth.getSession().then(({data})=>{if(data.session)enterWorkspace();else{loginPanel.hidden=false;workspace.hidden=true;signOut.hidden=true;}});
-    client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||!session){sessionStorage.removeItem('kali_staff_session_started_at');if(!workspace.hidden){workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;setMessage('Your session ended. Sign in again.');}}});
+    client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||!session){sessionStorage.removeItem('kali_staff_session_started_at');sessionStorage.removeItem('kali_staff_last_activity_at');if(!workspace.hidden){workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;setMessage('Your session ended. Sign in again.');}}});
     window.setInterval(()=>{if(!workspace.hidden&&!document.hidden)loadAppointments();},30000);
     document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!workspace.hidden){resetIdleTimer();loadAppointments();}});
   </script>>
