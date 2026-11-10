@@ -42,7 +42,9 @@
         <div id="trackingCredentials" hidden style="margin:24px 0;padding:18px;background:var(--ivory);border-radius:10px;text-align:left;">
           <p><strong>Booking reference:</strong> <span id="callbackReference"></span></p>
           <p style="margin-top:8px;"><strong>Private tracking code:</strong> <span id="callbackCode" style="overflow-wrap:anywhere;"></span></p>
-          <p style="margin-top:10px;color:var(--muted);font-size:.85rem;">Save these details. You need both to track your appointment.</p>
+          <p style="margin-top:10px;color:var(--muted);font-size:.85rem;">Save these details. You need both to track your appointment. Keep your tracking code private.</p>
+          <button id="downloadBookingDetails" class="btn primary" type="button" style="margin-top:16px;">Download booking details</button>
+          <p id="downloadMessage" role="status" aria-live="polite" style="margin-top:8px;color:var(--muted);font-size:.82rem;"></p>
         </div>
         <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px;">
           <a href="track-booking.html" class="btn primary">Track Your Booking</a>
@@ -67,8 +69,58 @@
       const paystackReference=new URLSearchParams(location.search).get('reference')||new URLSearchParams(location.search).get('trxref');
       const creds=document.getElementById('trackingCredentials');
       const retry=document.getElementById('retryPayment');
+      const downloadButton=document.getElementById('downloadBookingDetails');
+      const downloadMessage=document.getElementById('downloadMessage');
+      let bookingSnapshot=null;
+      const downloadDetails=()=>{
+        if(!ref||!code)return;
+        const b=bookingSnapshot;
+        const when=b?.starts_at?new Date(b.starts_at):null;
+        const validDate=when&&!Number.isNaN(when.getTime());
+        const date=validDate?when.toLocaleDateString('en-GH',{dateStyle:'full',timeZone:'Africa/Accra'}):'Not available';
+        const time=validDate?when.toLocaleTimeString('en-GH',{hour:'numeric',minute:'2-digit',timeZone:'Africa/Accra'}):'Not available';
+        const lines=[
+          'KALI DENTAL CLINIC — BOOKING DETAILS',
+          '=====================================',
+          '',
+          'BOOKING CREDENTIALS',
+          'Booking reference: '+ref,
+          'Private tracking code: '+code,
+          '',
+          'APPOINTMENT',
+          'Service: '+(b?.service?.name||'Not available'),
+          'Date: '+date,
+          'Time: '+time+' (Ghana time)',
+          'Booking status: '+(b?.status||'Not yet retrieved').replaceAll('_',' '),
+          'Payment status: '+(b?.payment_status||'Not yet retrieved').replaceAll('_',' '),
+          '',
+          'CLINIC CONTACT',
+          'KALI Dental Clinic (University of Cape Coast Dental Clinic)',
+          'University of Cape Coast, School of Medical Sciences, Cape Coast, Ghana',
+          'Phone: 055 941 1844',
+          'Email: piersalledev1@gmail.com',
+          '',
+          'IMPORTANT',
+          'Keep your private tracking code confidential. You need both the booking reference and tracking code to access your booking.',
+          'This document is a copy of your booking details. Check the clinic booking system for the latest appointment and payment status.'
+        ];
+        const blob=new Blob([lines.join('\\n')],{type:'text/plain;charset=utf-8'});
+        const url=URL.createObjectURL(blob);
+        const link=document.createElement('a');
+        link.href=url;
+        link.download='KALI-Booking-'+ref.replace(/[^a-z0-9_-]/gi,'-')+'.txt';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(()=>URL.revokeObjectURL(url),1000);
+        downloadMessage.textContent='Your booking details file has been prepared. Check your phone’s Downloads or Files app.';
+      };
+      if(downloadButton)downloadButton.addEventListener('click',downloadDetails);
       if(ref&&code){creds.hidden=false;document.getElementById('callbackReference').textContent=ref;document.getElementById('callbackCode').textContent=code;}
-      if(!ref||!code){document.getElementById('paymentMessage').textContent='Payment has returned, but this browser does not have the tracking credentials. Use the details saved during booking to track your appointment.';return;}
+      if(!ref||!code){
+        document.getElementById('paymentMessage').textContent='Payment has returned, but this browser does not have the tracking credentials. Use the details saved during booking to track your appointment.';
+        return;
+      }
       const client=window.getSupabaseClient();let confirmed=false,failed=false;
       for(let i=0;i<8;i++){
         try{
@@ -88,18 +140,19 @@
           const {data,error}=await client.functions.invoke('track-booking',{body:{booking_reference:ref,tracking_code:code}});
           if(!error&&data?.booking){
             const b=data.booking;
+            bookingSnapshot=b;
             if(b.status==='confirmed'){
               document.getElementById('paymentHeading').textContent='Payment verified';
-              document.getElementById('paymentMessage').textContent='Your appointment is confirmed. Keep your booking reference and tracking code.';
+              document.getElementById('paymentMessage').textContent='Your appointment is confirmed. Download and keep your booking details.';
               sessionStorage.removeItem('kali_pending_booking');
               confirmed=true;break;
             }
             if(b.status==='pending_payment'){
               document.getElementById('paymentHeading').textContent='Payment pending verification';
-              document.getElementById('paymentMessage').textContent='Paystack has not yet confirmed this payment. We are checking again.';
+              document.getElementById('paymentMessage').textContent='Paystack has not yet confirmed this payment. You can still download your booking credentials.';
             }else{
               document.getElementById('paymentHeading').textContent='Booking status: '+b.status.replaceAll('_',' ');
-              document.getElementById('paymentMessage').textContent='Check your booking status using the tracking page.';
+              document.getElementById('paymentMessage').textContent='Your booking details are available to download. Check the tracking page for the latest status.';
               break;
             }
           }
@@ -107,7 +160,7 @@
         await new Promise(resolve=>setTimeout(resolve,3500));
       }
       if(!confirmed&&!failed&&document.getElementById('paymentHeading').textContent==='Payment pending verification'){
-        document.getElementById('paymentMessage').textContent='Payment is still awaiting verification. Your booking is saved. Use Track Your Booking to check again, or return to payment later.';
+        document.getElementById('paymentMessage').textContent='Payment is still awaiting verification. Your booking is saved. Download your credentials and use Track Your Booking to check again.';
         retry.hidden=false;
       }
     })();
