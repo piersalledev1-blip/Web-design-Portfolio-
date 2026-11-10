@@ -1,0 +1,1005 @@
+/* =========================================================
+   NEXT GEN — GLOBAL
+   ========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+
+body {
+    background: #F8F7F4;
+    color: #111111;
+
+    font-family:
+        "Manrope",
+        "DM Sans",
+        Arial,
+        sans-serif;
+
+    line-height: 1.5;
+
+    /*
+       Prevent any child element from creating
+       horizontal page scrolling.
+    */
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+img {
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+main {
+    width: 100%;
+    max-width: 100%;
+
+    min-height: 100vh;
+
+    overflow-x: clip;
+}
+
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+
+.site-header {
+    position: fixed;
+
+    top: 20px;
+    left: 0;
+    right: 0;
+
+    width: 100%;
+    max-width: 100%;
+
+    padding: 0 16px;
+
+    z-index: 1000;
+
+    pointer-events: none;
+}
+
+
+.navbar {
+    position: relative;
+
+    width: 100%;
+    max-width: 1180px;
+
+    min-height: 64px;
+
+    margin: 0 auto;
+    padding: 9px 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    /*
+       Prevent the navigation contents from
+       expanding outside the navbar.
+    */
+    overflow: hidden;
+
+    background: rgba(248, 247, 244, 0.78);
+
+    border: 1px solid rgba(17, 17, 17, 0.08);
+    border-radius: 28px;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 10px 30px rgba(17, 17, 17, 0.08);
+
+    pointer-events: auto;
+}
+
+
+/* =========================================================
+   NEXT GEN LOGO / HOME
+   ========================================================= */
+
+.nav-home {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 106px;
+
+    width: 106px;
+    min-width: 0;
+    min-height: 44px;
+
+    padding: 10px 12px;
+
+    background: transparent;
+    color: #C62828;
+
+    border-radius: 15px;
+
+    font-size: 13px;
+    font-weight: 900;
+
+    letter-spacing: -0.03em;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    transition:
+        background-color 0.35s ease,
+        color 0.35s ease,
+        transform 0.3s ease;
+}
+
+
+/* HOMEPAGE ACTIVE */
+
+.nav-home.active {
+    background: #C62828;
+    color: #FFFFFF;
+}
+
+
+.nav-home:hover {
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   CENTER NAVIGATION
+   ========================================================= */
+
+.nav-links {
+    /*
+       Keep the navigation centered visually,
+       but prevent it from escaping the navbar.
+    */
+    position: absolute;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    max-width: calc(100% - 250px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 16px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+}
+
+
+.nav-link {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 1 auto;
+
+    min-width: 82px;
+
+    padding: 12px 14px;
+
+    border-radius: 15px;
+
+    background: transparent;
+    color: #111111;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    letter-spacing: 0.02em;
+
+    white-space: nowrap;
+
+    transition:
+        background-color 0.35s ease,
+        color 0.35s ease,
+        transform 0.3s ease;
+}
+
+
+.nav-link:hover {
+    background: rgba(17, 17, 17, 0.06);
+
+    transform: translateY(-1px);
+}
+
+
+.nav-link.active {
+    background: #C62828;
+    color: #FFFFFF;
+}
+
+
+.nav-link.active:hover {
+    background: #C62828;
+    color: #FFFFFF;
+}
+
+
+/* =========================================================
+   CALL BUTTON
+   ========================================================= */
+
+.nav-phone {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 106px;
+
+    width: 106px;
+    min-width: 0;
+    min-height: 44px;
+
+    padding: 10px 12px;
+
+    background: #111111;
+    color: #FFFFFF;
+
+    border-radius: 15px;
+
+    font-size: 13px;
+    font-weight: 900;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease;
+}
+
+
+.nav-phone:hover {
+    background: #C62828;
+    color: #FFFFFF;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.site-footer {
+    position: relative;
+
+    width: 100%;
+    max-width: 100%;
+
+    margin-top: 100px;
+
+    background: #111111;
+    color: #F8F7F4;
+
+    border-radius: 32px 32px 0 0;
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    transform: translateY(60px);
+
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+}
+
+
+.site-footer.footer-visible {
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+
+.footer-inner {
+    width: min(90%, 1180px);
+
+    margin: 0 auto;
+
+    padding: 100px 0 38px;
+}
+
+
+/* =========================================================
+   FOOTER CTA
+   ========================================================= */
+
+.footer-cta {
+    max-width: 760px;
+}
+
+
+.footer-eyebrow {
+    margin-bottom: 20px;
+
+    color: #C62828;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    letter-spacing: 0.16em;
+}
+
+
+.footer-cta h2 {
+    max-width: 720px;
+
+    margin-bottom: 26px;
+
+    font-size:
+        clamp(44px, 7vw, 82px);
+
+    line-height: 0.98;
+
+    letter-spacing: -0.055em;
+
+    font-weight: 700;
+}
+
+
+.footer-description {
+    max-width: 570px;
+
+    margin-bottom: 36px;
+
+    color:
+        rgba(248, 247, 244, 0.72);
+
+    font-size: 18px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   FOOTER WHATSAPP
+   ========================================================= */
+
+.footer-whatsapp {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 13px;
+
+    min-height: 52px;
+
+    padding: 15px 22px;
+
+    background: #25D366;
+    color: #111111;
+
+    border-radius: 14px;
+
+    font-size: 15px;
+    font-weight: 800;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.footer-whatsapp span {
+    transition:
+        transform 0.3s ease;
+}
+
+
+.footer-whatsapp:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 30px
+        rgba(37, 211, 102, 0.18);
+}
+
+
+.footer-whatsapp:hover span {
+    transform: translateX(4px);
+}
+
+
+/* =========================================================
+   FOOTER NAVIGATION
+   ========================================================= */
+
+.footer-navigation {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 80px;
+
+    margin-top: 100px;
+
+    padding-top: 40px;
+
+    border-top:
+        1px solid
+        rgba(248, 247, 244, 0.12);
+}
+
+
+.footer-column {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 16px;
+}
+
+
+.footer-label {
+    margin-bottom: 7px;
+
+    color:
+        rgba(248, 247, 244, 0.46);
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 0.15em;
+}
+
+
+.footer-column a {
+    color:
+        rgba(248, 247, 244, 0.82);
+
+    font-size: 16px;
+    font-weight: 600;
+
+    transition:
+        color 0.3s ease,
+        transform 0.3s ease;
+}
+
+
+.footer-column a:hover {
+    color: #FFFFFF;
+
+    transform: translateX(4px);
+}
+
+
+/* =========================================================
+   DEVELOPER SIGNATURE
+   ========================================================= */
+
+.footer-signature {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    margin-top: 90px;
+
+    padding-top: 36px;
+
+    border-top:
+        1px solid
+        rgba(248, 247, 244, 0.12);
+}
+
+
+.footer-profile {
+    width: 84px;
+    height: 84px;
+
+    margin-bottom: 16px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border:
+        2px solid
+        rgba(248, 247, 244, 0.2);
+}
+
+
+.footer-signature p {
+    color:
+        rgba(248, 247, 244, 0.68);
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   FOOTER BOTTOM
+   ========================================================= */
+
+.footer-bottom {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    margin-top: 70px;
+
+    padding-top: 26px;
+
+    border-top:
+        1px solid
+        rgba(248, 247, 244, 0.12);
+}
+
+
+.footer-bottom > p {
+    color:
+        rgba(248, 247, 244, 0.46);
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   SOCIAL LINKS
+   ========================================================= */
+
+.footer-socials {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.footer-socials a {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    padding: 0;
+    margin: 0;
+
+    border:
+        1px solid
+        rgba(248, 247, 244, 0.18);
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.3s ease,
+        background-color 0.3s ease,
+        border-color 0.3s ease;
+}
+
+
+.footer-socials a:hover {
+    transform: translateY(-3px);
+
+    background:
+        rgba(248, 247, 244, 0.08);
+
+    border-color:
+        rgba(248, 247, 244, 0.35);
+}
+
+
+.footer-socials a img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: contain;
+
+    padding: 0;
+    margin: 0;
+
+    transition:
+        transform 0.3s ease;
+}
+
+
+.footer-socials a:hover img {
+    transform: scale(1.08);
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .site-header {
+        padding: 0 12px;
+    }
+
+
+    .navbar {
+        width: 100%;
+
+        min-height: 60px;
+
+        padding: 8px 9px;
+    }
+
+
+    .nav-home,
+    .nav-phone {
+        flex-basis: 92px;
+
+        width: 92px;
+
+        min-height: 42px;
+
+        font-size: 12px;
+    }
+
+
+    .nav-links {
+        max-width: calc(100% - 220px);
+
+        gap: 8px;
+    }
+
+
+    .nav-link {
+        min-width: 0;
+
+        padding:
+            11px 10px;
+
+        font-size: 12px;
+    }
+
+
+    .footer-inner {
+        padding-top: 80px;
+    }
+
+
+    .footer-navigation {
+        margin-top: 80px;
+
+        gap: 50px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+    .site-header {
+        top: 12px;
+
+        padding: 0 12px;
+    }
+
+
+    .navbar {
+        min-height: 56px;
+
+        padding: 7px 8px;
+
+        border-radius: 23px;
+    }
+
+
+    .nav-home,
+    .nav-phone {
+        flex-basis: 76px;
+
+        width: 76px;
+
+        min-height: 38px;
+
+        padding: 9px 6px;
+
+        font-size: 11px;
+    }
+
+
+    .nav-links {
+        /*
+           The center navigation is now given a
+           strict space between HOME and CALL.
+        */
+
+        max-width:
+            calc(100% - 180px);
+
+        gap: 3px;
+    }
+
+
+    .nav-link {
+        min-width: 0;
+
+        padding:
+            9px 6px;
+
+        font-size: 10px;
+
+        letter-spacing: 0;
+    }
+
+
+    /* =====================================================
+       FOOTER
+       ===================================================== */
+
+    .site-footer {
+        margin-top: 80px;
+
+        border-radius:
+            26px 26px 0 0;
+    }
+
+
+    .footer-inner {
+        width: calc(100% - 40px);
+
+        padding: 70px 0 30px;
+    }
+
+
+    .footer-eyebrow {
+        font-size: 12px;
+    }
+
+
+    .footer-cta h2 {
+        font-size:
+            clamp(40px, 12vw, 58px);
+    }
+
+
+    .footer-description {
+        font-size: 16px;
+
+        line-height: 1.7;
+    }
+
+
+    .footer-whatsapp {
+        min-height: 50px;
+
+        padding: 14px 19px;
+
+        font-size: 14px;
+    }
+
+
+    .footer-navigation {
+        grid-template-columns: 1fr;
+
+        gap: 45px;
+
+        margin-top: 70px;
+    }
+
+
+    .footer-label {
+        font-size: 11px;
+    }
+
+
+    .footer-column a {
+        font-size: 15px;
+    }
+
+
+    .footer-signature {
+        margin-top: 65px;
+    }
+
+
+    .footer-profile {
+        width: 76px;
+        height: 76px;
+    }
+
+
+    .footer-signature p {
+        font-size: 14px;
+    }
+
+
+    .footer-bottom {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        margin-top: 55px;
+    }
+
+
+    .footer-bottom > p {
+        font-size: 12px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .site-header {
+        padding: 0 8px;
+    }
+
+
+    .navbar {
+        min-height: 52px;
+
+        padding: 6px;
+
+        border-radius: 20px;
+    }
+
+
+    .nav-home,
+    .nav-phone {
+        flex-basis: 67px;
+
+        width: 67px;
+
+        min-height: 35px;
+
+        padding: 8px 4px;
+
+        font-size: 10px;
+    }
+
+
+    .nav-links {
+        max-width:
+            calc(100% - 158px);
+
+        gap: 2px;
+    }
+
+
+    .nav-link {
+        padding:
+            8px 4px;
+
+        font-size: 9px;
+    }
+
+
+    .footer-inner {
+        width: calc(100% - 32px);
+    }
+
+
+    .footer-profile {
+        width: 72px;
+        height: 72px;
+    }
+
+
+    .footer-socials a {
+        width: 46px;
+        height: 46px;
+    }
+}
+
+
+/* =========================================================
+   EXTRA SMALL DEVICES
+   ========================================================= */
+
+@media (max-width: 340px) {
+
+    .nav-home,
+    .nav-phone {
+        flex-basis: 61px;
+
+        width: 61px;
+
+        font-size: 9px;
+    }
+
+
+    .nav-links {
+        max-width:
+            calc(100% - 142px);
+    }
+
+
+    .nav-link {
+        padding:
+            8px 3px;
+
+        font-size: 8px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+
+        animation-duration: 0.01ms !important;
+
+        animation-iteration-count: 1 !important;
+    }
+}
