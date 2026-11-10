@@ -46,7 +46,6 @@ jobs:
           cp -r "Websites/Next Gen Plumbing" _site/projects/next-gen-plumbing
           cp -r "Websites/Standard roofing system demo" _site/projects/standard-roofing
           cp -r "Websites/Starlight roofing demp" _site/projects/starlight-roofing
-          cp -r "Websites/Holiness plumbing v2" _site/projects/holiness-plumbing
 
       - name: Upload website
         uses: actions/upload-pages-artifact@v3
