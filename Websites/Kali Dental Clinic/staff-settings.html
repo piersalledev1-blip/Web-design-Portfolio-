@@ -107,13 +107,13 @@ const verified=await client.auth.signInWithPassword({email:user.email,password:c
 if(verified.error){say(passwordMessage,'Current password is incorrect.','error');btn.disabled=false;btn.textContent='Update password';return;}
 const updated=await client.auth.updateUser({password:next});
 if(updated.error){say(passwordMessage,updated.error.message||'Could not update password.','error');btn.disabled=false;btn.textContent='Update password';return;}
-await client.auth.signOut({scope:'global'});say(passwordMessage,'Password updated. Returning to sign in…');
+await client.auth.signOut({scope:'global'});sessionStorage.removeItem('kali_staff_session_started_at');sessionStorage.removeItem('kali_staff_last_activity_at');say(passwordMessage,'Password updated. Returning to sign in…');
 setTimeout(()=>location.replace('dashboard.html?password=updated'),1000);
 });
 document.getElementById('appearanceForm').addEventListener('submit',e=>{
 e.preventDefault();const theme=document.getElementById('themeChoice').value;sessionStorage.setItem('kali_staff_theme',theme);applyTheme(theme);say(document.getElementById('appearanceMessage'),'Appearance preference saved for this browser tab.');
 });
-document.getElementById('signOut').addEventListener('click',async()=>{await client.auth.signOut();location.replace('dashboard.html');});
+document.getElementById('signOut').addEventListener('click',async()=>{await client.auth.signOut();sessionStorage.removeItem('kali_staff_session_started_at');sessionStorage.removeItem('kali_staff_last_activity_at');location.replace('dashboard.html');});
 })();
 </script>
 </body></html>
