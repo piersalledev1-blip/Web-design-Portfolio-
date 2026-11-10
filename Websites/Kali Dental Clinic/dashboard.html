@@ -259,7 +259,7 @@ body.staff-theme-dark .staff-table-tools select{background:#1a2920;color:#e7eee8
       document.getElementById('appointmentRows').querySelectorAll('button[data-id]').forEach(btn=>btn.addEventListener('click',async()=>{
         const target=btn.dataset.status;
         let reason=null;
-        if(target==='clinic_cancelled'){reason=prompt('Why is the clinic cancelling this appointment?');if(reason===null)return;if(!reason.trim()){alert('Please enter a cancellation reason.');return;}if(!confirm('Cancel this appointment? This will be recorded in the activity log.'))return;}
+        if(target==='clinic_cancelled'){reason=prompt('Why is the clinic cancelling this appointment?');if(reason===null)return;if(!reason.trim()){alert('Please enter a cancellation reason.');return;}if(!confirm('Cancel this appointment? The cancellation reason will be recorded in the activity log. If a payment was collected, this action does not issue a refund; handle any refund separately with the clinic owner.'))return;}
         if(target==='no_show'&&!confirm('Mark this appointment as a no-show?'))return;
         btn.disabled=true;
         const {error}=await client.rpc('transition_appointment_status',{p_appointment_id:btn.dataset.id,p_new_status:target,p_reason:reason});
