@@ -247,7 +247,7 @@ body.staff-theme-dark .staff-table-tools select{background:#1a2920;color:#e7eee8
         const start=new Date(a.starts_at),date=start.toLocaleString('en-GH',{dateStyle:'medium',timeStyle:'short',timeZone:'Africa/Accra'});
         const isPast=start.getTime()<now,legacyChecked=a.status==='checked_in';
         let actions='';
-        if(a.status==='confirmed'&&isPast)actions='<button class="btn outline" data-id="'+a.id+'" data-status="no_show">Mark no-show</button><button class="btn outline" data-id="'+a.id+'" data-status="clinic_cancelled">Cancel</button>';
+        if(a.status==='confirmed'&&isPast)actions='<button class="btn primary" data-id="'+a.id+'" data-status="in_progress">Mark in progress</button><button class="btn outline" data-id="'+a.id+'" data-status="no_show">Mark no-show</button><button class="btn outline" data-id="'+a.id+'" data-status="clinic_cancelled">Cancel</button>';
         else if(a.status==='confirmed'||legacyChecked)actions='<button class="btn primary" data-id="'+a.id+'" data-status="in_progress">Mark in progress</button><button class="btn outline" data-id="'+a.id+'" data-status="clinic_cancelled">Cancel</button>';
         else if(a.status==='in_progress')actions='<button class="btn primary" data-id="'+a.id+'" data-status="completed">Complete</button><button class="btn outline" data-id="'+a.id+'" data-status="clinic_cancelled">Cancel</button>';
         const payments=Array.isArray(a.payments)?a.payments:[];
