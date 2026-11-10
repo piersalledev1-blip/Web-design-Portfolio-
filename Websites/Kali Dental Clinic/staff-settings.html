@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Manage your KALI Dental Clinic staff account and preferences.">
+<title>Staff Settings | KALI Dental Clinic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script><script src="supabase-config.js"></script>
+<style>
+[hidden]{display:none!important}
+body.settings-page{min-height:100vh;background:#f3f6f1;color:#24382d}
+.settings-main{padding:54px 18px 80px}.settings-shell{width:min(100%,850px);margin:auto}
+.settings-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:26px;flex-wrap:wrap}
+.settings-top a{color:#24583e;font-weight:700;text-decoration:none}
+.settings-heading h1{font:clamp(2rem,5vw,3rem)/1.1 'Playfair Display',serif;color:#173d32;margin:8px 0}
+.settings-heading p{color:#69786d;line-height:1.7}
+.settings-card{background:#fff;border:1px solid #e1e9df;border-radius:16px;padding:clamp(22px,4vw,34px);margin-top:20px;box-shadow:0 14px 40px rgba(23,61,50,.06)}
+.settings-card h2{font:1.55rem 'Playfair Display',serif;color:#173d32;margin:0 0 8px}
+.settings-card>p{color:#718077;font-size:.88rem;line-height:1.65;margin-bottom:22px}
+.settings-form{display:grid;gap:16px;max-width:560px}
+.settings-form label{display:block;font-size:.82rem;font-weight:700;color:#344a3b;margin-bottom:7px}
+.settings-form input,.settings-form select{width:100%;min-height:50px;padding:0 14px;border:1px solid #dce5dc;border-radius:8px;background:#fbfcfa;color:#23372d;font:inherit}
+.settings-form input:focus,.settings-form select:focus{outline:0;border-color:#47745e;box-shadow:0 0 0 4px rgba(71,116,94,.12)}
+.settings-form .btn{min-height:48px;justify-self:start}
+.settings-message{min-height:20px;color:#24613f;font-size:.84rem;line-height:1.6}.settings-message.error{color:#a33232}
+.settings-note{background:#f5f8f3;border-radius:9px;padding:13px 15px;color:#68766b;font-size:.78rem;line-height:1.7}
+.settings-danger{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+@media(max-width:520px){.settings-main{padding:34px 14px 56px}.settings-danger .btn{width:100%}}
+body.staff-theme-dark{background:#17251e;color:#e6eee8}
+body.staff-theme-dark .settings-card{background:#213329;border-color:#344b3b}
+body.staff-theme-dark .settings-heading h1,body.staff-theme-dark .settings-card h2{color:#e5f0e7}
+body.staff-theme-dark .settings-heading p,body.staff-theme-dark .settings-card>p{color:#b5c4b8}
+body.staff-theme-dark .settings-form label{color:#d7e4da}
+body.staff-theme-dark .settings-form input,body.staff-theme-dark .settings-form select{background:#18271f;border-color:#465c4c;color:#f0f4f1}
+body.staff-theme-dark .settings-note{background:#18271f;color:#c2d0c5}
+body.staff-theme-dark .settings-top a{color:#c6dfce}
+</style>
+</head>
+<body class="settings-page">
+<main class="settings-main"><div class="settings-shell">
+<div class="settings-top"><a href="dashboard.html">← Back to appointments</a><span class="eyebrow">KALI DENTAL CLINIC · STAFF PORTAL</span></div>
+<header class="settings-heading"><span class="eyebrow">ACCOUNT PREFERENCES</span><h1>Settings</h1><p>Manage your staff profile, password and personal dashboard appearance.</p></header>
+<section class="settings-card">
+<h2>Profile</h2><p>Your display name is used for staff records. It is not shown as a repeated dashboard greeting.</p>
+<form id="profileForm" class="settings-form">
+<div><label for="staffEmail">Staff email</label><input id="staffEmail" type="email" readonly disabled></div>
+<div><label for="staffName">Display name</label><input id="staffName" type="text" minlength="2" maxlength="100" autocomplete="name" required></div>
+<button class="btn primary" id="saveProfile" type="submit">Save profile</button>
+<p id="profileMessage" class="settings-message" role="status"></p>
+</form>
+</section>
+<section class="settings-card">
+<h2>Change password</h2><p>Confirm your current password before choosing a new one. After it changes, you will be signed out and must sign in again.</p>
+<form id="passwordForm" class="settings-form">
+<div><label for="currentPassword">Current password</label><input id="currentPassword" type="password" autocomplete="current-password" required></div>
+<div><label for="newPassword">New password</label><input id="newPassword" type="password" autocomplete="new-password" minlength="10" required></div>
+<div><label for="confirmPassword">Confirm new password</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="10" required></div>
+<div class="settings-note">Use at least 10 characters, including uppercase and lowercase letters, a number and a symbol. Do not reuse a password from another service.</div>
+<button class="btn primary" id="savePassword" type="submit">Update password</button>
+<p id="passwordMessage" class="settings-message" role="status"></p>
+</form>
+</section>
+<section class="settings-card">
+<h2>Appearance</h2><p>This preference applies only to this browser and does not change the view for other staff members.</p>
+<form id="appearanceForm" class="settings-form">
+<div><label for="themeChoice">Dashboard theme</label><select id="themeChoice"><option value="light">Light</option><option value="dark">Dark</option></select></div>
+<button class="btn outline" type="submit">Save appearance</button>
+<p id="appearanceMessage" class="settings-message" role="status"></p>
+</form>
+</section>
+<section class="settings-card settings-danger">
+<div><h2>Sign out</h2><p>End this staff session on this browser tab.</p></div>
+<button id="signOut" class="btn outline" type="button">Sign out</button>
+</section>
+</div></main>
+<script>
+(async()=>{
+const client=window.getSupabaseClient(),profileMessage=document.getElementById('profileMessage'),passwordMessage=document.getElementById('passwordMessage');
+const say=(el,text,type='')=>{el.textContent=text;el.className='settings-message'+(type?' '+type:'');};
+const applyTheme=theme=>{document.body.classList.toggle('staff-theme-dark',theme==='dark');};
+const storedTheme=sessionStorage.getItem('kali_staff_theme')||'light';
+document.getElementById('themeChoice').value=storedTheme;applyTheme(storedTheme);
+const {data:{user},error:userError}=await client.auth.getUser();
+if(userError||!user){location.replace('dashboard.html');return;}
+const {data:staff,error}=await client.from('staff_profiles').select('full_name,is_active').eq('user_id',user.id).maybeSingle();
+if(error||!staff||!staff.is_active){await client.auth.signOut();location.replace('dashboard.html');return;}
+document.getElementById('staffEmail').value=user.email||'';
+document.getElementById('staffName').value=staff.full_name||'';
+document.getElementById('profileForm').addEventListener('submit',async e=>{
+e.preventDefault();const btn=document.getElementById('saveProfile'),name=document.getElementById('staffName').value.trim();
+if(name.length<2||name.length>100){say(profileMessage,'Enter a name between 2 and 100 characters.','error');return;}
+btn.disabled=true;btn.textContent='Saving…';
+const {error}=await client.rpc('complete_staff_setup',{p_full_name:name});
+say(profileMessage,error?(error.message||'Could not update your profile.'):'Your display name has been updated.',error?'error':'');
+btn.disabled=false;btn.textContent='Save profile';
+});
+document.getElementById('passwordForm').addEventListener('submit',async e=>{
+e.preventDefault();const btn=document.getElementById('savePassword'),current=document.getElementById('currentPassword').value,next=document.getElementById('newPassword').value,confirm=document.getElementById('confirmPassword').value;
+if(next.length<10||!/[A-Z]/.test(next)||!/[a-z]/.test(next)||!/[0-9]/.test(next)||!/[^A-Za-z0-9]/.test(next)){say(passwordMessage,'Use at least 10 characters with uppercase, lowercase, a number and a symbol.','error');return;}
+if(next!==confirm){say(passwordMessage,'The new passwords do not match.','error');return;}
+if(next===current){say(passwordMessage,'Choose a password different from your current password.','error');return;}
+btn.disabled=true;btn.textContent='Verifying…';
+const verified=await client.auth.signInWithPassword({email:user.email,password:current});
+if(verified.error){say(passwordMessage,'Current password is incorrect.','error');btn.disabled=false;btn.textContent='Update password';return;}
+const updated=await client.auth.updateUser({password:next});
+if(updated.error){say(passwordMessage,updated.error.message||'Could not update password.','error');btn.disabled=false;btn.textContent='Update password';return;}
+await client.auth.signOut({scope:'global'});say(passwordMessage,'Password updated. Returning to sign in…');
+setTimeout(()=>location.replace('dashboard.html?password=updated'),1000);
+});
+document.getElementById('appearanceForm').addEventListener('submit',e=>{
+e.preventDefault();const theme=document.getElementById('themeChoice').value;sessionStorage.setItem('kali_staff_theme',theme);applyTheme(theme);say(document.getElementById('appearanceMessage'),'Appearance preference saved for this browser tab.');
+});
+document.getElementById('signOut').addEventListener('click',async()=>{await client.auth.signOut();location.replace('dashboard.html');});
+})();
+</script>
+</body></html>
