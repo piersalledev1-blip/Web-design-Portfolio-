@@ -9,7 +9,7 @@ let supabaseClient = null;
 function initSupabase() {
   if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
     if (!supabaseClient) {
-      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, { auth: { storage: window.sessionStorage, persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
       console.log('Supabase client initialized');
     }
     return supabaseClient;
