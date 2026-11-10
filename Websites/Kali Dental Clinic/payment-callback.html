@@ -118,7 +118,7 @@
       if(downloadButton)downloadButton.addEventListener('click',downloadDetails);
       if(ref&&code){creds.hidden=false;document.getElementById('callbackReference').textContent=ref;document.getElementById('callbackCode').textContent=code;}
       if(!ref||!code){
-        document.getElementById('paymentMessage').textContent='Payment has returned, but this browser does not have the tracking credentials. Use the details saved during booking to track your appointment.';
+        document.getElementById('paymentMessage').textContent='Payment has returned, but this browser does not have the tracking credentials. Use the booking ID and tracking code saved during booking to track your appointment.';
         return;
       }
       const client=window.getSupabaseClient();let confirmed=false,failed=false;
@@ -149,10 +149,10 @@
             }
             if(b.status==='pending_payment'){
               document.getElementById('paymentHeading').textContent='Payment pending verification';
-              document.getElementById('paymentMessage').textContent='Paystack has not yet confirmed this payment. You can still download your booking credentials.';
+              document.getElementById('paymentMessage').textContent='Paystack has not yet confirmed this payment. You can still save your booking ID and tracking code.';
             }else{
               document.getElementById('paymentHeading').textContent='Booking status: '+b.status.replaceAll('_',' ');
-              document.getElementById('paymentMessage').textContent='Your booking details are available to download. Check the tracking page for the latest status.';
+              document.getElementById('paymentMessage').textContent='Save your booking ID and tracking code. Use them on the tracking page to check the latest status.';
               break;
             }
           }
