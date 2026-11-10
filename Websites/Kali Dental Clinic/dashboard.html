@@ -59,6 +59,24 @@
 .staff-appointments-table{width:100%;min-width:850px;border-collapse:collapse}
 .staff-appointments-table th{padding:14px 13px;text-align:left;background:#f5f7f2;color:#526358;font-size:.73rem;text-transform:uppercase;letter-spacing:.06em}
 .staff-appointments-table td{padding:14px 13px;border-top:1px solid #edf0ec;color:#34483b;font-size:.84rem;vertical-align:middle}
+.staff-workspace-actions a{display:inline-flex;align-items:center;text-decoration:none}
+.staff-appointments-table tr.is-past{background:#f7f8f6;opacity:.62}
+.staff-appointments-table tr.is-past td{color:#7e8981}
+.staff-status{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;font-size:.72rem;font-weight:800;white-space:nowrap;text-transform:capitalize}
+.staff-status.confirmed{background:#e8f0ff;color:#28528a}
+.staff-status.in_progress{background:#e2f2e8;color:#236342}
+.staff-status.completed{background:#e9ecea;color:#59655e}
+.staff-status.pending_payment{background:#fff1d9;color:#895a13}
+.staff-status.clinic_cancelled,.staff-status.cancelled{background:#fde8e7;color:#9a3933}
+.staff-status.no_show,.staff-status.expired{background:#eeeeee;color:#666}
+.staff-row-actions{display:flex;gap:7px;flex-wrap:wrap}
+.staff-row-actions .btn{min-height:34px;padding:7px 10px;font-size:.74rem}
+.staff-id{display:block;margin-top:5px;color:#7c8980;font-size:.7rem;overflow-wrap:anywhere}
+.staff-payment-line{display:block;line-height:1.55;white-space:nowrap}
+.staff-filter-label{display:block;font-size:.83rem;font-weight:700;color:#344a3b}
+.staff-table-tools{flex-wrap:wrap}
+@media(max-width:820px){.staff-login-layout{grid-template-columns:1fr;max-width:560px;margin:auto}.staff-login-copy{max-width:none}.staff-login-copy h1{font-size:clamp(2.5rem,9vw,3.7rem)}.staff-login-points{grid-template-columns:1fr 1fr;gap:12px}.staff-login-points span{font-size:.8rem}.staff-workspace{padding:20px}.staff-table-wrap{overflow:visible;border:0}.staff-appointments-table{min-width:0}.staff-appointments-table thead{display:none}.staff-appointments-table,.staff-appointments-table tbody,.staff-appointments-table tr,.staff-appointments-table td{display:block;width:100%}.staff-appointments-table tr{border:1px solid #e7ece6;border-radius:12px;margin-bottom:12px;padding:8px;background:#fff}.staff-appointments-table td{display:flex;justify-content:space-between;gap:14px;border:0;padding:9px 8px;text-align:right}.staff-appointments-table td::before{content:attr(data-label);font-weight:700;color:#718077;text-align:left}.staff-row-actions{justify-content:flex-end}.staff-appointments-table tr.is-past{opacity:.72}}
+
 @media(max-width:820px){.staff-login-layout{grid-template-columns:1fr;max-width:560px;margin:auto}.staff-login-copy{max-width:none}.staff-login-copy h1{font-size:clamp(2.5rem,9vw,3.7rem)}.staff-login-points{grid-template-columns:1fr 1fr;gap:12px}.staff-login-points span{font-size:.8rem}.staff-workspace{padding:20px}}
 @media(max-width:520px){.staff-portal-main{padding:34px 0}.staff-login-points{grid-template-columns:1fr}.staff-login-card{padding:24px 20px}.staff-login-help{align-items:flex-start;flex-direction:column}.staff-profile-form{align-items:stretch}.staff-profile-form .btn{width:100%}.staff-table-tools{align-items:stretch;flex-direction:column}.staff-table-tools select{width:100%}.staff-workspace-actions{width:100%}.staff-workspace-actions .btn{flex:1}}
   </style>
@@ -129,10 +147,10 @@
         </section>
       </div>
       <section id="staffWorkspace" class="staff-workspace" hidden>
-        <div class="staff-workspace-heading"><div><span class="eyebrow">STAFF WORKSPACE</span><h1 id="welcomeStaff">Appointments</h1><p>Review and manage the clinic's appointment schedule.</p></div><div class="staff-workspace-actions"><button id="refreshAppointments" class="btn outline">Refresh</button><button id="signOut" class="btn outline" hidden>Sign out</button></div></div>
-        <form id="staffProfileForm" class="staff-profile-form"><div class="form-group"><label for="staffDisplayName">Display name</label><input id="staffDisplayName" type="text" minlength="2" maxlength="100" autocomplete="name" required></div><button class="btn outline" id="saveStaffName" type="submit">Save name</button><span id="staffProfileMessage" role="status"></span></form>
-        <div class="staff-table-tools"><label for="statusFilter">Filter appointments</label><select id="statusFilter" aria-label="Filter appointments"><option value="all">All appointments</option><option value="pending_payment">Awaiting payment</option><option value="confirmed">Confirmed</option><option value="checked_in">Checked in</option><option value="in_progress">In progress</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option><option value="clinic_cancelled">Clinic cancelled</option><option value="no_show">No-show</option><option value="expired">Expired</option></select></div>
-        <div class="staff-table-wrap"><table class="staff-appointments-table"><thead><tr><th>Appointment</th><th>Patient</th><th>Date &amp; time</th><th>Status</th><th>Payment</th><th>Action</th></tr></thead><tbody id="appointmentRows"></tbody></table></div>
+        <div class="staff-workspace-heading"><div><span class="eyebrow">STAFF WORKSPACE</span><h1 id="welcomeStaff">Appointments</h1><p>Review and manage the clinic's appointment schedule.</p></div><div class="staff-workspace-actions"><a href="staff-settings.html" class="btn outline">Settings</a><button id="refreshAppointments" class="btn outline">Refresh</button><button id="signOut" class="btn outline" hidden>Sign out</button></div></div>
+        
+        <div class="staff-table-tools"><label class="staff-filter-label" for="statusFilter">View appointments</label><select id="statusFilter" aria-label="Filter appointments"><option value="active">Upcoming &amp; active</option><option value="pending_payment">Awaiting payment</option><option value="confirmed">Confirmed</option><option value="in_progress">In progress</option><option value="completed">Completed</option><option value="clinic_cancelled">Clinic cancelled</option><option value="no_show">No-show</option><option value="expired">Expired</option><option value="all">All appointments</option></select></div>
+        <div class="staff-table-wrap"><table class="staff-appointments-table"><thead><tr><th>Booking</th><th>Patient</th><th>Date &amp; time</th><th>Status</th><th>Payment summary</th><th>Actions</th></tr></thead><tbody id="appointmentRows"></tbody></table></div>
         <p id="dashboardMessageWorkspace" class="staff-auth-message" role="status" aria-live="polite"></p>
       </section>
     </section>
@@ -178,32 +196,66 @@
   </footer>
   <script>
     const loginForm=document.getElementById('staffLogin'),loginPanel=document.getElementById('staffLoginPanel'),message=document.getElementById('dashboardMessage'),workspace=document.getElementById('staffWorkspace'),signOut=document.getElementById('signOut'),client=window.getSupabaseClient();
-    const esc=v=>String(v??'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    const esc=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    let idleTimer=null;
+    const SESSION_IDLE_MS=15*60*1000;
     function setMessage(v,type=''){message.textContent=v;message.className='staff-auth-message'+(type?' '+type:'');}
+    function resetIdleTimer(){
+      if(idleTimer)clearTimeout(idleTimer);
+      if(!workspace.hidden)idleTimer=setTimeout(async()=>{await client.auth.signOut();workspace.hidden=true;loginPanel.hidden=false;setMessage('You were signed out after 15 minutes of inactivity. Sign in again.');},SESSION_IDLE_MS);
+    }
+    ['pointerdown','keydown','touchstart','mousemove'].forEach(evt=>document.addEventListener(evt,resetIdleTimer,{passive:true}));
     async function loadAppointments(){
       const status=document.getElementById('dashboardMessageWorkspace');status.textContent='Loading appointments…';
-      const {data,error}=await client.from('appointments').select('id,booking_reference,status,starts_at,ends_at,total_price,amount_due_now,balance_due,service:services(name),patient:patients(full_name,phone_local),payments(status,amount,paid_at,created_at)').order('starts_at',{ascending:false}).limit(200);
+      const {data,error}=await client.from('appointments').select('id,booking_reference,status,starts_at,ends_at,total_price,amount_due_now,balance_due,service:services(name),patient:patients(full_name,phone_local),payments(status,amount,paid_at,created_at)').order('starts_at',{ascending:true}).limit(300);
       if(error){status.textContent='Unable to load appointments. Check staff permissions.';return;}
-      const filter=document.getElementById('statusFilter').value,rows=(data||[]).filter(a=>filter==='all'||a.status===filter);
+      const now=Date.now(),filter=document.getElementById('statusFilter').value;
+      const ordered=(data||[]).slice().sort((a,b)=>{
+        const ap=new Date(a.starts_at).getTime(),bp=new Date(b.starts_at).getTime(),af=ap>=now,bf=bp>=now;
+        if(af!==bf)return af?-1:1;
+        return af?ap-bp:bp-ap;
+      });
+      const rows=ordered.filter(a=>{
+        if(filter==='all')return true;
+        if(filter==='active')return ['pending_payment','confirmed','checked_in','in_progress'].includes(a.status)&&new Date(a.starts_at).getTime()>=now-86400000;
+        return a.status===filter;
+      });
       document.getElementById('appointmentRows').innerHTML=rows.length?rows.map(a=>{
-        const date=new Date(a.starts_at).toLocaleString('en-GH',{dateStyle:'medium',timeStyle:'short',timeZone:'Africa/Accra'});let actions='';
-        if(a.status==='confirmed')actions='<button class="btn outline" data-id="'+a.id+'" data-status="checked_in">Check in</button>';
-        else if(a.status==='checked_in')actions='<button class="btn outline" data-id="'+a.id+'" data-status="in_progress">Start</button>';
-        else if(a.status==='in_progress')actions='<button class="btn outline" data-id="'+a.id+'" data-status="completed">Complete</button>';
-        const payment=(a.payments||[]).slice().sort((x,y)=>new Date(y.created_at)-new Date(x.created_at))[0];
-        const paymentAmount=payment?'GH₵'+Number(payment.amount||0).toLocaleString('en-GH',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
-        const balance=Number(a.balance_due||0)>0?' · Balance GH₵'+Number(a.balance_due).toLocaleString('en-GH',{minimumFractionDigits:2,maximumFractionDigits:2}):'';
-        return '<tr><td><strong>'+esc(a.service?.name||'Dental service')+'</strong><br><small>'+esc(a.booking_reference)+'</small></td><td>'+esc(a.patient?.full_name)+'<br><small>'+esc(a.patient?.phone_local)+'</small></td><td>'+esc(date)+'</td><td>'+esc(a.status.replaceAll('_',' '))+'</td><td>'+esc(payment?.status||'not started')+'<br><small>'+esc(paymentAmount+balance)+'</small></td><td>'+actions+'</td></tr>';
-      }).join(''):'<tr><td colspan="6">No appointments found.</td></tr>';
+        const start=new Date(a.starts_at),date=start.toLocaleString('en-GH',{dateStyle:'medium',timeStyle:'short',timeZone:'Africa/Accra'});
+        const isPast=start.getTime()<now,legacyChecked=a.status==='checked_in';
+        let actions='';
+        if(a.status==='confirmed'||legacyChecked)actions='<button class="btn primary" data-id="'+a.id+'" data-status="in_progress">Mark in progress</button><button class="btn outline" data-id="'+a.id+'" data-status="clinic_cancelled">Cancel</button>';
+        else if(a.status==='in_progress')actions='<button class="btn primary" data-id="'+a.id+'" data-status="completed">Complete</button><button class="btn outline" data-id="'+a.id+'" data-status="clinic_cancelled">Cancel</button>';
+        else if(a.status==='confirmed'&&isPast)actions='<button class="btn outline" data-id="'+a.id+'" data-status="no_show">Mark no-show</button>';
+        const payments=Array.isArray(a.payments)?a.payments:[];
+        const paid=payments.filter(p=>['success','successful','succeeded','paid'].includes(String(p.status||'').toLowerCase())).reduce((sum,p)=>sum+Number(p.amount||0),0);
+        const balance=Number(a.balance_due||0);
+        const paymentLabel=paid>0?'Paid GH₵'+paid.toFixed(2):'Paid now GH₵'+Number(a.amount_due_now||0).toFixed(2);
+        const balanceLabel='Balance GH₵'+balance.toFixed(2);
+        const statusLabel=a.status==='checked_in'?'In progress':a.status.replaceAll('_',' ');
+        const rowClass=isPast||['completed','clinic_cancelled','cancelled','no_show','expired'].includes(a.status)?'is-past':'';
+        const actionMarkup=actions?'<div class="staff-row-actions">'+actions+'</div>':'<span>—</span>';
+        return '<tr class="'+rowClass+'"><td data-label="Booking"><strong>'+esc(a.service?.name||'Dental service')+'</strong><br><small>Ref: '+esc(a.booking_reference)+'</small><small class="staff-id">ID: '+esc(a.id)+'</small></td><td data-label="Patient">'+esc(a.patient?.full_name)+'<br><small>'+esc(a.patient?.phone_local)+'</small></td><td data-label="Date & time">'+esc(date)+'</td><td data-label="Status"><span class="staff-status '+esc(a.status)+'">'+esc(statusLabel)+'</span></td><td data-label="Payment"><span class="staff-payment-line">'+esc(paymentLabel)+'</span><span class="staff-payment-line">'+esc(balanceLabel)+'</span></td><td data-label="Actions">'+actionMarkup+'</td></tr>';
+      }).join(''):'<tr><td colspan="6">No appointments found for this view.</td></tr>';
       status.textContent=rows.length+' appointment(s) displayed.';
-      document.getElementById('appointmentRows').querySelectorAll('button[data-id]').forEach(btn=>btn.addEventListener('click',async()=>{btn.disabled=true;const {error}=await client.rpc('transition_appointment_status',{p_appointment_id:btn.dataset.id,p_new_status:btn.dataset.status});if(error){status.textContent=error.message||'Could not update appointment status.';btn.disabled=false;return;}await loadAppointments();}));
+      document.getElementById('appointmentRows').querySelectorAll('button[data-id]').forEach(btn=>btn.addEventListener('click',async()=>{
+        const target=btn.dataset.status;
+        let reason=null;
+        if(target==='clinic_cancelled'){reason=prompt('Why is the clinic cancelling this appointment?');if(reason===null)return;if(!reason.trim()){alert('Please enter a cancellation reason.');return;}if(!confirm('Cancel this appointment? This will be recorded in the activity log.'))return;}
+        if(target==='no_show'&&!confirm('Mark this appointment as a no-show?'))return;
+        btn.disabled=true;
+        const {error}=await client.rpc('transition_appointment_status',{p_appointment_id:btn.dataset.id,p_new_status:target,p_reason:reason});
+        if(error){status.textContent=error.message||'Could not update appointment status.';btn.disabled=false;return;}
+        await loadAppointments();
+      }));
     }
     async function enterWorkspace(){
       loginPanel.hidden=true;workspace.hidden=true;signOut.hidden=true;
-      const {data:{user}}=await client.auth.getUser();if(!user){loginPanel.hidden=false;return;}
+      const {data:{user},error:userError}=await client.auth.getUser();
+      if(userError||!user){loginPanel.hidden=false;return;}
       const {data:staff,error}=await client.from('staff_profiles').select('full_name,role,is_active').eq('user_id',user.id).maybeSingle();
       if(error||!staff||!staff.is_active){await client.auth.signOut();loginPanel.hidden=false;setMessage('This account is not authorised for clinic staff access. Ask the clinic administrator for access.','error');return;}
-      workspace.hidden=false;signOut.hidden=false;document.getElementById('welcomeStaff').textContent='Welcome, '+staff.full_name;document.getElementById('staffDisplayName').value=staff.full_name||'';await loadAppointments();
+      workspace.hidden=false;signOut.hidden=false;document.getElementById('welcomeStaff').textContent='Appointments';await loadAppointments();resetIdleTimer();
     }
     loginForm.addEventListener('submit',async e=>{
       e.preventDefault();const btn=document.getElementById('loginButton');btn.disabled=true;btn.textContent='Signing in…';setMessage('');
@@ -220,23 +272,13 @@
       catch(error){setMessage('We could not send the reset email. Please try again or contact the clinic administrator.','error');}
       finally{btn.disabled=false;btn.textContent='Send reset link';}
     });
-    document.getElementById('staffProfileForm').addEventListener('submit',async e=>{
-      e.preventDefault();
-      const btn=document.getElementById('saveStaffName'),status=document.getElementById('staffProfileMessage');
-      const fullName=document.getElementById('staffDisplayName').value.trim();
-      if(fullName.length<2||fullName.length>100){status.textContent='Enter a name between 2 and 100 characters.';return;}
-      btn.disabled=true;status.textContent='Saving...';
-      const {error}=await client.rpc('complete_staff_setup',{p_full_name:fullName});
-      if(error){status.textContent=error.message||'Could not update your name.';}
-      else{document.getElementById('welcomeStaff').textContent='Welcome, '+fullName+' · '+document.getElementById('welcomeStaff').textContent.split(' · ').pop();status.textContent='Name updated.';}
-      btn.disabled=false;
-    });
-    document.getElementById('signOut').addEventListener('click',async()=>{await client.auth.signOut();workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;loginForm.reset();setMessage('You have been signed out.');});
+    document.getElementById('signOut').addEventListener('click',async()=>{await client.auth.signOut();if(idleTimer)clearTimeout(idleTimer);workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;loginForm.reset();setMessage('You have been signed out.');});
     document.getElementById('refreshAppointments').addEventListener('click',loadAppointments);
     document.getElementById('statusFilter').addEventListener('change',loadAppointments);
     client.auth.getSession().then(({data})=>{if(data.session)enterWorkspace();else{loginPanel.hidden=false;workspace.hidden=true;signOut.hidden=true;}});
+    client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||!session){if(!workspace.hidden){workspace.hidden=true;signOut.hidden=true;loginPanel.hidden=false;setMessage('Your session ended. Sign in again.');}}});
     window.setInterval(()=>{if(!workspace.hidden&&!document.hidden)loadAppointments();},30000);
-    document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!workspace.hidden)loadAppointments();});
-  </script>
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!workspace.hidden){resetIdleTimer();loadAppointments();}});
+  </script>>
 </body>
 </html>
