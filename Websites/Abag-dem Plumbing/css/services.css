@@ -1,0 +1,608 @@
+/* =========================================================
+   SERVICES PAGE
+   ========================================================= */
+
+
+/* =========================================================
+   SERVICES HERO
+   ========================================================= */
+
+.services-hero {
+    padding: 85px 0 75px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f0f9ff 0%,
+            #ffffff 65%,
+            #f8fbfd 100%
+        );
+
+    border-bottom: 1px solid var(--border);
+}
+
+.services-hero-content {
+    max-width: 760px;
+}
+
+.services-hero .section-eyebrow {
+    display: inline-flex;
+
+    margin-bottom: 18px;
+
+    color: var(--secondary);
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 1.4px;
+}
+
+.services-hero h1 {
+    margin: 0 0 20px;
+
+    color: var(--dark);
+
+    font-size: clamp(38px, 6vw, 64px);
+
+    line-height: 1.05;
+
+    letter-spacing: -1.8px;
+}
+
+.services-hero h1 span {
+    color: var(--primary);
+}
+
+.services-hero p {
+    max-width: 650px;
+
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 17px;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   SERVICES LIST SECTION
+   ========================================================= */
+
+.services-list-section {
+    padding: 90px 0;
+
+    background: var(--white);
+}
+
+.services-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 90px;
+}
+
+
+/* =========================================================
+   SERVICE CARD
+   ========================================================= */
+
+.service-detail-card {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: 65px;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   REVERSED CARD
+   ========================================================= */
+
+.service-detail-card-reverse .service-detail-image {
+    order: 2;
+}
+
+.service-detail-card-reverse .service-detail-content {
+    order: 1;
+}
+
+
+/* =========================================================
+   SERVICE IMAGE
+   ========================================================= */
+
+.service-detail-image {
+    width: 100%;
+
+    min-width: 0;
+
+    overflow: hidden;
+
+    border-radius: var(--radius-lg);
+
+    background: #eaf3f7;
+
+    box-shadow: var(--shadow-md);
+}
+
+.service-detail-image img {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    aspect-ratio: 4 / 3;
+
+    object-fit: cover;
+
+    transition: transform 0.45s ease;
+}
+
+.service-detail-card:hover .service-detail-image img {
+    transform: scale(1.025);
+}
+
+
+/* =========================================================
+   SERVICE CONTENT
+   ========================================================= */
+
+.service-detail-content {
+    min-width: 0;
+}
+
+.service-detail-number {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--primary);
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.service-detail-label {
+    display: block;
+
+    margin-bottom: 15px;
+
+    color: var(--secondary);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+}
+
+.service-detail-content h2 {
+    margin: 0 0 18px;
+
+    color: var(--dark);
+
+    font-size: clamp(28px, 4vw, 42px);
+
+    line-height: 1.15;
+
+    letter-spacing: -0.8px;
+}
+
+.service-detail-content p {
+    max-width: 570px;
+
+    margin: 0 0 16px;
+
+    color: var(--muted);
+
+    font-size: 15px;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   SERVICE ACTIONS
+   ========================================================= */
+
+.service-detail-actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 16px;
+
+    margin-top: 25px;
+}
+
+.service-detail-actions .btn {
+    min-width: 145px;
+}
+
+.service-whatsapp-link {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: var(--secondary);
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.service-whatsapp-link:hover {
+    color: var(--secondary-dark);
+
+    transform: translateX(2px);
+}
+
+
+/* =========================================================
+   CTA SECTION
+   ========================================================= */
+
+.services-cta-section {
+    padding: 0 0 90px;
+
+    background: var(--white);
+}
+
+.services-cta {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 45px;
+
+    padding: 55px;
+
+    border-radius: var(--radius-lg);
+
+    background:
+        linear-gradient(
+            135deg,
+            #f0f9ff,
+            #f8fbfd
+        );
+
+    border: 1px solid var(--border);
+
+    box-shadow: var(--shadow-sm);
+}
+
+.services-cta-content {
+    max-width: 650px;
+}
+
+.services-cta .section-eyebrow {
+    display: block;
+
+    margin-bottom: 10px;
+
+    color: var(--secondary);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.3px;
+}
+
+.services-cta h2 {
+    margin: 0 0 14px;
+
+    color: var(--dark);
+
+    font-size: clamp(30px, 4vw, 44px);
+
+    line-height: 1.15;
+
+    letter-spacing: -1px;
+}
+
+.services-cta h2 span {
+    color: var(--primary);
+}
+
+.services-cta p {
+    max-width: 590px;
+
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 15px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   CTA BUTTONS
+   ========================================================= */
+
+.services-cta-actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 12px;
+
+    flex-shrink: 0;
+}
+
+.services-cta-actions .btn {
+    min-width: 145px;
+}
+
+.btn-secondary {
+    color: var(--primary);
+
+    background: var(--white);
+
+    border-color: var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--light);
+
+    box-shadow: var(--shadow-sm);
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .services-hero {
+        padding: 70px 0 60px;
+    }
+
+    .services-list-section {
+        padding: 70px 0;
+    }
+
+    .services-list {
+        gap: 70px;
+    }
+
+    .service-detail-card {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 1fr);
+
+        gap: 35px;
+    }
+
+    .service-detail-content h2 {
+        font-size: 32px;
+    }
+
+    .services-cta {
+        padding: 40px;
+
+        gap: 30px;
+    }
+
+    .services-cta-actions {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .services-cta-actions .btn {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .services-hero {
+        padding: 55px 0 50px;
+    }
+
+    .services-hero h1 {
+        font-size: 38px;
+
+        letter-spacing: -1px;
+    }
+
+    .services-hero p {
+        font-size: 15px;
+    }
+
+
+    /* -----------------------------------------
+       SERVICES LIST
+       ----------------------------------------- */
+
+    .services-list-section {
+        padding: 55px 0;
+    }
+
+    .services-list {
+        gap: 60px;
+    }
+
+
+    /* -----------------------------------------
+       ONE COLUMN
+       ----------------------------------------- */
+
+    .service-detail-card {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 28px;
+    }
+
+
+    /* -----------------------------------------
+       IMAGE ALWAYS FIRST
+       ----------------------------------------- */
+
+    .service-detail-card .service-detail-image,
+    .service-detail-card-reverse .service-detail-image {
+        order: 1;
+    }
+
+    .service-detail-card .service-detail-content,
+    .service-detail-card-reverse .service-detail-content {
+        order: 2;
+    }
+
+
+    /* -----------------------------------------
+       SERVICE IMAGE
+       ----------------------------------------- */
+
+    .service-detail-image img {
+        aspect-ratio: 4 / 3;
+    }
+
+
+    /* -----------------------------------------
+       SERVICE CONTENT
+       ----------------------------------------- */
+
+    .service-detail-content h2 {
+        font-size: 30px;
+    }
+
+    .service-detail-content p {
+        font-size: 14px;
+    }
+
+
+    /* -----------------------------------------
+       SERVICE BUTTONS
+       ----------------------------------------- */
+
+    .service-detail-actions {
+        align-items: stretch;
+
+        flex-direction: column;
+
+        gap: 13px;
+    }
+
+    .service-detail-actions .btn {
+        width: 100%;
+    }
+
+    .service-whatsapp-link {
+        justify-content: center;
+
+        min-height: 44px;
+    }
+
+
+    /* -----------------------------------------
+       CTA
+       ----------------------------------------- */
+
+    .services-cta-section {
+        padding-bottom: 60px;
+    }
+
+    .services-cta {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 28px;
+
+        padding: 32px 24px;
+
+        border-radius: 16px;
+    }
+
+    .services-cta h2 {
+        font-size: 31px;
+    }
+
+    .services-cta p {
+        font-size: 14px;
+    }
+
+    .services-cta-actions {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 390px) {
+
+    .services-hero h1 {
+        font-size: 34px;
+    }
+
+    .service-detail-content h2 {
+        font-size: 27px;
+    }
+
+    .services-cta {
+        padding: 27px 18px;
+    }
+
+    .services-cta h2 {
+        font-size: 28px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .service-detail-image img {
+        transition: none;
+    }
+}
