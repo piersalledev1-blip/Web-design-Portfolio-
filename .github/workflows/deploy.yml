@@ -36,6 +36,7 @@ jobs:
           cp -r assets pages _site/portfolio/
           cp -r "Websites/Kali Dental Clinic/." _site/
           mkdir -p _site/projects
+          cp -r "Websites/Holiness plumbing v2" _site/projects/holiness-plumbing
           cp -r "Websites/Abag-dem Electricals" _site/projects/abag-dem-electricals
           cp -r "Websites/Abag-dem Plumbing" _site/projects/abag-dem-plumbing
           cp -r "Websites/Dripfix demo" _site/projects/dripfix
