@@ -2815,3 +2815,14 @@ body.menu-open {
     height: 44px;
   }
 }
+
+/* Keep the diagonal hero treatment on desktop landscape screens only. */
+@media (max-width: 1024px), (orientation: portrait) {
+  .hero-image {
+    clip-path: none;
+  }
+
+  .hero-gold-edge {
+    display: none;
+  }
+}
