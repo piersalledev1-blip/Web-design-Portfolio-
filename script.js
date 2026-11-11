@@ -163,6 +163,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const closing = document.querySelector(".why-closing");
 
 
+  if (!label || !heading || !closing) return;
+
   /* Intro animation */
 
   setTimeout(() => {
