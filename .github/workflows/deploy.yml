@@ -47,6 +47,10 @@ jobs:
           cp -r "Websites/Standard roofing system demo" _site/projects/standard-roofing
           cp -r "Websites/Starlight roofing demp" _site/projects/starlight-roofing
 
+          # Keep internal research, integration notes and server-side functions out of the public static site.
+          find _site -type f -name '*.txt' -delete
+          find _site -type d -name 'supabase' -prune -exec rm -rf {} +
+
       - name: Upload website
         uses: actions/upload-pages-artifact@v3
         with:
