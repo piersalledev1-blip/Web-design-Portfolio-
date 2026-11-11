@@ -31,8 +31,21 @@
 .project-visual{height:285px;display:block;position:relative;overflow:hidden;border-radius:5px;background:#102c50;border:1px solid rgba(130,165,212,.17)}
 .project-card-featured .project-visual{height:440px}
 .project-visual:after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(transparent,rgba(3,13,29,.28));pointer-events:none}
-.project-visual img{width:100%;height:100%;display:block;object-fit:cover;object-position:top center;transition:transform .7s cubic-bezier(.2,.75,.25,1),filter .5s}
-.project-visual:hover img{transform:scale(1.035);filter:saturate(1.08)}
+.project-preview-frame{
+  position:absolute;
+  inset:0;
+  width:238%;
+  height:238%;
+  border:0;
+  transform:scale(.42);
+  transform-origin:top left;
+  background:#fff;
+  pointer-events:none;
+  display:block;
+}
+.project-visual:hover .project-preview-frame{
+  filter:saturate(1.04);
+}
 .project-visual-tag{position:absolute;left:20px;top:20px;z-index:2;background:#eaf2ff;color:#071a35;border-radius:2px;padding:9px 12px;font-size:9px;font-weight:800;letter-spacing:1.3px}
 .project-open{position:absolute;right:17px;bottom:17px;z-index:2;width:42px;height:42px;border-radius:50%;background:#eaf2ff;color:#071a35;display:grid;place-items:center;font-size:20px;transition:transform .25s}
 .project-visual:hover .project-open{transform:rotate(45deg)}
