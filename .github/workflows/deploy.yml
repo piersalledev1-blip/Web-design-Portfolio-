@@ -31,11 +31,10 @@ jobs:
 
       - name: Prepare website
         run: |
-          mkdir -p _site/portfolio
-          cp index.html style.css script.js _site/portfolio/
-          cp -r assets pages _site/portfolio/
-          cp -r "Websites/Kali Dental Clinic/." _site/
+          cp index.html style.css script.js _site/
+          cp -r assets pages _site/
           mkdir -p _site/projects
+          cp -r "Websites/Kali Dental Clinic/." _site/projects/kali-dental-clinic
           cp -r "Websites/Holiness plumbing v2" _site/projects/holiness-plumbing
           cp -r "Websites/Abag-dem Electricals" _site/projects/abag-dem-electricals
           cp -r "Websites/Abag-dem Plumbing" _site/projects/abag-dem-plumbing
