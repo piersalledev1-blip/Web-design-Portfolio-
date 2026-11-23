@@ -42,6 +42,7 @@
   background:#fff;
   pointer-events:none;
   display:block;
+}
 .project-visual:hover .project-preview-frame{
   filter:saturate(1.04);
 }
