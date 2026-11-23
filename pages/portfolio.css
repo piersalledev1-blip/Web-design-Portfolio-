@@ -34,15 +34,17 @@
 .project-preview-frame{
   position:absolute;
   inset:0;
-  width:238%;
-  height:238%;
+  display:block;
+  width:100%;
+  height:100%;
   border:0;
-  transform:scale(.42);
-  transform-origin:top left;
+  transform:none;
   background:#fff;
   pointer-events:none;
-  display:block;
+  z-index:0;
 }
+.project-visual:after{z-index:1}
+.project-visual-tag,.project-open{z-index:2}
 .project-visual:hover .project-preview-frame{
   filter:saturate(1.04);
 }
